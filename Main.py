@@ -55,11 +55,15 @@ for i in range(0, len(atomList)):
    aList = help.object_list(atoms[i])
    atom.append(Atom(aList[0],aList[1],aList[2],aList[3],aList[4]))
 
-print atom[0].atom_id
-print atom[0].atom_type
-print atom[0].x_pos
-print atom[0].y_pos
-print atom[0].z_pos
+print "   ATOMS   "
+print "-----------"
+for k in range(0, len(atom)):
+   print "Atom id: %s" % atom[k].atom_id
+   print "Atom type: %s" % atom[k].atom_type
+   print "X position: %s" % atom[k].x_pos
+   print "Y position: %s" % atom[k].y_pos
+   print "Z position: %s" % atom[k].z_pos
+   print ""
 
 #create a bunch of bond objects
 for j in range(0, len(bondList)):
@@ -67,6 +71,10 @@ for j in range(0, len(bondList)):
    bList = help.bond_list(bonds[j])
    bond.append(Bond(bList[0],bList[1],bList[2]))
 
-print bond[0].bond_type
-print bond[0].bond_master
-print bond[0].bond_slave
+print "   BONDS   "
+print "-----------"
+for z in range(0, len(bond)):
+   print "Bond Type: %s" % bond[z].bond_type
+   print "Bond Master(bonded from): %s" % bond[z].bond_master
+   print "Bond Slave(bonded to): %s" % bond[z].bond_slave
+   print ""
