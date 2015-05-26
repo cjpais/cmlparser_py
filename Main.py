@@ -37,10 +37,10 @@ class Atom(object):
         if bond.bond_master == atom.atom_id:
             self.Bonds[Num_bonds] = bond.bond_slave 
             self.Num_Bonds += 1
-        else if bond.bond_slave == atom.atom_id:
+        elif bond.bond_slave == atom.atom_id:
             self.Bonds[Num_bonds] = bond.bond_master
             self.Num_Bonds +=1
-        else 
+        else:
             sys.exit("Error: atom id does not match bonding atoms")
             
         
@@ -72,8 +72,8 @@ class Angle(object):
 
 def Find_Angles( atom, bond):
     Angles= []
-    for j in range(0, len(atom):
-        for i in range(0,len(bond))
+    for j in range(0, len(atom)):
+        for i in range(0,len(bond)):
             if bond[i].bond_master == atom[j].atom_id or bond[i].bond_slave == atom[j].atom_id:
                 atom[j].Add_Bond[i] 
     a = 0 
@@ -94,7 +94,7 @@ def Find_Angles( atom, bond):
             a+= 1
             Angles[a] = [Angle_type, atom.Bonds[0], atom.atom_id, atom.Bonds[2]]
             a+=1 
-            Angles[a] = [Angle_type, atom.Bonds[0], atom.atom_id, atom.Bonds[3]
+            Angles[a] = [Angle_type, atom.Bonds[0], atom.atom_id, atom.Bonds[3]]
             a+=1
     return Angles
             
