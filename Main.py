@@ -32,14 +32,14 @@ class Atom(object):
         self.x_pos = x_pos
         self.y_pos = y_pos
         self.z_pos = z_pos
-    
-    def Add_Bond(bond):
+
+    def Add_Bond(atom, bond):
         if bond.bond_master == atom.atom_id:
-            self.Bonds[Num_bonds] = bond.bond_slave 
-            self.Num_Bonds += 1
+            atom.Bonds.append(bond.bond_slave)
+            atom.Num_Bonds += 1
         elif bond.bond_slave == atom.atom_id:
-            self.Bonds[Num_bonds] = bond.bond_master
-            self.Num_Bonds +=1
+            atom.Bonds.append(bond.bond_master)
+            atom.Num_Bonds +=1
         else:
             sys.exit("Error: atom id does not match bonding atoms")
             
@@ -75,30 +75,13 @@ def Find_Angles( atom, bond):
     for j in range(0, len(atom)):
         for i in range(0,len(bond)):
             if bond[i].bond_master == atom[j].atom_id or bond[i].bond_slave == atom[j].atom_id:
-                atom[j].Add_Bond[i] 
+                atom[j].Add_Bond(bond[i]) 
     a = 0 
     for j in range(0, len(atom)):
-        if atom[j].Num_Bonds == 2:
-            Angle_type = 1 # Need to change this to allow for different angle types
-            Angles[a] = [ Angle_type, atom.Bonds[0], atom.atom_id, atom.Bonds[1]]
-            a+=1
-        if atom[j].Num_bonds == 3:
-            Angle_type = 1 # Need to change..
-            Angles[a] = [Angle_type, atom.Bonds[0], atom.atom_id, atom.Bonds[2]]
-            a+=1 
-            Angles[a] = [ Angle_type, atom.Bonds[0], atom.atom_id, atom.Bonds[1]]
-            a+=1
-        if atom[j].Num_bonds == 4:
-            Angle_type = 1
-            Angles[a] = [ Angle_type, atom.Bonds[0], atom.atom_id, atom.Bonds[1]]
-            a+= 1
-            Angles[a] = [Angle_type, atom.Bonds[0], atom.atom_id, atom.Bonds[2]]
-            a+=1 
-            Angles[a] = [Angle_type, atom.Bonds[0], atom.atom_id, atom.Bonds[3]]
-            a+=1
-    return Angles
-            
-                
+      for k in range(1, atom[j].Num_Bonds):
+        Angle_type = 1
+        Angles.append(Angle(Angle_type, atom[j].Bonds[0], atom[j].atom_id, atom[j].Bonds[k]))
+    return Angles         
                     
 
 #begin parsing, gets single atom. do in method
@@ -137,12 +120,11 @@ for z in range(0, len(bond)):
    print "Bond Slave(bonded to): %s" % bond[z].bond_slave
    print ""
 
-Angle_List = Find_Angles(atom, bond)
-angle = []
+angle = Find_Angles(atom, bond)
 
-for j in range(0, len(Angle_List)):
-    angle.append(Angle(Angle_List[0], Angle_List[1], Angle_List[2], Angle_List[3]))
+#for j in range(0, len(Angle_List)):
+#    angle.append(Angle(Angle_List[0], Angle_List[1], Angle_List[2], Angle_List[3]))
     
 for i in range(0, len(angle)):
-    print angle.Angle_Type, angle.Angle_master, angle.Angle_slave1, angle.Angle_slave2
+    print angle[i].Angle_type, angle[i].Angle_master, angle[i].Angle_slave1, angle[i].Angle_slave2
     
