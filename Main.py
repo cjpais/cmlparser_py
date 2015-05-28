@@ -9,7 +9,6 @@ import xml.etree.ElementTree as ET
 import helper as help
 import time
 
-#TODO NEED TO FIX BONDS
 #get filename from commandline
 file = sys.argv[1]
 atoms = []
@@ -49,25 +48,36 @@ class Bond(object):
       self.bond_master = bond_master
       self.bond_slave = bond_slave
 
+#create angle object
 class Angle(object):
     Angle_type = 0
     Angle_master = ""
     Angle_slave1 = ""
     Angle_slave2 = ""
     
+    #constructor
     def __init__(self, Angle_type, Angle_master, Angle_slave1, Angle_slave2):
         self.Angle_type = Angle_type
         self.Angle_master = Angle_master
         self.Angle_slave1 = Angle_slave1
         self.Angle_slave2 = Angle_slave2 
 
+
 def find_angles(atom, bondList):
-   Angles = []
-   if atom.Num_Bonds > 1:
-      for i in range(0, atom.Num_Bonds):
-         ang_type = 1
-         Angles.append(Angle(ang_type,atom.Bonds[0],atom.atom_id,atom.Bonds[i]))
-      return Angles                    
+    """
+    Find the angles give an atoms and a list of bonds. Returns a list of angles
+
+    Keyword Arguments:
+    atom -- The specific atom to find the angles for
+    bondList -- The list of bonds the atom might have
+    """
+    
+    Angles = []
+    if atom.Num_Bonds > 1:
+       for i in range(0, atom.Num_Bonds):
+          ang_type = 1
+          Angles.append(Angle(ang_type,atom.Bonds[0],atom.atom_id,atom.Bonds[i]))
+       return Angles                    
 
 #begin parsing, gets single atom. do in method
 tree = ET.parse(file)
@@ -87,6 +97,7 @@ for j in range(0, len(bondList)):
    bList = help.bond_list(bonds[j])
    bond.append(Bond(bList[0],bList[1],bList[2]))
 
+# print the atoms
 print "   ATOMS   "
 print "-----------"
 for k in range(0, len(atom)):
@@ -97,6 +108,7 @@ for k in range(0, len(atom)):
    print "Z position: %s" % atom[k].z_pos
    print ""
 
+# print the bonds
 print "   BONDS   "
 print "-----------"
 for z in range(0, len(bond)):
@@ -105,6 +117,7 @@ for z in range(0, len(bond)):
    print "Bond Slave(bonded to): %s" % bond[z].bond_slave
    print ""
 
+# print the angles to (eventually) calculate
 for i in range(0,len(atom)):
   help.get_num_bonds(atom[i],bond)
   angles = find_angles(atom[i],bond)
@@ -115,19 +128,6 @@ for i in range(0,len(atom)):
       print "Slave angle 1: %s" % angles[x].Angle_slave1
       print "Slave angle 2: %s" % angles[x].Angle_slave2
       print ""
-
-#angle = 
-
-#for i in range(0, len(angle)):
-#   print " The angle type is: %s \n The master angle is: %s \n The first slave angle is %s \n The second slave angle is %s \n" % (angle[i].Angle_type, angle[i].Angle_master, angle[i].Angle_slave1,angle[i].Angle_slave2)
-
-#for j in range(0, len(Angle_List)):
-#    angle.append(Angle(Angle_List[0], Angle_List[1], Angle_List[2], Angle_List[3]))
-
-#for j in range(0, len(Angle_List)):
-#    angle.append(Angle(Angle_List[0], Angle_List[1], Angle_List[2], Angle_List[3]))
-    
-for i in range(0, len(angle)):
-   print " The angle type is: %s \n The master angle is: %s \n The first slave angle is %s \n The second slave angle is %s \n" % (angle[i].Angle_type, angle[i].Angle_master, angle[i].Angle_slave1,angle[i].Angle_slave2)
-    
+ 
+#print the running time   
 print("--- %s seconds ---" % (time.time() - start_time))
