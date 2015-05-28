@@ -14,6 +14,7 @@ atoms = []
 atom = []
 bonds = []
 bond = []
+angle = []
 
 #create Atom object
 class Atom(object):
@@ -57,37 +58,13 @@ class Angle(object):
         self.Angle_slave1 = Angle_slave1
         self.Angle_slave2 = Angle_slave2
 
-
-def Find_Angles( atom, bond):
-    Angles= []
-    for j in range(0, len(atom)):
-        for i in range(0,len(bond)):
-            if bond[i].bond_master == atom[j].atom_id or bond[i].bond_slave == atom[j].atom_id:
-                atom[j].Add_Bond[i] 
-    a = 0 
-    for j in range(0, len(atom)):
-        if atom[j].Num_Bonds == 2:
-            Angle_type = 1 # Need to change this to allow for different angle types
-            Angles[a] = [ Angle_type, atom.Bonds[0], atom.atom_id, atom.Bonds[1]]
-            a+=1
-        if atom[j].Num_bonds == 3:
-            Angle_type = 1 # Need to change..
-            Angles[a] = [Angle_type, atom.Bonds[0], atom.atom_id, atom.Bonds[2]]
-            a+=1 
-            Angles[a] = [ Angle_type, atom.Bonds[0], atom.atom_id, atom.Bonds[1]]
-            a+=1
-        if atom[j].Num_bonds == 4:
-            Angle_type = 1
-            Angles[a] = [ Angle_type, atom.Bonds[0], atom.atom_id, atom.Bonds[1]]
-            a+=1
-            Angles[a] = [Angle_type, atom.Bonds[0], atom.atom_id, atom.Bonds[2]]
-            a+=1 
-            Angles[a] = [Angle_type, atom.Bonds[0], atom.atom_id, atom.Bonds[3]]
-            a = a + 1
-    return Angles
-            
-                
-                    
+def find_angles(atom, bondList):
+   Angles = []
+   if atom.Num_Bonds > 1:
+      for i in range(0, atom.Num_Bonds):
+         ang_type = 1
+         Angles.append(Angle(ang_type,atom.Bonds[0],atom.atom_id,atom.Bonds[i]))
+      return Angles                    
 
 #begin parsing, gets single atom. do in method
 tree = ET.parse(file)
@@ -126,17 +103,22 @@ for z in range(0, len(bond)):
    print ""
 
 for i in range(0,len(atom)):
-  help.find_num_bonds(atom[i],bond)
-  print "%s has %s bond(s)" % (atom[i].atom_id,atom[i].Num_Bonds)
-  for k in range(0,len(atom[i].Bonds)):
-    print atom[i].Bonds[k]
-  print ""
-#Angle_List = Find_Angles(atom, bond)
-#angle = []
+  help.get_num_bonds(atom[i],bond)
+  angles = find_angles(atom[i],bond)
+  if atom[i].Num_Bonds > 1:
+    for x in range(0,len(angles)):
+      print "Angle Type: %s" % angles[x].Angle_type
+      print "Master Angle: %s" % angles[x].Angle_master
+      print "Slave angle 1: %s" % angles[x].Angle_slave1
+      print "Slave angle 2: %s" % angles[x].Angle_slave2
+      print ""
+
+#angle = 
+
+#for i in range(0, len(angle)):
+#   print " The angle type is: %s \n The master angle is: %s \n The first slave angle is %s \n The second slave angle is %s \n" % (angle[i].Angle_type, angle[i].Angle_master, angle[i].Angle_slave1,angle[i].Angle_slave2)
 
 #for j in range(0, len(Angle_List)):
 #    angle.append(Angle(Angle_List[0], Angle_List[1], Angle_List[2], Angle_List[3]))
-    
-#for i in range(0, len(angle)):
-#    print angle.Angle_Type, angle.Angle_master, angle.Angle_slave1, angle.Angle_slave2
-    
+
+
