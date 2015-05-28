@@ -23,5 +23,3 @@ def get_bonds(bondList, i):
    singleBond = str(bondList[i].attrib)
    singleBondSplit = singleBond.split()
    return singleBondSplit
-
-#def gen_alist:
