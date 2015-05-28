@@ -22,4 +22,17 @@ def bond_list(bonds):
 def get_bonds(bondList, i):
    singleBond = str(bondList[i].attrib)
    singleBondSplit = singleBond.split()
-   return singleBondSplit
+
+def get_num_bonds(atom, bondList):
+   numBonds = 0
+   bondedTo = []
+   for i in range(0,len(bondList)):
+      if atom.atom_id == bondList[i].bond_master or atom.atom_id == bondList[i].bond_slave:
+         if atom.atom_id == bondList[i].bond_master:
+            numBonds += 1
+            bondedTo.append(bondList[i].bond_slave)
+         if atom.atom_id == bondList[i].bond_slave:
+            numBonds += 1
+            bondedTo.append(bondList[i].bond_master)
+   atom.Num_Bonds = numBonds #set atoms number of bonds
+   atom.Bonds = bondedTo     #set the atoms it is bonded to

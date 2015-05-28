@@ -16,6 +16,7 @@ atoms = []
 atom = []
 bonds = []
 bond = []
+angle = []
 start_time = time.time()
 
 #create Atom object
@@ -36,19 +37,6 @@ class Atom(object):
         self.y_pos = y_pos
         self.z_pos = z_pos
 
-    def Add_Bond(atom, bond):
-        if bond.bond_master == atom.atom_id:
-            atom.Bonds.append(bond.bond_slave)
-            print bond.bond_slave
-            atom.Num_Bonds += 1
-        elif bond.bond_slave == atom.atom_id:
-            atom.Bonds.append(bond.bond_master)
-            print bond.bond_master
-            atom.Num_Bonds +=1
-        else:
-            sys.exit("Error: atom id does not match bonding atoms")
-            
-        
 #create Bond object 
 class Bond(object):
    bond_type = ""
@@ -62,7 +50,7 @@ class Bond(object):
       self.bond_slave = bond_slave
 
 class Angle(object):
-    Angle_type = ""
+    Angle_type = 0
     Angle_master = ""
     Angle_slave1 = ""
     Angle_slave2 = ""
@@ -73,23 +61,13 @@ class Angle(object):
         self.Angle_slave1 = Angle_slave1
         self.Angle_slave2 = Angle_slave2 
 
-
-def Find_Angles( atom, bond):
-    Angles= []
-    for j in range(0, len(atom)):
-        for i in range(0,len(bond)):
-            if bond[i].bond_master == atom[j].atom_id:
-              atom[j].Add_Bond(bond[i]) #TODO SOMETHING WRONG
-            elif bond[i].bond_slave == atom[j].atom_id:
-              #print bond[i].bond_slave
-              atom[j].Add_Bond(bond[i])
-    for j in range(0, len(atom)):
-      if atom[j].Num_Bonds > 1:
-        for k in range(0, atom[j].Num_Bonds):
-          Angle_type = 1
-          Angles.append(Angle(Angle_type, atom[j].Bonds[0], atom[j].atom_id, atom[j].Bonds[k]))
-    return Angles        
-                    
+def find_angles(atom, bondList):
+   Angles = []
+   if atom.Num_Bonds > 1:
+      for i in range(0, atom.Num_Bonds):
+         ang_type = 1
+         Angles.append(Angle(ang_type,atom.Bonds[0],atom.atom_id,atom.Bonds[i]))
+      return Angles                    
 
 #begin parsing, gets single atom. do in method
 tree = ET.parse(file)
@@ -127,7 +105,24 @@ for z in range(0, len(bond)):
    print "Bond Slave(bonded to): %s" % bond[z].bond_slave
    print ""
 
-angle = Find_Angles(atom, bond)
+for i in range(0,len(atom)):
+  help.get_num_bonds(atom[i],bond)
+  angles = find_angles(atom[i],bond)
+  if atom[i].Num_Bonds > 1:
+    for x in range(0,len(angles)):
+      print "Angle Type: %s" % angles[x].Angle_type
+      print "Master Angle: %s" % angles[x].Angle_master
+      print "Slave angle 1: %s" % angles[x].Angle_slave1
+      print "Slave angle 2: %s" % angles[x].Angle_slave2
+      print ""
+
+#angle = 
+
+#for i in range(0, len(angle)):
+#   print " The angle type is: %s \n The master angle is: %s \n The first slave angle is %s \n The second slave angle is %s \n" % (angle[i].Angle_type, angle[i].Angle_master, angle[i].Angle_slave1,angle[i].Angle_slave2)
+
+#for j in range(0, len(Angle_List)):
+#    angle.append(Angle(Angle_List[0], Angle_List[1], Angle_List[2], Angle_List[3]))
 
 #for j in range(0, len(Angle_List)):
 #    angle.append(Angle(Angle_List[0], Angle_List[1], Angle_List[2], Angle_List[3]))
