@@ -22,7 +22,6 @@ def bond_list(bonds):
 def get_bonds(bondList, i):
    singleBond = str(bondList[i].attrib)
    singleBondSplit = singleBond.split()
-   return singleBondSplit
 
 def get_num_bonds(atom, bondList):
    numBonds = 0

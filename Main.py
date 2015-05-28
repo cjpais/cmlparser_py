@@ -7,7 +7,9 @@ Created on Thurs May 21 22:23:22 2015
 import sys
 import xml.etree.ElementTree as ET
 import helper as help
+import time
 
+#TODO NEED TO FIX BONDS
 #get filename from commandline
 file = sys.argv[1]
 atoms = []
@@ -15,6 +17,7 @@ atom = []
 bonds = []
 bond = []
 angle = []
+start_time = time.time()
 
 #create Atom object
 class Atom(object):
@@ -56,7 +59,7 @@ class Angle(object):
         self.Angle_type = Angle_type
         self.Angle_master = Angle_master
         self.Angle_slave1 = Angle_slave1
-        self.Angle_slave2 = Angle_slave2
+        self.Angle_slave2 = Angle_slave2 
 
 def find_angles(atom, bondList):
    Angles = []
@@ -78,6 +81,12 @@ for i in range(0, len(atomList)):
    aList = help.object_list(atoms[i])
    atom.append(Atom(aList[0],aList[1],aList[2],aList[3],aList[4]))
 
+#create a bunch of bond objects
+for j in range(0, len(bondList)):
+   bonds.append(help.get_atoms(bondList,j))
+   bList = help.bond_list(bonds[j])
+   bond.append(Bond(bList[0],bList[1],bList[2]))
+
 print "   ATOMS   "
 print "-----------"
 for k in range(0, len(atom)):
@@ -87,12 +96,6 @@ for k in range(0, len(atom)):
    print "Y position: %s" % atom[k].y_pos
    print "Z position: %s" % atom[k].z_pos
    print ""
-
-#create a bunch of bond objects
-for j in range(0, len(bondList)):
-   bonds.append(help.get_atoms(bondList,j))
-   bList = help.bond_list(bonds[j])
-   bond.append(Bond(bList[0],bList[1],bList[2]))
 
 print "   BONDS   "
 print "-----------"
@@ -121,4 +124,10 @@ for i in range(0,len(atom)):
 #for j in range(0, len(Angle_List)):
 #    angle.append(Angle(Angle_List[0], Angle_List[1], Angle_List[2], Angle_List[3]))
 
-
+#for j in range(0, len(Angle_List)):
+#    angle.append(Angle(Angle_List[0], Angle_List[1], Angle_List[2], Angle_List[3]))
+    
+for i in range(0, len(angle)):
+   print " The angle type is: %s \n The master angle is: %s \n The first slave angle is %s \n The second slave angle is %s \n" % (angle[i].Angle_type, angle[i].Angle_master, angle[i].Angle_slave1,angle[i].Angle_slave2)
+    
+print("--- %s seconds ---" % (time.time() - start_time))
