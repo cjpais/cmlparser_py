@@ -8,6 +8,7 @@ import sys
 import xml.etree.ElementTree as ET
 import helper as help
 import time
+import parse
 
 #get filename from commandline
 file = sys.argv[1]
