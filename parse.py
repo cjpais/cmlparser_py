@@ -80,7 +80,7 @@ class Dihedral(object):
         self.Angle_slave1 = Angle_slave1
         self.Angle_slave2 = Angle_slave2
 
-#create ring object TODO
+#create ring object
 class Ring(object):
     ring_type = 0
     atom1 = ""
@@ -110,6 +110,11 @@ class Ring(object):
             a6.ring = True
 
 def find_atom_by_id(checkId):
+    """ Given an atom id (such as a1), it will get and return the atom object
+
+    Keyword Arguments:
+    checkId -- The id to look for and return the atom
+    """
     for i in range(0, len(atom)):
         if atom[i].atom_id == checkId:
             return atom[i]
@@ -117,8 +122,7 @@ def find_atom_by_id(checkId):
         print "no atom found by that id" 
 
 def find_angles(atom, bondList):
-    """
-    Find the angles give an atoms and a list of bonds. Returns a list of angles
+    """ Find the angles give an atoms and a list of bonds. Returns a list of angles
 
     Keyword Arguments:
     atom -- The specific atom to find the angles for
@@ -134,7 +138,11 @@ def find_angles(atom, bondList):
     return Angles
 
 def create_atomobj(atomList):
-    #create a bunch of atoms objects
+    """ Create a bunch of atom objects based on the cml file. Returns a list of atom objects
+
+    Keyword Arguments:
+    atomList -- The list of atoms found in the cml file to pass in and split
+    """
     for i in range(0, len(atomList)):
         atoms.append(help.get_atoms(atomList,i))
         aList = help.object_list(atoms[i])
@@ -142,7 +150,11 @@ def create_atomobj(atomList):
     return atom
 
 def create_bondobj(bondList):
-    #create a bunch of bond objects
+    """ Create a bunch of bond objects based on the cml file. Returns a list of bond objects
+
+    Keyword Arguments:
+    bondList -- The list of bonds found in the cml file to pass in and split
+    """
     for j in range(0, len(bondList)):
         bonds.append(help.get_atoms(bondList,j))
         bList = help.bond_list(bonds[j])
@@ -150,7 +162,11 @@ def create_bondobj(bondList):
     return bond
 
 def print_atoms(atom):
-    # print the atoms
+    """ Prints a list of atoms created by create_atomobj
+
+    Keyword Arguments:
+    atom -- The list of atom objects to pass in and print
+    """
     print "   ATOMS   "
     print "-----------"
     for k in range(0, len(atom)):
@@ -162,7 +178,11 @@ def print_atoms(atom):
        print ""
 
 def print_bonds(bond):
-    # print the bonds
+    """ Prints a list of bond objects created by create_bondobj
+
+    Keyword Arguments:
+    bond -- The list of bond objects to pass in and print
+    """
     print "   BONDS   "
     print "-----------"
     for z in range(0, len(bond)):
@@ -173,7 +193,15 @@ def print_bonds(bond):
        print ""
 
 def print_find_angles(atom,bond):
-    # print the angles to (eventually) calculate
+    """
+    Given a list of atoms and bonds, it finds the angles of the atoms bonded to
+    other atoms. It returns a list of angle objects. It also prints the angles without
+    needing another statement.
+
+    Keyword Arguments:
+    atom -- The list of atom objects to pass in and generate angle objects
+    bond -- The list of bond objects to pass in and generate angle objects
+    """
     AngleList = []
     print "   ANGLES   "
     print "------------"
@@ -191,8 +219,12 @@ def print_find_angles(atom,bond):
     return AngleList
 
 def find_dihedrals(AngleList):
-    dihedrals = []
+    """ Finds the dihedrals given a list of Angle objects. Returns a list of dihedrals
 
+    Keyword Arguments:
+    AngleList -- A list of angle objects to calculate the dihedrals from
+    """
+    dihedrals = []
     for i in range(0,len(AngleList)):
         outerMaster = find_atom_by_id(AngleList[i].Angle_master)
         outerSlave1 = find_atom_by_id(AngleList[i].Angle_slave1)
@@ -224,6 +256,11 @@ def find_dihedrals(AngleList):
     return dihedrals
 
 def print_dihedrals(dihedrals):
+    """ Print the atom id's of a list of dihedrals
+
+    Keyword Arguments:
+    dihedrals -- the list of dihedrals to print
+    """
     for i in range(0,len(dihedrals)):
         print "Dihedral %s: %s" % (i,dihedrals[i])
         print "Dihedral Master1 %s" % (dihedrals[i].Angle_master1.atom_id)
@@ -232,6 +269,13 @@ def print_dihedrals(dihedrals):
         print "Dihedral Slave2 %s" % (dihedrals[i].Angle_slave2.atom_id)
 
 def find_ring(dihedrals):
+    """
+    Given a list of dihedrals finds if the dihedrals help to form a ring. It also
+    marks the atoms that form a ring. It creates a list of ring objects as well.
+
+    Keyword Arguments:
+    dihedrals -- The list of dihedrals to find if rings exist or not
+    """
     rings = []
     for i in range(0,len(dihedrals)):
         for j in range(0,len(dihedrals)):
@@ -253,6 +297,11 @@ def find_ring(dihedrals):
     return rings
 
 def print_ring(rings):
+    """ Prints the atom id's from what is contained in the Ring list.
+
+    Keyword Arguments:
+    rings -- The list of rings to print and get atom id's from
+    """
     for k in range(0,len(rings)):
         print rings[k]
         print rings[k].atom1.atom_id
