@@ -65,6 +65,17 @@ class Angle(object):
         self.Angle_slave1 = Angle_slave1
         self.Angle_slave2 = Angle_slave2
 
+#create dihedral object
+class Dihedral(object):
+    Angle1 = ""
+    Angle2 = ""
+    Angle3 = ""
+
+    def __init__(self, Angle1, Angle2, Angle3):
+        self.Angle1 = Angle1
+        self.Angle2 = Angle2
+        self.Angle3 = Angle3
+
 def find_atom_by_id(checkId):
     for i in range(0, len(atom)):
         if atom[i].atom_id == checkId:
