@@ -8,6 +8,7 @@ atom = []
 bonds = []
 bond = []
 angle = []
+ignore_list = []
 
 #create Atom object
 class Atom(object):
@@ -67,14 +68,46 @@ class Angle(object):
 
 #create dihedral object
 class Dihedral(object):
-    Angle1 = ""
-    Angle2 = ""
-    Angle3 = ""
+    #these are atoms not angles
+    Angle_master1 = ""
+    Angle_master2 = ""
+    Angle_slave1 = ""
+    Angle_slave2 = ""
 
-    def __init__(self, Angle1, Angle2, Angle3):
-        self.Angle1 = Angle1
-        self.Angle2 = Angle2
-        self.Angle3 = Angle3
+    def __init__(self, Angle_master1, Angle_master2, Angle_slave1, Angle_slave2):
+        self.Angle_master1 = Angle_master1
+        self.Angle_master2 = Angle_master2
+        self.Angle_slave1 = Angle_slave1
+        self.Angle_slave2 = Angle_slave2
+
+#create ring object TODO
+class Ring(object):
+    ring_type = 0
+    atom1 = ""
+    atom2 = ""
+    atom3 = ""
+    atom4 = ""
+    atom5 = ""
+    atom6 = ""
+
+    def __init__(self,a1,a2,a3,a4,a5,a6=None):
+        self.atom1 = a1
+        self.atom2 = a2
+        self.atom3 = a3
+        self.atom4 = a4
+        self.atom5 = a5
+        self.atom6 = a6
+
+        a1.ring = True
+        a2.ring = True
+        a3.ring = True
+        a4.ring = True
+        a5.ring = True
+
+        self.ring_type = 5
+        if a6 != None:
+            self.ring_type = 6
+            a6.ring = True
 
 def find_atom_by_id(checkId):
     for i in range(0, len(atom)):
@@ -149,42 +182,83 @@ def print_find_angles(atom,bond):
       angles = find_angles(atom[i],bond)
       if atom[i].Num_Bonds > 1:
         for x in range(0,len(angles)):
-          AngleList.append(angles[x])
-          print "Angle Type: %s" % angles[x].Angle_type
-          print "Master Angle: %s" % angles[x].Angle_master
-          print "Slave angle 1: %s" % angles[x].Angle_slave1
-          print "Slave angle 2: %s" % angles[x].Angle_slave2
-          print ""
+            AngleList.append(angles[x])
+            print "Angle Type: %s" % angles[x].Angle_type
+            print "Master Angle: %s" % angles[x].Angle_master
+            print "Slave angle 1: %s" % angles[x].Angle_slave1
+            print "Slave angle 2: %s" % angles[x].Angle_slave2
+            print ""
     return AngleList
 
 def find_dihedrals(AngleList):
-    #get dihedrals
-    print ""
     dihedrals = []
+
     for i in range(0,len(AngleList)):
-        angleMaster = find_atom_by_id(AngleList[i].Angle_master)
-        angleSlave1 = find_atom_by_id(AngleList[i].Angle_slave1)
-        if angleMaster.atom_type == "H" or angleSlave1.atom_type == "H":
+        outerMaster = find_atom_by_id(AngleList[i].Angle_master)
+        outerSlave1 = find_atom_by_id(AngleList[i].Angle_slave1)
+        outerSlave2 = find_atom_by_id(AngleList[i].Angle_slave2)
+        if outerMaster.atom_type == "H" or outerSlave1.atom_type == "H" or outerSlave2.atom_type == "H":
             continue
-        fList = [AngleList[i].Angle_master,AngleList[i].Angle_slave1]
-        fList.sort()
-        for j in range(i, len(AngleList)):
-            angleMaster2 = find_atom_by_id(AngleList[i].Angle_master)
-            angleSlave2 = find_atom_by_id(AngleList[i].Angle_slave2)
-            angleSlave12 = find_atom_by_id(AngleList[i].Angle_slave1)
-            if angleMaster2.atom_type == "H" or angleSlave12.atom_type == "H" or angleSlave2.atom_type == "H":
+        outerFirstTwo = [outerMaster,outerSlave1]
+        outerFirstTwo.sort()
+        for j in range(0,len(AngleList)):
+            dihedralObj = []
+            if AngleList[j] == AngleList[i]:
                 continue
-            sList = [AngleList[j].Angle_slave1,AngleList[j].Angle_slave2]
-            sList.sort()
-            sList2 = [AngleList[j].Angle_master,AngleList[j].Angle_slave1]
-            sList2.sort()
-            if fList == sList2:
-                dihedrals.append(AngleList[i])
-            elif fList == sList:
-                dihedrals.append(AngleList[i])
-    dihedrals = list(set(dihedrals))
+            innerMaster = find_atom_by_id(AngleList[j].Angle_master)
+            innerSlave1 = find_atom_by_id(AngleList[j].Angle_slave1)
+            innerSlave2 = find_atom_by_id(AngleList[j].Angle_slave2)
+            if innerMaster.atom_type == "H" or innerSlave1.atom_type == "H" or innerSlave2.atom_type == "H":
+                continue
+            innerFirstTwo = [innerMaster,innerSlave1]
+            innerSecondTwo = [innerSlave1,innerSlave2]
+            innerFirstTwo.sort()
+            innerSecondTwo.sort()
+            if outerFirstTwo == innerFirstTwo:
+                dihedralObj = [outerMaster,outerSlave1,outerSlave2,innerSlave2]
+            elif outerFirstTwo == innerSecondTwo:
+                dihedralObj = [outerMaster,outerSlave1,outerSlave2,innerMaster]
+            else:
+                continue
+            dihedrals.append(Dihedral(dihedralObj[0],dihedralObj[1],dihedralObj[2],dihedralObj[3]))
     return dihedrals
 
 def print_dihedrals(dihedrals):
     for i in range(0,len(dihedrals)):
         print "Dihedral %s: %s" % (i,dihedrals[i])
+        print "Dihedral Master1 %s" % (dihedrals[i].Angle_master1.atom_id)
+        print "Dihedral Master2 %s" % (dihedrals[i].Angle_master2.atom_id)
+        print "Dihedral Slave1 %s" % (dihedrals[i].Angle_slave1.atom_id)
+        print "Dihedral Slave2 %s" % (dihedrals[i].Angle_slave2.atom_id)
+
+def find_ring(dihedrals):
+    rings = []
+    for i in range(0,len(dihedrals)):
+        for j in range(0,len(dihedrals)):
+            if dihedrals[i] == dihedrals[j]:
+                continue
+            if dihedrals[i].Angle_master1.ring == True: 
+                continue
+            dList = [dihedrals[j].Angle_master1,dihedrals[j].Angle_master2,dihedrals[j].Angle_slave1,dihedrals[j].Angle_slave2]
+            outList = [dihedrals[i].Angle_master1,dihedrals[i].Angle_master2,dihedrals[i].Angle_slave1,dihedrals[i].Angle_slave2]
+            if dihedrals[i].Angle_master1 not in dList and dihedrals[i].Angle_master2 not in dList:
+                if dihedrals[i].Angle_slave1 in dList and dihedrals[i].Angle_slave2 in dList:
+                    rings.append(Ring(dihedrals[i].Angle_master1,dihedrals[i].Angle_master2,dihedrals[i].Angle_slave1,dihedrals[i].Angle_slave2,dihedrals[j].Angle_master1,dihedrals[j].Angle_master2))
+            elif dihedrals[i].Angle_master1 in dList and dihedrals[i].Angle_slave1 in dList and dihedrals[i].Angle_slave2 in dList:
+                if dihedrals[i].Angle_master2 not in dList:
+                    rings.append(Ring(dihedrals[i].Angle_master1,dihedrals[i].Angle_master2,dihedrals[i].Angle_slave1,dihedrals[i].Angle_slave2,dihedrals[j].Angle_master2))
+            elif dihedrals[i].Angle_master2 in dList and dihedrals[i].Angle_slave1 in dList and dihedrals[i].Angle_slave2 in dList:
+                if dihedrals[i].Angle_master1 not in dList:
+                    rings.append(Ring(dihedrals[i].Angle_master1,dihedrals[i].Angle_master2,dihedrals[i].Angle_slave1,dihedrals[i].Angle_slave2,dihedrals[j].Angle_master1))
+    return rings
+
+def print_ring(rings):
+    for k in range(0,len(rings)):
+        print rings[k]
+        print rings[k].atom1.atom_id
+        print rings[k].atom2.atom_id
+        print rings[k].atom3.atom_id
+        print rings[k].atom4.atom_id
+        print rings[k].atom5.atom_id
+        if rings[k].ring_type == 6:
+            print rings[k].atom6.atom_id

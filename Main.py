@@ -6,13 +6,8 @@ import parse as p
 
 #get filename from commandline
 file = sys.argv[1]
-atoms = []
-atom = []
-bonds = []
-bond = []
-angle = []
 
-#begin parsing, gets single atom. do in method
+#begin parsing
 tree = ET.parse(file)
 root = tree.getroot()
 atomList = root.findall('./atomArray/atom')
@@ -28,3 +23,6 @@ AngleList = p.print_find_angles(atom,bond)
 
 dihedrals = p.find_dihedrals(AngleList)
 p.print_dihedrals(dihedrals)
+
+ring = p.find_ring(dihedrals)
+p.print_ring(ring)
