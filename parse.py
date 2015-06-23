@@ -1,7 +1,5 @@
 import sys
-import xml.etree.ElementTree as ET
 import helper as help
-import time
 
 atoms = []
 atom = []
@@ -12,17 +10,18 @@ ignore_list = []
 
 #create Atom object
 class Atom(object):
+    id = ""
     atom_id = ""
     atom_type = ""
+    partial_charge = ""
+    sigma = ""
+    epsilon = ""
     x_pos = 0.000
     y_pos = 0.000
     z_pos = 0.000
     Num_Bonds = 0
     Atom_Bonds = []
-    primary = {}
-    secondary = {}
-    tertiary = {}
-    related = {}
+    Bonds_List = []
     ring = False
 
     #constructor
@@ -43,6 +42,8 @@ class Atom(object):
 #create Bond object 
 class Bond(object):
    bond_type = ""
+   bond_equib_len = ""
+   bond_force_const = ""
    bond_master = ""
    bond_slave = ""
 
@@ -54,7 +55,10 @@ class Bond(object):
 
 #create angle object
 class Angle(object):
+    #Angle_master specifies the master angle. Etc for slaves
     Angle_type = 0
+    Angle_equib_len = ""
+    Angle_force_const = ""
     Angle_master = ""
     Angle_slave1 = ""
     Angle_slave2 = ""
@@ -68,7 +72,9 @@ class Angle(object):
 
 #create dihedral object
 class Dihedral(object):
-    #these are atoms not angles
+    #these are dihedrals not angles
+    dihedral_eqib_len = ""
+    dihedral_force_const = ""
     Angle_master1 = ""
     Angle_master2 = ""
     Angle_slave1 = ""
@@ -83,6 +89,7 @@ class Dihedral(object):
 #create ring object
 class Ring(object):
     ring_type = 0
+    improper = False
     atom1 = ""
     atom2 = ""
     atom3 = ""
@@ -108,6 +115,39 @@ class Ring(object):
         if a6 != None:
             self.ring_type = 6
             a6.ring = True
+
+    def list(self):
+        rList = []
+        rList.append(self.atom1)
+        rList.append(self.atom2)
+        rList.append(self.atom3)
+        rList.append(self.atom4)
+        rList.append(self.atom5)
+        if self.atom6 != None:
+            rList.append(self.atom6)
+        return rList
+
+class Fused_Ring(object):
+    ring1 = ""
+    ring2 = ""
+
+    def __init__(self,ring1,ring2):
+        self.ring1 = ring1
+        self.ring2 = ring2
+
+class Molecule(object):
+    atom_list = ""
+    bond_list = ""
+    angle_list = ""
+    dihedral_list = ""
+    ring_list = ""
+
+    def __init__(self,atList,boList,anList,diList,riList):
+        self.atom_list = atList
+        self.bond_list = boList
+        self.angle_list = anList
+        self.dihedral_list = diList
+        self.ring_list = riList
 
 def find_atom_by_id(checkId):
     """ Given an atom id (such as a1), it will get and return the atom object
@@ -158,7 +198,13 @@ def create_bondobj(bondList):
     for j in range(0, len(bondList)):
         bonds.append(help.get_atoms(bondList,j))
         bList = help.bond_list(bonds[j])
-        bond.append(Bond(bList[0],bList[1],bList[2]))
+        newBond = Bond(bList[0],bList[1],bList[2])
+        bond.append(newBond)
+        fromAtom = find_atom_by_id(bList[1])
+        toAtom = find_atom_by_id(bList[2])
+        fromAtom.Atom_Bonds.append(bList[2])
+        toAtom.Atom_Bonds.append(bList[1])
+        toAtom.Bonds_List.append(newBond)
     return bond
 
 def print_atoms(atom):
@@ -175,6 +221,12 @@ def print_atoms(atom):
        print "X position: %s" % atom[k].x_pos
        print "Y position: %s" % atom[k].y_pos
        print "Z position: %s" % atom[k].z_pos
+       print "Atoms bonded to %s" % atom[k].Atom_Bonds
+       print "Number of bonds %s" % atom[k].Num_Bonds
+       print "OPLS id %s" % atom[k].id
+       print "OPLS sigma %s" % atom[k].sigma
+       print "OPLS epsilon %s" % atom[k].epsilon
+       print "OPLS partial charge %s" % atom[k].partial_charge
        print ""
 
 def print_bonds(bond):
@@ -195,8 +247,7 @@ def print_bonds(bond):
 def print_find_angles(atom,bond):
     """
     Given a list of atoms and bonds, it finds the angles of the atoms bonded to
-    other atoms. It returns a list of angle objects. It also prints the angles without
-    needing another statement.
+    other atoms. It returns a list of angle objects.
 
     Keyword Arguments:
     atom -- The list of atom objects to pass in and generate angle objects
@@ -211,12 +262,21 @@ def print_find_angles(atom,bond):
       if atom[i].Num_Bonds > 1:
         for x in range(0,len(angles)):
             AngleList.append(angles[x])
-            print "Angle Type: %s" % angles[x].Angle_type
-            print "Master Angle: %s" % angles[x].Angle_master
-            print "Slave angle 1: %s" % angles[x].Angle_slave1
-            print "Slave angle 2: %s" % angles[x].Angle_slave2
-            print ""
     return AngleList
+
+def print_angles(AngleList):
+    """
+    Given a list of angles, print the angle id's
+
+    Keyword Arguments:
+    AngleList -- The list of angles to print
+    """
+    for x in range(0,len(AngleList)):
+        print "Angle Type: %s" % AngleList[x].Angle_type
+        print "Master Angle: %s" % AngleList[x].Angle_master
+        print "Slave angle 1: %s" % AngleList[x].Angle_slave1
+        print "Slave angle 2: %s" % AngleList[x].Angle_slave2
+        print ""
 
 def find_dihedrals(AngleList):
     """ Finds the dihedrals given a list of Angle objects. Returns a list of dihedrals
@@ -276,6 +336,7 @@ def find_ring(dihedrals):
     Keyword Arguments:
     dihedrals -- The list of dihedrals to find if rings exist or not
     """
+    #TODO CLEAN THIS CODE A LOT
     rings = []
     for i in range(0,len(dihedrals)):
         for j in range(0,len(dihedrals)):
@@ -303,6 +364,8 @@ def print_ring(rings):
     rings -- The list of rings to print and get atom id's from
     """
     for k in range(0,len(rings)):
+        print ""
+        print "ring number %d" % k
         print rings[k]
         print rings[k].atom1.atom_id
         print rings[k].atom2.atom_id
