@@ -24,6 +24,13 @@ def get_molecule(atom,opls):
     is177(atom,opls)
     is178(atom,opls)
     is181(atom,opls)
+
+def assign_atom_vars(atom,number,opls):
+    atom.id = opls[number].atom_id
+    atom.sigma = opls[number].sigma
+    atom.epsilon = opls[number].epsilon
+    atom.partial_charge = opls[number].partial_charge
+    atom.bond_id = opls[number].bond_id
     
 def is181(atom,opls):
     number = 180
@@ -31,10 +38,7 @@ def is181(atom,opls):
         if atom.Num_Bonds == 3:
             if p.find_atom_by_id(atom.Atom_Bonds[0]).atom_type == "C" and p.find_atom_by_id(atom.Atom_Bonds[1]).atom_type == "C" and p.find_atom_by_id(atom.Atom_Bonds[2]).atom_type == "C":
                 print "181"
-                atom.id = opls[number].atom_id
-                atom.sigma = opls[number].sigma
-                atom.epsilon = opls[number].epsilon
-                atom.partial_charge = opls[number].partial_charge
+                assign_atom_vars(atom,number,opls)
                 return True
     return False
 
@@ -50,29 +54,26 @@ def is10(atom,opls):
                 atom.sigma = opls[number].sigma
                 atom.epsilon = opls[number].epsilon
                 atom.partial_charge = opls[number].partial_charge
+                atom.bond_id = opls[number].bond_id
                 return True
     return False
 
+
+#DO THIS WITH NEW METHOD
 def is13(atom,opls):
     number = 12
-    if atom.atom_type == "C":
-        if atom.Num_Bonds == 4:
-            bondList = [p.find_atom_by_id(atom.Atom_Bonds[0]),p.find_atom_by_id(atom.Atom_Bonds[1]),p.find_atom_by_id(atom.Atom_Bonds[2]),p.find_atom_by_id(atom.Atom_Bonds[3])]
-            bondList.sort()
-            if bondList[0].atom_type == "C" and bondList[1].atom_type == "C" and bondList[2].atom_type == "H" and bondList[3].atom_type == "H":
-                print "13"
-                atom.id = opls[number].atom_id
-                atom.sigma = opls[number].sigma
-                atom.epsilon = opls[number].epsilon
-                atom.partial_charge = opls[number].partial_charge
-                return True
-            elif bondList[0].atom_type == "N" and bondList[1].atom_type == "C" and bondList[2].atom_type == "H" and bondList[3].atom_type == "H":
-                print "13"
-                atom.id = opls[number].atom_id
-                atom.sigma = opls[number].sigma
-                atom.epsilon = opls[number].epsilon
-                atom.partial_charge = opls[number].partial_charge
-                return True
+    if atom.atom_type == "C" and atom.Num_Bonds == 4:
+        bondList = [p.find_atom_by_id(atom.Atom_Bonds[0]).atom_type,p.find_atom_by_id(atom.Atom_Bonds[1]).atom_type,p.find_atom_by_id(atom.Atom_Bonds[2]).atom_type,p.find_atom_by_id(atom.Atom_Bonds[3]).atom_type]
+        if "H" in bondList:
+            bondList.remove("H")
+            if "H" in bondList:
+                bondList.remove("H")
+                if "C" in bondList:
+                    bondList.remove("C")
+                    if "N" in bondList:
+                        assign_atom_vars(atom,number,opls)
+                    elif "C" in bondList:
+                        assign_atom_vars(atom,number,opls)
 
 def is90(atom,opls):
     number = 89
@@ -88,12 +89,14 @@ def is90(atom,opls):
                         atom.sigma = opls[number].sigma
                         atom.epsilon = opls[number].epsilon
                         atom.partial_charge = opls[number].partial_charge
+                        atom.bond_id = opls[number].bond_id
                         print "90"
                     elif "S" in bondList:
                         atom.id = opls[number].atom_id
                         atom.sigma = opls[number].sigma
                         atom.epsilon = opls[number].epsilon
                         atom.partial_charge = opls[number].partial_charge
+                        atom.bond_id = opls[number].bond_id
                         print "90"
                     elif "N" in bondList:
                         print "90"
@@ -101,6 +104,7 @@ def is90(atom,opls):
                         atom.sigma = opls[number].sigma
                         atom.epsilon = opls[number].epsilon
                         atom.partial_charge = opls[number].partial_charge
+                        atom.bond_id = opls[number].bond_id
 
 def is17(atom,opls):
     number = 16
@@ -115,6 +119,7 @@ def is17(atom,opls):
                     atom.sigma = opls[number].sigma
                     atom.epsilon = opls[number].epsilon
                     atom.partial_charge = opls[number].partial_charge
+                    atom.bond_id = opls[number].bond_id
 
 def is26(atom,opls):
     number = 25
@@ -125,6 +130,7 @@ def is26(atom,opls):
             atom.sigma = opls[number].sigma
             atom.epsilon = opls[number].epsilon
             atom.partial_charge = opls[number].partial_charge
+            atom.bond_id = opls[number].bond_id
 
 def is177(atom,opls):
     number = 176
@@ -136,6 +142,7 @@ def is177(atom,opls):
             atom.sigma = opls[number].sigma
             atom.epsilon = opls[number].epsilon
             atom.partial_charge = opls[number].partial_charge
+            atom.bond_id = opls[number].bond_id
 
 def is178(atom,opls):
     number = 177
@@ -145,6 +152,7 @@ def is178(atom,opls):
             atom.sigma = opls[number].sigma
             atom.epsilon = opls[number].epsilon
             atom.partial_charge = opls[number].partial_charge
+            atom.bond_id = opls[number].bond_id
             print "178"
 
 def is15(atom,opls):
@@ -160,4 +168,5 @@ def is15(atom,opls):
                     atom.sigma = opls[number].sigma
                     atom.epsilon = opls[number].epsilon
                     atom.partial_charge = opls[number].partial_charge
+                    atom.bond_id = opls[number].bond_id
                     print "15"

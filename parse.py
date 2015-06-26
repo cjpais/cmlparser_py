@@ -12,6 +12,7 @@ ignore_list = []
 class Atom(object):
     id = ""
     atom_id = ""
+    bond_id = ""
     atom_type = ""
     partial_charge = ""
     sigma = ""
@@ -21,7 +22,6 @@ class Atom(object):
     z_pos = 0.000
     Num_Bonds = 0
     Atom_Bonds = []
-    Bonds_List = []
     ring = False
 
     #constructor
@@ -39,7 +39,10 @@ class Atom(object):
         tertiary = {}
         related = {}
 
-#create Bond object 
+    #def calc_jones(self):
+        #TODO
+
+#create Bond object
 class Bond(object):
    bond_type = ""
    bond_equib_len = ""
@@ -62,7 +65,7 @@ class Angle(object):
     Angle_master = ""
     Angle_slave1 = ""
     Angle_slave2 = ""
-    
+
     #constructor
     def __init__(self, Angle_type, Angle_master, Angle_slave1, Angle_slave2):
         self.Angle_type = Angle_type
@@ -159,7 +162,7 @@ def find_atom_by_id(checkId):
         if atom[i].atom_id == checkId:
             return atom[i]
     else:
-        print "no atom found by that id" 
+        print "no atom found by that id"
 
 def find_angles(atom, bondList):
     """ Find the angles give an atoms and a list of bonds. Returns a list of angles
@@ -168,7 +171,7 @@ def find_angles(atom, bondList):
     atom -- The specific atom to find the angles for
     bondList -- The list of bonds the atom might have
     """
-    
+
     Angles = []
     if atom.Num_Bonds > 1:
        for i in range(0, atom.Num_Bonds):
@@ -204,10 +207,9 @@ def create_bondobj(bondList):
         toAtom = find_atom_by_id(bList[2])
         fromAtom.Atom_Bonds.append(bList[2])
         toAtom.Atom_Bonds.append(bList[1])
-        toAtom.Bonds_List.append(newBond)
     return bond
 
-def print_atoms(atom):
+def print_atoms(atom, boo = False):
     """ Prints a list of atoms created by create_atomobj
 
     Keyword Arguments:
@@ -223,13 +225,15 @@ def print_atoms(atom):
        print "Z position: %s" % atom[k].z_pos
        print "Atoms bonded to %s" % atom[k].Atom_Bonds
        print "Number of bonds %s" % atom[k].Num_Bonds
-       print "OPLS id %s" % atom[k].id
-       print "OPLS sigma %s" % atom[k].sigma
-       print "OPLS epsilon %s" % atom[k].epsilon
-       print "OPLS partial charge %s" % atom[k].partial_charge
+       if boo:
+           print "OPLS id %s" % atom[k].id
+           print "OPLS bond id %s" % atom[k].bond_id
+           print "OPLS sigma %s" % atom[k].sigma
+           print "OPLS epsilon %s" % atom[k].epsilon
+           print "OPLS partial charge %s" % atom[k].partial_charge
        print ""
 
-def print_bonds(bond):
+def print_bonds(bond,boo = False):
     """ Prints a list of bond objects created by create_bondobj
 
     Keyword Arguments:
@@ -238,10 +242,15 @@ def print_bonds(bond):
     print "   BONDS   "
     print "-----------"
     for z in range(0, len(bond)):
+       print "Bond Master Type: %s" % find_atom_by_id(bond[z].bond_master).atom_type
+       print "Bond Slave Type: %s" % find_atom_by_id(bond[z].bond_slave).atom_type
        print "Bond Number %s" % z
-       print "Bond Type: %s" % bond[z].bond_type
-       print "Bond Master(bonded from): %s" % bond[z].bond_master
-       print "Bond Slave(bonded to): %s" % bond[z].bond_slave
+       if boo:
+           print "Bond Type: %s" % bond[z].bond_type
+           print "Bond Master(bonded from): %s" % bond[z].bond_master
+           print "Bond Slave(bonded to): %s" % bond[z].bond_slave
+           print "OPLS Force Constant: %s" % bond[z].bond_force_const
+           print "OPLS Equilibrium Length: %s" % bond[z].bond_equib_len
        print ""
 
 def print_find_angles(atom,bond):
@@ -264,7 +273,7 @@ def print_find_angles(atom,bond):
             AngleList.append(angles[x])
     return AngleList
 
-def print_angles(AngleList):
+def print_angles(AngleList,boo = False):
     """
     Given a list of angles, print the angle id's
 
@@ -276,6 +285,19 @@ def print_angles(AngleList):
         print "Master Angle: %s" % AngleList[x].Angle_master
         print "Slave angle 1: %s" % AngleList[x].Angle_slave1
         print "Slave angle 2: %s" % AngleList[x].Angle_slave2
+        if boo:
+            if find_atom_by_id(AngleList[x].Angle_slave2).bond_id == "":
+                print ""
+                continue
+            print "Master Angle Bond: %s" % find_atom_by_id(AngleList[x].Angle_master).bond_id
+            print "Slave Angle Bond: %s" % find_atom_by_id(AngleList[x].Angle_slave1).bond_id
+            print "Slave Angle2 Bond: %s" % find_atom_by_id(AngleList[x].Angle_slave2).bond_id
+            if AngleList[x].Angle_equib_len == "":
+                print "No good data on these bonds"
+                print ""
+                continue
+            print "Equilibrium length %s" % AngleList[x].Angle_equib_len
+            print "Force Constant: %s" % AngleList[x].Angle_force_const
         print ""
 
 def find_dihedrals(AngleList):
@@ -342,7 +364,7 @@ def find_ring(dihedrals):
         for j in range(0,len(dihedrals)):
             if dihedrals[i] == dihedrals[j]:
                 continue
-            if dihedrals[i].Angle_master1.ring == True: 
+            if dihedrals[i].Angle_master1.ring == True:
                 continue
             dList = [dihedrals[j].Angle_master1,dihedrals[j].Angle_master2,dihedrals[j].Angle_slave1,dihedrals[j].Angle_slave2]
             outList = [dihedrals[i].Angle_master1,dihedrals[i].Angle_master2,dihedrals[i].Angle_slave1,dihedrals[i].Angle_slave2]
@@ -355,6 +377,18 @@ def find_ring(dihedrals):
             elif dihedrals[i].Angle_master2 in dList and dihedrals[i].Angle_slave1 in dList and dihedrals[i].Angle_slave2 in dList:
                 if dihedrals[i].Angle_master1 not in dList:
                     rings.append(Ring(dihedrals[i].Angle_master1,dihedrals[i].Angle_master2,dihedrals[i].Angle_slave1,dihedrals[i].Angle_slave2,dihedrals[j].Angle_master1))
+    return rings
+
+def remove_duplicates(l):
+    return list(set(l))
+
+def clean_rings(rings):
+    for i in range(0,len(rings)):
+        if rings[i].ring_type == 6:
+            dup_remove = rings[i].list()
+            dup_remove = remove_duplicates(dup_remove)
+            rings.remove(rings[i])
+            rings.append(Ring(dup_remove[0],dup_remove[1],dup_remove[2],dup_remove[3],dup_remove[4]))
     return rings
 
 def print_ring(rings):
@@ -374,3 +408,27 @@ def print_ring(rings):
         print rings[k].atom5.atom_id
         if rings[k].ring_type == 6:
             print rings[k].atom6.atom_id
+
+def find_fused(rings):
+    fused_rings = []
+    for i in range(0,len(rings)):
+        outRing = rings[i].list()
+        for j in range(0,len(rings)):
+            inRing = rings[j].list()
+            if outRing == inRing:
+                continue
+            counter = 0
+            for k in range(0,len(outRing)):
+                for j in range(0,len(inRing)):
+                    if outRing[k] == inRing[j]:
+                        counter += 1
+                        if counter == 2:
+                            fused_rings.append(Fused_Ring(inRing,outRing))
+                        continue
+    return fused_rings
+
+def print_fused(fused):
+    for i in range(0,len(fused)):
+        print ""
+        print fused[i].ring1
+        print fused[i].ring2

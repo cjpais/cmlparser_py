@@ -1,9 +1,10 @@
 import sys
 import xml.etree.ElementTree as ET
 import parse as p
-import typeofmolecule as t
+import typeofmolecule as tm
 import oplsparse as op
 import time
+import tester
 
 start = time.time()
 twoArg = False
@@ -42,12 +43,13 @@ p.print_dihedrals(dihedrals)
 
 #get the rings and print them
 ring = p.find_ring(dihedrals)
+ring = p.clean_rings(ring)
 p.print_ring(ring)
 
 #get the fused rings and print them
 #TODO
-"""fused = p.find_fused(ring)
-p.print_fused(fused)"""
+fused = p.find_fused(ring)
+p.print_fused(fused)
 
 #begin to parse the opls file
 opls_file = 'oplsaa.prm.txt'
@@ -59,14 +61,36 @@ oplsMatrix2 = [x for x in oplsMatrix if x != []]
 opls_atom_ids = op.getAtoms(oplsMatrix2)
 opls_van = op.getVan(oplsMatrix2)
 opls_partial = op.getPartial(oplsMatrix2)
+opls_bond = op.getBonds(oplsMatrix2)
+opls_angle = op.getAngles(oplsMatrix2)
 
 opls_atoms = op.create_opls_atom(opls_atom_ids,opls_van,opls_partial)
-op.print_opls_atoms(opls_atoms)
+#op.print_opls_atoms(opls_atoms)
 
+opls_bonds = op.create_opls_bond(opls_bond)
+#op.print_opls_bonds(opls_bonds)
+
+opls_angles = op.create_opls_angle(opls_angle)
+#op.print_opls_angles(opls_angles)
+
+#get opls molecules
 for i in range(0,len(atom)):
-    t.get_molecule(atom[i],opls_atoms)
+    tm.get_molecule(atom[i],opls_atoms)
 
-p.print_atoms(atom)
+#get opls bonds
+for i in range(0,len(bond)):
+    if p.find_atom_by_id(bond[i].bond_master).atom_type == "H" or p.find_atom_by_id(bond[i].bond_slave).atom_type == "H":
+        continue
+    op.get_bond(bond[i],opls_bonds)
+
+for i in range(0,len(AngleList)):
+    op.get_angles(AngleList[i],opls_angles)
+
+p.print_atoms(atom,True)
+p.print_bonds(bond,True)
+p.print_angles(AngleList,True)
+
+tester.count_atoms(opls_atoms,atom)
 
 print("--- %s seconds ---" % (time.time() - start))
 
