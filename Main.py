@@ -83,15 +83,19 @@ for i in range(0,len(bond)):
         continue
     op.get_bond(bond[i],opls_bonds)
 
+#get opls angles
 for i in range(0,len(AngleList)):
     op.get_angles(AngleList[i],opls_angles)
 
+#print again to see the opls changes, this time printing the extra info
 p.print_atoms(atom,True)
 p.print_bonds(bond,True)
 p.print_angles(AngleList,True)
 
+#count the atoms found earlier by get_molecule
 tester.count_atoms(opls_atoms,atom)
 
+#print the time it takes to make sure it doesnt take too long
 print("--- %s seconds ---" % (time.time() - start))
 
 if twoArg:

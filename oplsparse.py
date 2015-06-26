@@ -45,6 +45,12 @@ class OPLS_Angle(object):
         self.equib_len = equib_len
 
 def getAtoms(oplslist):
+    """ Reads in oplsaa file and gets the values and ids for the different kinds
+        of atoms. Returns a list of all the ids and values associated with the atoms
+
+        Keyword Arguments:
+        oplslist - the oplsaa file
+    """
     atomList = []
     for i in range(0,len(oplslist)):
         curLine = oplslist[i]
@@ -53,6 +59,12 @@ def getAtoms(oplslist):
     return atomList
 
 def getBonds(oplslist):
+    """ Reads in oplsaa file and gets the values and ids for the different kinds
+        of bonds. Returns a list of all the ids and values associated with the bonds
+
+        Keyword Arguments:
+        oplslist - the oplsaa file
+    """
     bondList = []
     for i in range(0,len(oplslist)):
         curLine = oplslist[i]
@@ -61,6 +73,12 @@ def getBonds(oplslist):
     return bondList
 
 def get_bond(aBond,opls):
+    """ Sets the equil_len and force constant for each bond. No returns, is void.
+
+    Keyword Arguments:
+    aBond - The list of bonds to set the opls values
+    opls - The list of opls bond values created by getBonds
+    """
     master_id = p.find_atom_by_id(aBond.bond_master).bond_id
     slave_id = p.find_atom_by_id(aBond.bond_slave).bond_id
     if slave_id == "":
@@ -74,6 +92,12 @@ def get_bond(aBond,opls):
             aBond.bond_equib_len = opls[i].equib_len
 
 def getAngles(oplslist):
+    """ Reads in oplsaa file and gets the values and ids for the different kinds
+        of angles. Returns a list of all the ids and values associated with the angles
+
+        Keyword Arguments:
+        oplslist - the oplsaa file
+    """
     bondList = []
     for i in range(0,len(oplslist)):
         curLine = oplslist[i]
@@ -81,8 +105,15 @@ def getAngles(oplslist):
             bondList.append(curLine)
     return bondList
 
-# figure this shit out TODO
 def get_angles(angle,opls):
+    """ Gets the angles from a given opls file and assigns them to the relevant
+        angle objects from the parse file. Is a void method
+
+        Keyword Arguments:
+        angle - The list of angle objects to add attributes to
+        opls - The opls angle objects from the opls file
+    """
+    #PROBABLY SLIGHTLY INCORRECT TODO
     a_master = p.find_atom_by_id(angle.Angle_master).bond_id
     a_slave1 = p.find_atom_by_id(angle.Angle_slave1).bond_id
     a_slave2 = p.find_atom_by_id(angle.Angle_slave2).bond_id
@@ -103,8 +134,14 @@ def get_angles(angle,opls):
             if oplsList[0] == opls[i].angle_slave2 and oplsList[1] == opls[i].angle_master and oplsList[2] == opls[i].angle_slave1:
                 angle.Angle_equib_len = opls[i].equib_len
                 angle.Angle_force_const = opls[i].force_const
-    
+
 def getVan(oplslist):
+    """ Gets the van der waals information from the split opls file. Returns a
+        list of the relevant van der waals information
+
+        Keyword Arguments:
+        oplslist - The split opls file
+    """
     vanList = []
     for i in range(0,len(oplslist)):
         curLine = oplslist[i]
@@ -113,6 +150,12 @@ def getVan(oplslist):
     return vanList
 
 def getPartial(oplslist):
+    """ Gets the partial charges from the split opls file
+        Returns a list of the relevant partial charge information
+
+        Keyword Arguments:
+        oplslist - The split opls file
+    """
     partialList = []
     for i in range(0,len(oplslist)):
         curLine = oplslist[i]
@@ -121,6 +164,12 @@ def getPartial(oplslist):
     return partialList
 
 def splitList(oplslist):
+    """ Splits the opls file to make it easier to read and process in other methods.
+        Returns a list of all the data in the opls file
+
+        Keyword Arguments:
+        oplslist - The original opls file to process
+    """
     bigList = []
     for i in range(0,len(oplslist)):
         split = oplslist[i].split()
@@ -128,6 +177,14 @@ def splitList(oplslist):
     return bigList
 
 def create_opls_atom(atom,van,partial):
+    """ Creates and OPLS_Atom object from a the list of opls data found earlier
+        Returns a list of all the important opls atom data
+
+        Keyword Arguments:
+        atom - The atoms from the opls file to take in and proccess
+        van - The van der waals information to take in and proccess from the opls file
+        partial - The partial charge information to take in and proccess from the opls file
+    """
     opls_atoms = []
     for i in range(0,len(atom)):
         aList =  atom[i]
@@ -137,6 +194,11 @@ def create_opls_atom(atom,van,partial):
     return opls_atoms
 
 def print_opls_atoms(opls_atoms):
+    """ Prints the list of opls atoms created earlier in this file
+
+        Keyword Arguments:
+        opls_atoms - The list of opls atoms to print
+    """
     print "----------OPLS ATOMS----------"
     for i in range(0,len(opls_atoms)):
         print ""
@@ -148,6 +210,12 @@ def print_opls_atoms(opls_atoms):
         print opls_atoms[i].partial_charge
 
 def create_opls_bond(bond):
+    """ Creates and OPLS_Bond object from a the list of opls data found earlier
+        Returns a list of all the important opls bond data
+
+        Keyword Arguments:
+        bond - The bonds from the opls file to take in and proccess
+    """
     opls_bonds = []
     for i in range(0,len(bond)):
         bList = bond[i]
@@ -155,6 +223,11 @@ def create_opls_bond(bond):
     return opls_bonds
 
 def print_opls_bonds(opls_bonds):
+    """ Prints the list of opls bonds created earlier in this file
+
+        Keyword Arguments:
+        opls_bonds - The list of opls bond to print
+    """
     print "----------OPLS BONDS----------"
     for i in range(0,len(opls_bonds)):
         print ""
@@ -164,6 +237,12 @@ def print_opls_bonds(opls_bonds):
         print opls_bonds[i].equib_len
 
 def create_opls_angle(angle):
+    """ Creates and OPLS_Angle object from a the list of opls data found earlier
+        Returns a list of all the important opls angle data
+
+        Keyword Arguments:
+        angle - The angles from the opls file to take in and proccess
+    """
     opls_angles = []
     for i in range(0,len(angle)):
         anList = angle[i]
@@ -171,6 +250,11 @@ def create_opls_angle(angle):
     return opls_angles
 
 def print_opls_angles(opls_angles):
+    """ Prints the list of opls angles created earlier in this file
+
+        Keyword Arguments:
+        opls_angles - The list of opls angles to print
+    """
     print "----------OPLS ANGLES----------"
     for i in range(0,len(opls_angles)):
         print ""
