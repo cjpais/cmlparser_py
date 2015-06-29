@@ -38,12 +38,12 @@ AngleList = p.print_find_angles(atom,bond)
 p.print_angles(AngleList)
 
 #get the dihedrals and print them
-dihedrals = p.find_dihedrals(AngleList)
+dihedrals = p.find_dihedrals_new(AngleList)
 p.print_dihedrals(dihedrals)
 
 #get the rings and print them
-ring = p.find_ring(dihedrals)
-ring = p.clean_rings(ring)
+ring = p.find_6ring(dihedrals)
+#ring = p.clean_rings(ring)
 p.print_ring(ring)
 
 #get the fused rings and print them
@@ -88,9 +88,9 @@ for i in range(0,len(AngleList)):
     op.get_angles(AngleList[i],opls_angles)
 
 #print again to see the opls changes, this time printing the extra info
-p.print_atoms(atom,True)
-p.print_bonds(bond,True)
-p.print_angles(AngleList,True)
+#p.print_atoms(atom,True)
+#p.print_bonds(bond,True)
+#p.print_angles(AngleList,True)
 
 #count the atoms found earlier by get_molecule
 tester.count_atoms(opls_atoms,atom)
