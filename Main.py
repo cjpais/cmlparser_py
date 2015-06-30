@@ -34,7 +34,9 @@ p.print_atoms(atom)
 p.print_bonds(bond)
 
 #get a list of angles formed by the bonds
-AngleList = p.print_find_angles(atom,bond)
+for i in range(0,len(atom)):
+    p.get_num_bonds(atom[i],bond)
+AngleList = p.print_find_angles_new(atom,bond)
 p.print_angles(AngleList)
 
 #get the dihedrals and print them
@@ -42,8 +44,8 @@ dihedrals = p.find_dihedrals_new(AngleList)
 p.print_dihedrals(dihedrals)
 
 #get the rings and print them
-ring = p.find_6ring(dihedrals)
-#ring = p.clean_rings(ring)
+ring = p.find_ring(dihedrals)
+ring = p.clean_rings(ring)
 p.print_ring(ring)
 
 #get the fused rings and print them
