@@ -7,7 +7,7 @@ file otherwise there may be issues.
 
 There are a few command line flags to be aware of:
 
-python Main.py <cml-filename> <output-filename> <aa>
+python Main.py cml-filename output-filename aa
 
 * cml-filename - The name and location of the cml file you would like to parse
 * output-filename - If you want to output the debugging output/lammps to a file
