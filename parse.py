@@ -7,6 +7,7 @@ bonds = []
 bond = []
 angle = []
 ignore_list = []
+hydrogen = False
 
 #create Atom object
 class Atom(object):
@@ -164,22 +165,6 @@ def find_atom_by_id(checkId):
     else:
         print "no atom found by that id"
 
-def find_angles(atom, bondList):
-    """ Find the angles give an atoms and a list of bonds. Returns a list of angles
-
-    Keyword Arguments:
-    atom -- The specific atom to find the angles for
-    bondList -- The list of bonds the atom might have
-    """
-
-    Angles = []
-    if atom.Num_Bonds > 1:
-       for i in range(0, atom.Num_Bonds):
-          ang_type = 1
-          if atom.Bonds[0] != atom.Bonds[i]:
-              Angles.append(Angle(ang_type,atom.Bonds[0],atom.atom_id,atom.Bonds[i]))
-    return Angles
-
 def create_atomobj(atomList):
     """ Create a bunch of atom objects based on the cml file. Returns a list of atom objects
 
@@ -253,7 +238,30 @@ def print_bonds(bond,boo = False):
            print "OPLS Equilibrium Length: %s" % bond[z].bond_equib_len
        print ""
 
-def print_find_angles(atom,bond):
+def get_num_bonds(atom, bondList):
+   """
+   Gets the number of bonds for a specified atom and gets the list of other
+   atoms it is bonded to
+
+   Keyword Arguments:
+   atom -- The atom you want to get the number of bonds for
+   bondList -- the list of bonds to check against
+   """
+   
+   numBonds = 0
+   bondedTo = []
+   for i in range(0,len(bondList)):
+      if atom.atom_id == bondList[i].bond_master or atom.atom_id == bondList[i].bond_slave:
+         if atom.atom_id == bondList[i].bond_master:
+            numBonds += 1
+            bondedTo.append(bondList[i].bond_slave)
+         if atom.atom_id == bondList[i].bond_slave:
+            numBonds += 1
+            bondedTo.append(bondList[i].bond_master)
+   atom.Num_Bonds = numBonds #set atoms number of bonds
+   atom.Bonds = bondedTo     #set the atoms it is bonded to
+
+def print_find_angles_new(atom,bond):
     """
     Given a list of atoms and bonds, it finds the angles of the atoms bonded to
     other atoms. It returns a list of angle objects.
@@ -266,11 +274,13 @@ def print_find_angles(atom,bond):
     print "   ANGLES   "
     print "------------"
     for i in range(0,len(atom)):
-      help.get_num_bonds(atom[i],bond)
-      angles = find_angles(atom[i],bond)
-      if atom[i].Num_Bonds > 1:
-        for x in range(0,len(angles)):
-            AngleList.append(angles[x])
+        if atom[i].Num_Bonds > 1:
+            help.get_num_bonds(atom[i],bond)
+            for j in range(0,atom[i].Num_Bonds):
+                for k in range(j,atom[i].Num_Bonds):
+                    atomBonds = atom[i].Atom_Bonds
+                    if atomBonds[k] != atomBonds[j]:
+                        AngleList.append(Angle(1,atom[i].atom_id,atomBonds[j],atomBonds[k]))
     return AngleList
 
 def print_angles(AngleList,boo = False):
@@ -281,6 +291,7 @@ def print_angles(AngleList,boo = False):
     AngleList -- The list of angles to print
     """
     for x in range(0,len(AngleList)):
+        print "Angle number %s" % x
         print "Angle Type: %s" % AngleList[x].Angle_type
         print "Master Angle: %s" % AngleList[x].Angle_master
         print "Slave angle 1: %s" % AngleList[x].Angle_slave1
@@ -300,41 +311,49 @@ def print_angles(AngleList,boo = False):
             print "Force Constant: %s" % AngleList[x].Angle_force_const
         print ""
 
-def find_dihedrals(AngleList):
-    """ Finds the dihedrals given a list of Angle objects. Returns a list of dihedrals
+def get_unique_dihedrals(dihedrals):
+    dihedrals_new = []
+    for i in range(0,len(dihedrals)):
+        for j in range(0,len(dihedrals)):
+            if dihedrals[i] == dihedrals[j]:
+                continue
+            if dihedrals[i].Angle_master1 == dihedrals[j].Angle_master2 and dihedrals[i].Angle_master2 == dihedrals[j].Angle_master1:
+                if dihedrals[i].Angle_slave1 == dihedrals[j].Angle_slave2 and dihedrals[i].Angle_slave2 == dihedrals[j].Angle_slave1:
+                    dihedrals_new.append(dihedrals[j])
+    dihedrals_new = remove_duplicates(dihedrals_new)
+    for i in range(0,len(dihedrals_new)):
+        dihedrals.remove(dihedrals_new[i])
+    return dihedrals
 
-    Keyword Arguments:
-    AngleList -- A list of angle objects to calculate the dihedrals from
-    """
+def find_dihedrals_new(AngleList):
     dihedrals = []
     for i in range(0,len(AngleList)):
         outerMaster = find_atom_by_id(AngleList[i].Angle_master)
         outerSlave1 = find_atom_by_id(AngleList[i].Angle_slave1)
         outerSlave2 = find_atom_by_id(AngleList[i].Angle_slave2)
-        if outerMaster.atom_type == "H" or outerSlave1.atom_type == "H" or outerSlave2.atom_type == "H":
-            continue
-        outerFirstTwo = [outerMaster,outerSlave1]
-        outerFirstTwo.sort()
+        outerList = [outerMaster,outerSlave1,outerSlave2]
+        if hydrogen == False:
+            if outerMaster.atom_type == "H" or outerSlave1.atom_type == "H" or outerSlave2.atom_type == "H":
+                continue
         for j in range(0,len(AngleList)):
-            dihedralObj = []
             if AngleList[j] == AngleList[i]:
                 continue
             innerMaster = find_atom_by_id(AngleList[j].Angle_master)
             innerSlave1 = find_atom_by_id(AngleList[j].Angle_slave1)
             innerSlave2 = find_atom_by_id(AngleList[j].Angle_slave2)
-            if innerMaster.atom_type == "H" or innerSlave1.atom_type == "H" or innerSlave2.atom_type == "H":
-                continue
-            innerFirstTwo = [innerMaster,innerSlave1]
-            innerSecondTwo = [innerSlave1,innerSlave2]
-            innerFirstTwo.sort()
-            innerSecondTwo.sort()
-            if outerFirstTwo == innerFirstTwo:
-                dihedralObj = [outerMaster,outerSlave1,outerSlave2,innerSlave2]
-            elif outerFirstTwo == innerSecondTwo:
-                dihedralObj = [outerMaster,outerSlave1,outerSlave2,innerMaster]
-            else:
-                continue
-            dihedrals.append(Dihedral(dihedralObj[0],dihedralObj[1],dihedralObj[2],dihedralObj[3]))
+            inF = [innerMaster,innerSlave1]
+            inS = [innerSlave1,innerSlave2]
+            inFL = [innerMaster,innerSlave2]
+            if hydrogen == False:
+                if innerMaster.atom_type == "H" or innerSlave1.atom_type == "H" or innerSlave2.atom_type == "H":
+                    continue
+            if outerList[0] in inF and outerList[1] in inF:
+                dihedrals.append(Dihedral(outerMaster,outerSlave1,outerSlave2,innerSlave2))
+            elif outerList[0] in inS and outerList[1] in inS:
+                dihedrals.append(Dihedral(outerMaster,outerSlave1,outerSlave2,innerMaster))
+            elif outerList[0] in inFL and outerList[1] in inFL:
+                dihedrals.append(Dihedral(outerMaster,outerSlave1,outerSlave2,innerSlave1))
+    dihedrals = get_unique_dihedrals(dihedrals)
     return dihedrals
 
 def print_dihedrals(dihedrals):
@@ -343,6 +362,8 @@ def print_dihedrals(dihedrals):
     Keyword Arguments:
     dihedrals -- the list of dihedrals to print
     """
+    print "DIHEDRALS"
+    print "---------"
     for i in range(0,len(dihedrals)):
         print "Dihedral %s: %s" % (i,dihedrals[i])
         print "Dihedral Master1 %s" % (dihedrals[i].Angle_master1.atom_id)
@@ -377,6 +398,7 @@ def find_ring(dihedrals):
             elif dihedrals[i].Angle_master2 in dList and dihedrals[i].Angle_slave1 in dList and dihedrals[i].Angle_slave2 in dList:
                 if dihedrals[i].Angle_master1 not in dList:
                     rings.append(Ring(dihedrals[i].Angle_master1,dihedrals[i].Angle_master2,dihedrals[i].Angle_slave1,dihedrals[i].Angle_slave2,dihedrals[j].Angle_master1))
+    print rings
     return rings
 
 def remove_duplicates(l):
@@ -397,8 +419,12 @@ def clean_rings(rings):
         if rings[i].ring_type == 6:
             dup_remove = rings[i].list()
             dup_remove = remove_duplicates(dup_remove)
-            rings.remove(rings[i])
-            rings.append(Ring(dup_remove[0],dup_remove[1],dup_remove[2],dup_remove[3],dup_remove[4]))
+            if len(dup_remove) == 5:
+                rings.remove(rings[i])
+                rings.append(Ring(dup_remove[0],dup_remove[1],dup_remove[2],dup_remove[3],dup_remove[4]))
+            elif len(dup_remove) == 6:
+                rings.remove(rings[i])
+                rings.append(Ring(dup_remove[0],dup_remove[1],dup_remove[2],dup_remove[3],dup_remove[4],dup_remove[5]))
     return rings
 
 def print_ring(rings):
@@ -407,6 +433,7 @@ def print_ring(rings):
     Keyword Arguments:
     rings -- The list of rings to print and get atom id's from
     """
+    print "----------RINGS----------"
     for k in range(0,len(rings)):
         print ""
         print "ring number %d" % k
@@ -449,7 +476,8 @@ def print_fused(fused):
         Keyword Arguments:
         fused - The list of fused rings generated by find_fused
     """
+    print "----------FUSED RINGS---------"
     for i in range(0,len(fused)):
         print ""
-        print fused[i].ring1
-        print fused[i].ring2
+        print "fused 1 %s" % fused[i].ring1
+        print "fused 2 %s" % fused[i].ring2
