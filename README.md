@@ -7,8 +7,8 @@ file otherwise there may be issues.
 
 There are a few command line flags to be aware of:
 
-Flags with a % next to them are optional.
-python Main.py <cml-filename> %<output-filename> %<aa>
-*  <cml-filename> - The name and location of the cml file you would like to parse
-*  %<output-filename> - If you want to output the debugging output/lammps to a file
-*  %<aa> - Specifiy "aa" if you want to use an opls-aa(all atom) forcefield rather than a opls-ua(united atom) forcefield
+python Main.py <cml-filename> <output-filename> %<aa>
+
+<cml-filename> - The name and location of the cml file you would like to parse
+OPTIONAL - <output-filename> - If you want to output the debugging output/lammps to a file
+OPTIONAL - <aa> - Specifiy "aa" if you want to use an opls-aa(all atom) forcefield rather than a opls-ua(united atom) forcefield
