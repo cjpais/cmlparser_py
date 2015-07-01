@@ -117,10 +117,6 @@ def get_angles(angle,opls):
     a_master = p.find_atom_by_id(angle.Angle_master).bond_id
     a_slave1 = p.find_atom_by_id(angle.Angle_slave1).bond_id
     a_slave2 = p.find_atom_by_id(angle.Angle_slave2).bond_id
-    print ""
-    print a_master
-    print a_slave1
-    print a_slave2
     if a_slave1 == "" or a_slave2 == "":
         return
     for i in range(0,len(opls)):

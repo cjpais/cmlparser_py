@@ -7,6 +7,7 @@ bonds = []
 bond = []
 angle = []
 ignore_list = []
+hydrogen = False
 
 #create Atom object
 class Atom(object):
@@ -290,7 +291,7 @@ def print_angles(AngleList,boo = False):
     AngleList -- The list of angles to print
     """
     for x in range(0,len(AngleList)):
-        print x
+        print "Angle number %s" % x
         print "Angle Type: %s" % AngleList[x].Angle_type
         print "Master Angle: %s" % AngleList[x].Angle_master
         print "Slave angle 1: %s" % AngleList[x].Angle_slave1
@@ -310,43 +311,6 @@ def print_angles(AngleList,boo = False):
             print "Force Constant: %s" % AngleList[x].Angle_force_const
         print ""
 
-def find_dihedrals(AngleList):
-    """ Finds the dihedrals given a list of Angle objects. Returns a list of dihedrals
-
-    Keyword Arguments:
-    AngleList -- A list of angle objects to calculate the dihedrals from
-    """
-    dihedrals = []
-    for i in range(0,len(AngleList)):
-        outerMaster = find_atom_by_id(AngleList[i].Angle_master)
-        outerSlave1 = find_atom_by_id(AngleList[i].Angle_slave1)
-        outerSlave2 = find_atom_by_id(AngleList[i].Angle_slave2)
-        if outerMaster.atom_type == "H" or outerSlave1.atom_type == "H" or outerSlave2.atom_type == "H":
-            continue
-        outerFirstTwo = [outerMaster,outerSlave1]
-        outerFirstTwo.sort()
-        for j in range(0,len(AngleList)):
-            dihedralObj = []
-            if AngleList[j] == AngleList[i]:
-                continue
-            innerMaster = find_atom_by_id(AngleList[j].Angle_master)
-            innerSlave1 = find_atom_by_id(AngleList[j].Angle_slave1)
-            innerSlave2 = find_atom_by_id(AngleList[j].Angle_slave2)
-            if innerMaster.atom_type == "H" or innerSlave1.atom_type == "H" or innerSlave2.atom_type == "H":
-                continue
-            innerFirstTwo = [innerMaster,innerSlave1]
-            innerSecondTwo = [innerSlave1,innerSlave2]
-            innerFirstTwo.sort()
-            innerSecondTwo.sort()
-            if outerFirstTwo == innerFirstTwo:
-                dihedralObj = [outerMaster,outerSlave1,outerSlave2,innerSlave2]
-            elif outerFirstTwo == innerSecondTwo:
-                dihedralObj = [outerMaster,outerSlave1,outerSlave2,innerMaster]
-            else:
-                continue
-            dihedrals.append(Dihedral(dihedralObj[0],dihedralObj[1],dihedralObj[2],dihedralObj[3]))
-    return dihedrals
-
 def get_unique_dihedrals(dihedrals):
     dihedrals_new = []
     for i in range(0,len(dihedrals)):
@@ -356,8 +320,6 @@ def get_unique_dihedrals(dihedrals):
             if dihedrals[i].Angle_master1 == dihedrals[j].Angle_master2 and dihedrals[i].Angle_master2 == dihedrals[j].Angle_master1:
                 if dihedrals[i].Angle_slave1 == dihedrals[j].Angle_slave2 and dihedrals[i].Angle_slave2 == dihedrals[j].Angle_slave1:
                     dihedrals_new.append(dihedrals[j])
-    print dihedrals
-    print dihedrals_new
     dihedrals_new = remove_duplicates(dihedrals_new)
     for i in range(0,len(dihedrals_new)):
         dihedrals.remove(dihedrals_new[i])
@@ -370,8 +332,9 @@ def find_dihedrals_new(AngleList):
         outerSlave1 = find_atom_by_id(AngleList[i].Angle_slave1)
         outerSlave2 = find_atom_by_id(AngleList[i].Angle_slave2)
         outerList = [outerMaster,outerSlave1,outerSlave2]
-        if outerMaster.atom_type == "H" or outerSlave1.atom_type == "H" or outerSlave2.atom_type == "H":
-            continue
+        if hydrogen == False:
+            if outerMaster.atom_type == "H" or outerSlave1.atom_type == "H" or outerSlave2.atom_type == "H":
+                continue
         for j in range(0,len(AngleList)):
             if AngleList[j] == AngleList[i]:
                 continue
@@ -381,19 +344,17 @@ def find_dihedrals_new(AngleList):
             inF = [innerMaster,innerSlave1]
             inS = [innerSlave1,innerSlave2]
             inFL = [innerMaster,innerSlave2]
-            if innerMaster.atom_type == "H" or innerSlave1.atom_type == "H" or innerSlave2.atom_type == "H":
-                continue
+            if hydrogen == False:
+                if innerMaster.atom_type == "H" or innerSlave1.atom_type == "H" or innerSlave2.atom_type == "H":
+                    continue
             if outerList[0] in inF and outerList[1] in inF:
-                print "dihedral"
                 dihedrals.append(Dihedral(outerMaster,outerSlave1,outerSlave2,innerSlave2))
             elif outerList[0] in inS and outerList[1] in inS:
-                print "dihedral2"
+                dihedrals.append(Dihedral(outerMaster,outerSlave1,outerSlave2,innerMaster))
             elif outerList[0] in inFL and outerList[1] in inFL:
                 dihedrals.append(Dihedral(outerMaster,outerSlave1,outerSlave2,innerSlave1))
-                print "dihedral3"
     dihedrals = get_unique_dihedrals(dihedrals)
     return dihedrals
-
 
 def print_dihedrals(dihedrals):
     """ Print the atom id's of a list of dihedrals
@@ -401,6 +362,8 @@ def print_dihedrals(dihedrals):
     Keyword Arguments:
     dihedrals -- the list of dihedrals to print
     """
+    print "DIHEDRALS"
+    print "---------"
     for i in range(0,len(dihedrals)):
         print "Dihedral %s: %s" % (i,dihedrals[i])
         print "Dihedral Master1 %s" % (dihedrals[i].Angle_master1.atom_id)

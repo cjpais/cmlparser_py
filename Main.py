@@ -8,12 +8,18 @@ import tester
 
 start = time.time()
 twoArg = False
+hydrogen = False
 
 if len(sys.argv) > 2:
     print "ran"
     old_stdout = sys.stdout
     log_file = open(sys.argv[2],"w")
     sys.stdout = log_file
+
+if len(sys.argv) == 4:
+    if sys.argv[3] == "aa":
+        hydrogen = True
+        p.hydrogen = True
 
 #get filename from commandline
 cmlfile = sys.argv[1]
