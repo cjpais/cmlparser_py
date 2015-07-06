@@ -36,28 +36,28 @@ atom = p.create_atomobj(atomList)
 bond = p.create_bondobj(bondList)
 
 #print the atom and bond objects
-p.print_atoms(atom)
-p.print_bonds(bond)
+#p.print_atoms(atom)
+#p.print_bonds(bond)
 
 #get a list of angles formed by the bonds
 for i in range(0,len(atom)):
     p.get_num_bonds(atom[i],bond)
 AngleList = p.print_find_angles_new(atom,bond)
-p.print_angles(AngleList)
+#p.print_angles(AngleList)
 
 #get the dihedrals and print them
 dihedrals = p.find_dihedrals_new(AngleList)
-p.print_dihedrals(dihedrals)
+#p.print_dihedrals(dihedrals)
 
 #get the rings and print them
 ring = p.find_ring(dihedrals)
 ring = p.clean_rings(ring)
-p.print_ring(ring)
+#p.print_ring(ring)
 
 #get the fused rings and print them
 #TODO
 fused = p.find_fused(ring)
-p.print_fused(fused)
+#p.print_fused(fused)
 
 #begin to parse the opls file
 opls_file = 'oplsaa.prm.txt'
@@ -101,10 +101,64 @@ for i in range(0,len(AngleList)):
 #p.print_angles(AngleList,True)
 
 #count the atoms found earlier by get_molecule
-tester.count_atoms(opls_atoms,atom)
+#tester.count_atoms(opls_atoms,atom)
+num_diff_atoms = tester.count_atom_type(atom)
+bond_info = tester.opls_bond_info(bond)
 
 #print the time it takes to make sure it doesnt take too long
-print("--- %s seconds ---" % (time.time() - start))
+#print("--- %s seconds ---" % (time.time() - start))
+
+def print_lammps():
+    print "Created by CMLParser\n"
+    print "\t%s atoms" % len(atom)
+    print "\t%s bonds" % len(bond)
+    print "\t%s angles" % len(AngleList)
+    print "\t%s dihedrals" % len(dihedrals)
+    print "\t0 impropers\n"
+    print "\t%s atom types" % len(num_diff_atoms)
+    print "\t%s bond types" % len(bond_info)
+    print "\t1 angle types"
+    print "\t1 dihedral types"
+    print "\t0 impoper types\n"
+    print "\t0.000000 1011.713454 xlo xhi"
+    print "\t0.000000 1011.713454 ylo yhi"
+    print "\t0.000000 1011.713454 zlo zhi\n"
+    print "Masses\n"
+    #TODO USE LOOP TO PRINT MASSES
+    print "\t"
+    print "Bond Coeffs\n"
+    for i in range(0,len(bond_info)):
+        print "%s %s %s" % (i+1,bond_info[i][0],bond_info[i][1])
+    print ""
+    print "Angle Coeffs\n"
+    print "\t"
+    print "Atoms\n"
+    for i in range(0,len(atom)):
+        print "%s chain? %s %.4f %.4f %.4f" % (atom[i].atom_id.replace('a',''),atom[i].id,float(atom[i].x_pos),float(atom[i].y_pos),float(atom[i].z_pos))
+    #???? CORRECT?????
+    print ""
+    print "Bonds\n"
+    for i in range(0,len(bond)):
+        master = (bond[i].bond_master).replace('a','')
+        slave = (bond[i].bond_slave).replace('a','')
+        print "%s bond_type %s %s" % (i,master,slave)
+    print ""
+    print "Angles\n"
+    for i in range(1,len(AngleList)):
+        master = AngleList[i].Angle_master.replace('a','')
+        slave1 = AngleList[i].Angle_slave1.replace('a','')
+        slave2 = AngleList[i].Angle_slave2.replace('a','')
+        print "%s angle_type %s %s %s" % (i,master,slave1,slave2)
+    print ""
+    print "Dihedrals\n"
+    for i in range(1,len(dihedrals)):
+        master1 = dihedrals[i].Angle_master1.atom_id.replace('a','')
+        master2 = dihedrals[i].Angle_master2.atom_id.replace('a','')
+        slave1 = dihedrals[i].Angle_slave1.atom_id.replace('a','')
+        slave2 = dihedrals[i].Angle_slave2.atom_id.replace('a','')
+        print "%s dihedral_type %s %s %s %s" % (i,master1,master2,slave1,slave2)
+
+print_lammps()
 
 if twoArg:
     sys.stdout = old_stdout

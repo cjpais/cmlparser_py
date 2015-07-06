@@ -271,8 +271,6 @@ def print_find_angles_new(atom,bond):
     bond -- The list of bond objects to pass in and generate angle objects
     """
     AngleList = []
-    print "   ANGLES   "
-    print "------------"
     for i in range(0,len(atom)):
         if atom[i].Num_Bonds > 1:
             help.get_num_bonds(atom[i],bond)
@@ -398,7 +396,6 @@ def find_ring(dihedrals):
             elif dihedrals[i].Angle_master2 in dList and dihedrals[i].Angle_slave1 in dList and dihedrals[i].Angle_slave2 in dList:
                 if dihedrals[i].Angle_master1 not in dList:
                     rings.append(Ring(dihedrals[i].Angle_master1,dihedrals[i].Angle_master2,dihedrals[i].Angle_slave1,dihedrals[i].Angle_slave2,dihedrals[j].Angle_master1))
-    print rings
     return rings
 
 def remove_duplicates(l):
