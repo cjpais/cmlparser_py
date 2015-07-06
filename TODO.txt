@@ -1,0 +1,5 @@
+TODO.txt
+
+Make a list of "R" atoms and use that in lists to make non specific for SMDPPEH
+Remove Duplicate Fused Rings
+Gets good LAMMPS output
