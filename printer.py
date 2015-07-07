@@ -11,11 +11,11 @@ def print_atoms(atom,extra = False):
        print "Atoms bonded to %s" % atom[k].atom_bonds
        print "Number of bonds %s" % atom[k].numbonds
        if extra:
-           print "OPLS id %s" % atom[k].id
-           print "OPLS bond id %s" % atom[k].bond_id
-           print "OPLS sigma %s" % atom[k].sigma
-           print "OPLS epsilon %s" % atom[k].epsilon
-           print "OPLS partial charge %s" % atom[k].partial_charge
+           print "OPLS id %s" % atom[k].opls_id
+           print "OPLS bond id %s" % atom[k].opls_bondid
+           print "OPLS sigma %s" % atom[k].opls_sigma
+           print "OPLS epsilon %s" % atom[k].opls_epsilon
+           print "OPLS partial charge %s" % atom[k].opls_partial
        print ""
 
 def print_bonds(bond,boo = False):
@@ -111,3 +111,48 @@ def print_fused(fused):
         print ""
         print "fused 1 %s" % fused[i].ring1
         print "fused 2 %s" % fused[i].ring2
+
+def print_opls_atoms(opls_atoms):
+    """ Prints the list of opls atoms created earlier in this file
+
+        Keyword Arguments:
+        opls_atoms - The list of opls atoms to print
+    """
+    print "----------OPLS ATOMS----------"
+    for i in range(0,len(opls_atoms)):
+        print ""
+        print opls_atoms[i].opls_id
+        print opls_atoms[i].opls_bondid
+        print opls_atoms[i].opls_type
+        print opls_atoms[i].pc
+        print opls_atoms[i].sigma
+        print opls_atoms[i].epsilon
+
+def print_opls_bonds(opls_bonds):
+    """ Prints the list of opls bonds created earlier in this file
+
+        Keyword Arguments:
+        opls_bonds - The list of opls bond to print
+    """
+    print "----------OPLS BONDS----------"
+    for i in range(0,len(opls_bonds)):
+        print ""
+        print opls_bonds[i].opls_master
+        print opls_bonds[i].opls_slave
+        print opls_bonds[i].fc
+        print opls_bonds[i].el
+
+def print_opls_angles(opls_angles):
+    """ Prints the list of opls angles created earlier in this file
+
+        Keyword Arguments:
+        opls_angles - The list of opls angles to print
+    """
+    print "----------OPLS ANGLES----------"
+    for i in range(0,len(opls_angles)):
+        print ""
+        print opls_angles[i].opls_master
+        print opls_angles[i].opls_slave1
+        print opls_angles[i].opls_slave2
+        print opls_angles[i].fc
+        print opls_angles[i].el
