@@ -44,6 +44,22 @@ class OPLS_Angle(object):
         self.force_const = force_const
         self.equib_len = equib_len
 
+class OPLS_Dihedral(object):
+    dihedral_master1 = ""
+    dihedral_master2 = ""
+    dihedral_slave1 = ""
+    dihedral_slave2 = ""
+    force_const = ""
+    equib_len = ""
+
+    def __init__(self,dihedral_master1,dihedral_master2,dihedral_slave1,dihedral_slave2,force_const,equib_len):
+        self.dihedral_master1 = dihedral_master1
+        self.dihedral_master2 = dihedral_master2
+        self.dihedral_slave1 = dihedral_slave1
+        self.dihedral_slave2 = dihedral_slave2
+        self.force_const = force_const
+        self.equib_len = equib_len
+
 def getAtoms(oplslist):
     """ Reads in oplsaa file and gets the values and ids for the different kinds
         of atoms. Returns a list of all the ids and values associated with the atoms
@@ -130,6 +146,13 @@ def get_angles(angle,opls):
             if oplsList[0] == opls[i].angle_slave2 and oplsList[1] == opls[i].angle_master and oplsList[2] == opls[i].angle_slave1:
                 angle.Angle_equib_len = opls[i].equib_len
                 angle.Angle_force_const = opls[i].force_const
+
+"""def getDihedrals(oplslist):
+    dihedralList = []
+    for i in range(0,len(oplslist)):
+        curLine = oplslist[i]
+        if curLine[0] == """
+
 
 def getVan(oplslist):
     """ Gets the van der waals information from the split opls file. Returns a
@@ -259,3 +282,10 @@ def print_opls_angles(opls_angles):
         print opls_angles[i].angle_slave2
         print opls_angles[i].force_const
         print opls_angles[i].equib_len
+
+def create_opls_dihedral(dihedral):
+    opls_dihedral = []
+    for i in range(0,len(dihedral)):
+        diList = dihedral[i]
+        opls_dihedral.append(OPLS_Dihedral(diList[1],diList[2],diList[3],diList[4],diList[6],diList[7]))
+    return opls_dihedral

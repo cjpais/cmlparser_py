@@ -44,6 +44,17 @@ def opls_bond_info(bonds):
             new.append([bonds[i].bond_equib_len,bonds[i].bond_force_const])
     return new
 
+def opls_angle_info(angle):
+    new = []
+    for i in range(0,len(angle)):
+        if [angle[i].Angle_equib_len,angle[i].Angle_force_const] in new:
+            continue
+        elif [angle[i].Angle_equib_len,angle[i].Angle_force_const] == ['','']:
+            continue
+        else:
+            new.append([angle[i].Angle_equib_len,angle[i].Angle_force_const])
+    return new
+
 """
 def count_angle_type(angles):
         Counts the number of different types of atoms for the molecule for 

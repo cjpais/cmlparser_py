@@ -71,6 +71,7 @@ opls_van = op.getVan(oplsMatrix2)
 opls_partial = op.getPartial(oplsMatrix2)
 opls_bond = op.getBonds(oplsMatrix2)
 opls_angle = op.getAngles(oplsMatrix2)
+#opls_dihedrals = op.getDihedrals(oplsMatrix2)
 
 opls_atoms = op.create_opls_atom(opls_atom_ids,opls_van,opls_partial)
 #op.print_opls_atoms(opls_atoms)
@@ -80,6 +81,8 @@ opls_bonds = op.create_opls_bond(opls_bond)
 
 opls_angles = op.create_opls_angle(opls_angle)
 #op.print_opls_angles(opls_angles)
+
+#opls_dihedral = op.create_opls_dihedral(opls)
 
 #get opls molecules
 for i in range(0,len(atom)):
@@ -96,14 +99,15 @@ for i in range(0,len(AngleList)):
     op.get_angles(AngleList[i],opls_angles)
 
 #print again to see the opls changes, this time printing the extra info
-#p.print_atoms(atom,True)
+p.print_atoms(atom,True)
 #p.print_bonds(bond,True)
-#p.print_angles(AngleList,True)
+p.print_angles(AngleList,True)
 
 #count the atoms found earlier by get_molecule
 #tester.count_atoms(opls_atoms,atom)
 num_diff_atoms = tester.count_atom_type(atom)
 bond_info = tester.opls_bond_info(bond)
+angle_info = tester.opls_angle_info(AngleList)
 
 #print the time it takes to make sure it doesnt take too long
 #print("--- %s seconds ---" % (time.time() - start))
@@ -117,7 +121,7 @@ def print_lammps():
     print "\t0 impropers\n"
     print "\t%s atom types" % len(num_diff_atoms)
     print "\t%s bond types" % len(bond_info)
-    print "\t1 angle types"
+    print "\t%s angle types" % len(angle_info)
     print "\t1 dihedral types"
     print "\t0 impoper types\n"
     print "\t0.000000 1011.713454 xlo xhi"
@@ -131,7 +135,9 @@ def print_lammps():
         print "%s %s %s" % (i+1,bond_info[i][0],bond_info[i][1])
     print ""
     print "Angle Coeffs\n"
-    print "\t"
+    for i in range(0,len(angle_info)):
+        print "%s %s %s" % (i+1,angle_info[i][0],angle_info[i][1])
+    print ""
     print "Atoms\n"
     for i in range(0,len(atom)):
         print "%s chain? %s %.4f %.4f %.4f" % (atom[i].atom_id.replace('a',''),atom[i].id,float(atom[i].x_pos),float(atom[i].y_pos),float(atom[i].z_pos))
@@ -141,14 +147,22 @@ def print_lammps():
     for i in range(0,len(bond)):
         master = (bond[i].bond_master).replace('a','')
         slave = (bond[i].bond_slave).replace('a','')
-        print "%s bond_type %s %s" % (i,master,slave)
+        bond_type = 0
+        for j in range(0,len(bond_info)):
+            if bond[i].bond_equib_len == bond_info[j][0] and bond[i].bond_force_const == bond_info[j][1]:
+                bond_type = j+1
+        print "%s %s %s %s" % (i+1,bond_type,master,slave)
     print ""
     print "Angles\n"
-    for i in range(1,len(AngleList)):
+    for i in range(0,len(AngleList)):
         master = AngleList[i].Angle_master.replace('a','')
         slave1 = AngleList[i].Angle_slave1.replace('a','')
         slave2 = AngleList[i].Angle_slave2.replace('a','')
-        print "%s angle_type %s %s %s" % (i,master,slave1,slave2)
+        angle_type = 0
+        for j in range(0,len(angle_info)):
+            if AngleList[i].Angle_equib_len == angle_info[j][0] and AngleList[i].Angle_force_const == angle_info[j][1]:
+                angle_type = j+1
+        print "%s %s %s %s %s" % (i+1,angle_type,master,slave1,slave2)
     print ""
     print "Dihedrals\n"
     for i in range(1,len(dihedrals)):
@@ -159,6 +173,10 @@ def print_lammps():
         print "%s dihedral_type %s %s %s %s" % (i,master1,master2,slave1,slave2)
 
 print_lammps()
+
+print "-----------------------------------"
+print "TO PRINT OTHER DATA UNCOMMENT LINES"
+print "-----------------------------------"
 
 if twoArg:
     sys.stdout = old_stdout
