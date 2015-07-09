@@ -7,15 +7,17 @@ class OPLS_Atom(object):
     partial_charge = ""
     sigma = ""
     epsilon = ""
+    amass = ""
 
     #constructor
-    def __init__(self, atom_id, bond_id, atom_type, partial_charge, sigma, epsilon):
+    def __init__(self, atom_id, bond_id, atom_type, partial_charge, sigma, epsilon, amass):
         self.atom_id = atom_id
         self.bond_id = bond_id
         self.atom_type = atom_type
         self.partial_charge = partial_charge
         self.sigma = sigma
         self.epsilon = epsilon
+        self.amass = amass
 
 class OPLS_Bond(object):
     bond_master = ""
@@ -209,7 +211,7 @@ def create_opls_atom(atom,van,partial):
         aList =  atom[i]
         vList = van[i]
         pList = partial[i]
-        opls_atoms.append(OPLS_Atom(aList[1],aList[2],aList[3],pList[2],vList[2],vList[3]))
+        opls_atoms.append(OPLS_Atom(aList[1],aList[2],aList[3],pList[2],vList[2],vList[3],aList[8]))
     return opls_atoms
 
 def print_opls_atoms(opls_atoms):
@@ -227,6 +229,7 @@ def print_opls_atoms(opls_atoms):
         print opls_atoms[i].sigma
         print opls_atoms[i].epsilon
         print opls_atoms[i].partial_charge
+        print opls_atoms[i].amass
 
 def create_opls_bond(bond):
     """ Creates and OPLS_Bond object from a the list of opls data found earlier

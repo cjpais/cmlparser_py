@@ -72,3 +72,13 @@ def get_num_bonds(atom, bondList):
             bondedTo.append(bondList[i].bond_master)
    atom.Num_Bonds = numBonds #set atoms number of bonds
    atom.Bonds = bondedTo     #set the atoms it is bonded to
+
+def get_min_max(list):
+   min = list[0]
+   max = list[1]
+   for i in range(0,len(list)):
+      if list[i] < min:
+         min = list[i]
+      elif list[i] > max:
+         max = list[i]
+   return min,max

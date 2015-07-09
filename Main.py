@@ -5,6 +5,8 @@ import typeofmolecule as tm
 import oplsparse as op
 import time
 import tester
+import ptable
+import helper
 
 start = time.time()
 twoArg = False
@@ -99,15 +101,63 @@ for i in range(0,len(AngleList)):
     op.get_angles(AngleList[i],opls_angles)
 
 #print again to see the opls changes, this time printing the extra info
-p.print_atoms(atom,True)
+#p.print_atoms(atom,True)
 #p.print_bonds(bond,True)
-p.print_angles(AngleList,True)
+#p.print_angles(AngleList,True)
 
 #count the atoms found earlier by get_molecule
 #tester.count_atoms(opls_atoms,atom)
 num_diff_atoms = tester.count_atom_type(atom)
 bond_info = tester.opls_bond_info(bond)
 angle_info = tester.opls_angle_info(AngleList)
+
+#get periodic table information
+periodic = 'periodic.csv'
+periodicfile = open(periodic,'r')
+periodiclist = periodicfile.readlines()
+periodicseperated = []
+for i in range(0,len(periodiclist)):
+    curr = periodiclist[i].split(',')
+    periodicseperated.append(curr)
+
+table = ptable.create_tableobj(periodicseperated)
+
+def get_masses():
+    relmass = []
+    id = []
+    for i in range(0,len(table)):
+        for j in range(0,len(atom)):
+            if atom[j].atom_type in id:
+                continue
+            if atom[j].atom_type == table[i].atom_id:
+                relmass.append(table[i])
+                id.append(atom[j].atom_type)
+    return relmass
+
+masses = get_masses()
+
+req = []
+for i in range(0,len(atom)):
+    req.append(atom[i].x_pos)
+atomx = req
+
+req = []
+for i in range(0,len(atom)):
+    req.append(atom[i].y_pos)
+atomy = req
+
+req = []
+for i in range(0,len(atom)):
+    req.append(atom[i].z_pos)
+atomz = req
+
+xmin,xmax = helper.get_min_max(atomx)
+ymin,ymax = helper.get_min_max(atomy)
+zmin,zmax = helper.get_min_max(atomz)
+
+xmin,xmax = float(xmin) - 0.1,float(xmax) + 0.1
+ymin,ymax = float(ymin) - 0.1,float(ymax) + 0.1
+zmin,zmax = float(zmin) - 0.1,float(zmax) + 0.1
 
 #print the time it takes to make sure it doesnt take too long
 #print("--- %s seconds ---" % (time.time() - start))
@@ -119,16 +169,17 @@ def print_lammps():
     print "\t%s angles" % len(AngleList)
     print "\t%s dihedrals" % len(dihedrals)
     print "\t0 impropers\n"
-    print "\t%s atom types" % len(num_diff_atoms)
+    print "\t%s atom types" % len(masses)
     print "\t%s bond types" % len(bond_info)
     print "\t%s angle types" % len(angle_info)
     print "\t1 dihedral types"
     print "\t0 impoper types\n"
-    print "\t0.000000 1011.713454 xlo xhi"
-    print "\t0.000000 1011.713454 ylo yhi"
-    print "\t0.000000 1011.713454 zlo zhi\n"
+    print "\t%s %s xlo xhi" % (xmin,xmax)
+    print "\t%s %s ylo yhi" % (ymin,ymax)
+    print "\t%s %s zlo zhi\n" % (zmin,zmax)
     print "Masses\n"
-    #TODO USE LOOP TO PRINT MASSES
+    for i in range(0,len(masses)):
+        print "%s %s" % (i+1,masses[i].atomic_mass)
     print "\t"
     print "Bond Coeffs\n"
     for i in range(0,len(bond_info)):
@@ -140,8 +191,12 @@ def print_lammps():
     print ""
     print "Atoms\n"
     for i in range(0,len(atom)):
-        print "%s chain? %s %.4f %.4f %.4f" % (atom[i].atom_id.replace('a',''),atom[i].id,float(atom[i].x_pos),float(atom[i].y_pos),float(atom[i].z_pos))
-    #???? CORRECT?????
+        atomtype = 0
+        for j in range(0,len(masses)):
+            if atom[i].atom_type == masses[j].atom_id:
+                atomtype = j+1
+        #the 1 is for the molecule id, there is only one molecule here
+        print "%s 1 %s %.4f %.4f %.4f" % (i+1,atomtype,float(atom[i].x_pos),float(atom[i].y_pos),float(atom[i].z_pos))
     print ""
     print "Bonds\n"
     for i in range(0,len(bond)):

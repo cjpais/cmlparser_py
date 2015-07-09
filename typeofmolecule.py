@@ -11,6 +11,13 @@ def get_molecule(atom,opls):
         atom - The specific atom to assign opls data
         opls - The list of opls atom objects to get data from
     """
+    if atom.atom_type == "H":
+        if p.find_atom_by_id(atom.Atom_Bonds[0]).id == "10":
+            assign_atom_vars(atom,84,opls)
+        elif p.find_atom_by_id(atom.Atom_Bonds[0]).id == "13":
+            assign_atom_vars(atom,84,opls)
+        elif p.find_atom_by_id(atom.Atom_Bonds[0]).id == "17":
+            assign_atom_vars(atom,90,opls)
     #is1(atom,opls)
     #is2(atom,opls)
     #is3(atom,opls)
