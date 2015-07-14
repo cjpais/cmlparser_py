@@ -4,6 +4,7 @@ class Bond(object):
    bond_force_const = ""
    bond_master = ""
    bond_slave = ""
+   opls_bond_num = 0
 
    #constructor
    def __init__(self, bond_type, bond_master, bond_slave):

@@ -6,6 +6,8 @@ def set_flags():
         print "You need to specifiy a file to read!"
         quit()
 
+    out = sys.argv[2]
+
     #debug?
     if "d" in sys.argv or "debug" in sys.argv:
         textout = True
@@ -18,4 +20,5 @@ def set_flags():
     else:
         aa = False
 
-    return textout,aa
+    return textout,aa,out
+

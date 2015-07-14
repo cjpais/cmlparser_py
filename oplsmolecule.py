@@ -1,5 +1,6 @@
 def get_molecule(atom,opls):
     for i in range(0,len(atom)):
+        assign_h(atom[i],opls)
         is10(atom[i],opls)
         is13(atom[i],opls)
         is15(atom[i],opls)
@@ -24,8 +25,18 @@ def gen_bondlist(atom):
         bondlist.append(atom.atom_bonds[i].atom_type)
     return bondlist
 
-def is10(atom,opls):
-    number = 9
+def assign_h(atom,opls):
+    if atom.atom_type == "H" and atom.numbonds == 1:
+        bondlist = atom.atom_bonds
+        if bondlist[0].opls_id == "80":
+            assign_atom_vars(atom,84,opls)
+        elif bondlist[0].opls_id == "81":
+            assign_atom_vars(atom,84,opls)
+        elif bondlist[0].opls_id == "90":
+            assign_atom_vars(atom,90,opls)
+
+def is10(atom,opls): #this is really a 80
+    number = 79
     if atom.atom_type == "C" and atom.numbonds == 4:
         bondlist = gen_bondlist(atom)
         if "C" in bondlist:
@@ -37,8 +48,8 @@ def is10(atom,opls):
                     if "H" in bondlist:
                         assign_atom_vars(atom,number,opls)
 
-def is13(atom,opls):
-    number = 12
+def is13(atom,opls): # this is really 81
+    number = 80
     if atom.atom_type == "C" and atom.numbonds == 4:
         bondList = gen_bondlist(atom)
         if "H" in bondList:
@@ -61,8 +72,8 @@ def is15(atom,opls):
                 if "C" in bondList and "H" in bondList:
                     assign_atom_vars(atom,number,opls)
 
-def is17(atom,opls):
-    number = 16
+def is17(atom,opls): #this is really a 90
+    number = 89
     if atom.atom_type == "C" and atom.numbonds == 3:
         bondList = gen_bondlist(atom)
         if "C" in bondList:

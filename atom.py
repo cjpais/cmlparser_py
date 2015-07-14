@@ -32,4 +32,14 @@ def create_atoms(atom):
         type = curratom[5].replace(',','').replace("'","")
         atoms.append(Atom(id,type,x,y,z))
     return atoms
-        
+
+def uniq_types(atom):
+    uniq = []
+    uniqadd = []
+    for i in range(0,len(atom)):
+        if atom[i].opls_id in uniqadd:
+            continue
+        uniq.append(atom[i])
+        uniqadd.append(atom[i].opls_id)
+    print uniq
+    return uniq

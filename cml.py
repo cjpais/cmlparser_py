@@ -16,8 +16,7 @@ import oplsbond
 import oplsangle
 import oplsmolecule
 
-
-textout,aa = setflags.set_flags()
+textout,aa,outname = setflags.set_flags()
 
 #import the cml file and read
 cmlfile = sys.argv[1]
@@ -44,17 +43,19 @@ rings = ring.create_rings(dihedrals)
 fused_rings = fused.create_fused_rings(rings)
 
 #get important OPLS info
-atom,van,partial,bond,angle = op.getImportant(oplsfinal)
+opatom,van,partial,bond,angle = op.getImportant(oplsfinal)
 
 #deal with OPLS
-opls_atoms = oplsatom.create_atoms(atom,van,partial)
+opls_atoms = oplsatom.create_atoms(opatom,van,partial)
 opls_bonds = oplsbond.create_bonds(bond)
 opls_angles = oplsangle.create_angles(angle)
 
 #more OPLS fun
 oplsmolecule.get_molecule(atoms,opls_atoms)
 
-op.count_atoms(opls_atoms,atoms)
+#unique types
+unique_a = atom.uniq_types(atoms)
+unique_b = bond.uniq_types(bonds)
 
 #print everything to text output as specified by boolean
 if textout:
@@ -73,6 +74,16 @@ if textout:
 
     #reprint for opls add
     printer.print_atoms(atoms,True)
+    op.count_atoms(opls_atoms,atoms)
 
-#else:
-#    printer.lammps_output()
+lammps = open(outname,"w")
+sys.stdout = lammps
+
+print "Written by CMLParser\n"
+print "\t%s atoms" % len(atoms)
+print "\t%s bonds" % len(bonds)
+print ""
+print "\t%s atom types" % len(unique_a)
+print "\t%s bond types" % "something else"
+
+
