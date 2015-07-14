@@ -12,6 +12,7 @@ class Atom(object):
     opls_partial = 0
     opls_sigma = 0
     opls_epsilon = 0
+    opls_mass = 0
 
     def __init__(self,atom_id,atom_type,x_pos,y_pos,z_pos):
         self.atom_id = atom_id

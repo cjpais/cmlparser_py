@@ -16,6 +16,7 @@ def print_atoms(atom,extra = False):
            print "OPLS sigma %s" % atom[k].opls_sigma
            print "OPLS epsilon %s" % atom[k].opls_epsilon
            print "OPLS partial charge %s" % atom[k].opls_partial
+           print "OPLS atomic mass %s" % atom[k].opls_mass
        print ""
 
 def print_bonds(bond,boo = False):
@@ -127,6 +128,7 @@ def print_opls_atoms(opls_atoms):
         print opls_atoms[i].pc
         print opls_atoms[i].sigma
         print opls_atoms[i].epsilon
+        print opls_atoms[i].amass
 
 def print_opls_bonds(opls_bonds):
     """ Prints the list of opls bonds created earlier in this file

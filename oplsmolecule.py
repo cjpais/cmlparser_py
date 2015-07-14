@@ -16,6 +16,7 @@ def assign_atom_vars(atom,number,opls):
     atom.opls_epsilon = opls[number].epsilon
     atom.opls_partial = opls[number].pc
     atom.opls_bondid = opls[number].opls_bondid
+    atom.opls_mass = opls[number].amass
 
 def gen_bondlist(atom):
     bondlist = []
