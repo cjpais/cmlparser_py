@@ -64,7 +64,7 @@ atom         11    6    C3    "Isobutane CH3- (UA)"          6    15.035    1
 atom         12    6    C3    "Neopentane CH3- (UA)"         6    15.035    1
 atom         13    2    C2    "Alkanes -CH2- (UA)"           6    14.027    2
 atom         14    9    C9    "1-Alkene CH2= (UA)"           6    14.027    1
-atom         15   10    CH    "Isobutane CH (UA)"            6    13.019    3
+atom         15   10    CH    "Isobutane CH (UA)"                 13.019    3
 atom         16   11    C8    "2-Alkene -CH= (UA)"           6    13.019    2
 atom         17   12    CD    "Aromatic CH (UA)"             6    13.019    2
 atom         18   13    CT    "Neopentane C (UA)"            6    12.011    4
@@ -75,7 +75,7 @@ atom         22    6    C3    "Methanol CH3- (UA)"           6    15.035    1
 atom         23    2    C2    "Ethanol -CH2OH (UA)"          6    14.027    2
 atom         24   15    SH    "Hydrogen Sulfide H2S"        16    32.060    2
 atom         25   15    SH    "Alkyl Sulfide RSH (UA)"      16    32.060    2
-atom         26   16    S     "Thioether RSR (UA)"          16    32.060    2
+atom         26   16    S     "Thioether RSR (UA)"                32.060    2
 atom         27   16    S     "Disulfide RSSR (UA)"         16    32.060    2
 atom         28   17    HS    "Hydrogen Sulfide H2S"         1     1.008    1
 atom         29   17    HS    "Alkyl Sulfide RSH (UA)"       1     1.008    1

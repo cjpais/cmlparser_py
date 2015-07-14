@@ -43,3 +43,25 @@ def uniq_types(atom):
         uniqadd.append(atom[i].opls_id)
     print uniq
     return uniq
+
+def periodic_b_size(atom):
+    minx = 0
+    miny = 0
+    minz = 0
+    maxx = 0
+    maxy = 0
+    maxz = 0
+    for i in range(0,len(atom)):
+        if atom[i].x_pos > maxx:
+            maxx = atom[i].x_pos
+        else:
+            minx = atom[i].x_pos
+        if atom[i].y_pos > maxy:
+            maxy = atom[i].y_pos
+        else:
+            miny = atom[i].y_pos
+        if atom[i].z_pos > maxz:
+            maxz = atom[i].z_pos
+        else:
+            minz = atom[i].z_pos
+    return float(minx)-100,float(miny)-100,float(minz)-100,float(maxx)+100,float(maxy)+100,float(maxz)+100

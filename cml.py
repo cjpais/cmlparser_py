@@ -43,29 +43,34 @@ rings = ring.create_rings(dihedrals)
 fused_rings = fused.create_fused_rings(rings)
 
 #get important OPLS info
-opatom,van,partial,bond,angle = op.getImportant(oplsfinal)
+opatom,van,partial,opbond,angle = op.getImportant(oplsfinal)
 
 #deal with OPLS
 opls_atoms = oplsatom.create_atoms(opatom,van,partial)
-opls_bonds = oplsbond.create_bonds(bond)
+opls_bonds = oplsbond.create_bonds(opbond)
 opls_angles = oplsangle.create_angles(angle)
 
 #more OPLS fun
 oplsmolecule.get_molecule(atoms,opls_atoms)
 
+bond.set_opls(bonds,opls_bonds)
+
 #unique types
 unique_a = atom.uniq_types(atoms)
 unique_b = bond.uniq_types(bonds)
 
+#box size
+xmin,ymin,zmin,xmax,ymax,zmax = atom.periodic_b_size(atoms)
+
 #print everything to text output as specified by boolean
 if textout:
     #print basic info
-    printer.print_atoms(atoms)
-    printer.print_bonds(bonds)
-    printer.print_angles(angles)
-    printer.print_dihedrals(dihedrals)
-    printer.print_ring(rings)
-    printer.print_fused(fused_rings)
+    #printer.print_atoms(atoms)
+    #printer.print_bonds(bonds)
+    #printer.print_angles(angles)
+    #printer.print_dihedrals(dihedrals)
+    #printer.print_ring(rings)
+    #printer.print_fused(fused_rings)
 
     #print opls info (not very useful)
     #printer.print_opls_atoms(opls_atoms)
@@ -74,16 +79,23 @@ if textout:
 
     #reprint for opls add
     printer.print_atoms(atoms,True)
-    op.count_atoms(opls_atoms,atoms)
+    #printer.print_bonds(bonds,True)
+    #op.count_atoms(opls_atoms,atoms)
 
 lammps = open(outname,"w")
 sys.stdout = lammps
 
 print "Written by CMLParser\n"
 print "\t%s atoms" % len(atoms)
-print "\t%s bonds" % len(bonds)
-print ""
+print "\t%s bonds\n" % len(bonds)
 print "\t%s atom types" % len(unique_a)
-print "\t%s bond types" % "something else"
-
+print "\t%s bond types\n" % len(unique_b)
+print "\t%s %s xlo xhi" % (xmin,xmax)
+print "\t%s %s ylo yhi" % (ymin,ymax)
+print "\t%s %s zlo zhi\n" % (zmin,zmax)
+print "Masses\n"
+for i in range(len(unique_a)):
+    print "%s %s" % (i+1,unique_a[i].opls_mass,)
+for i in range(len(unique_b)):
+    print "%s %s %s"
 

@@ -32,3 +32,25 @@ def change_id_to_atom(bonds,atoms):
                 bonds[i].bond_master = atoms[j]
             if atoms[j].atom_id == newbondslave:
                 bonds[i].bond_slave = atoms[j]
+
+def set_opls(bonds,opls_bonds):
+    for i in range(len(bonds)):
+        master = bonds[i].bond_master.opls_bondid
+        slave = bonds[i].bond_slave.opls_bondid
+        for j in range(len(opls_bonds)):
+            if master == opls_bonds[j].opls_master and slave == opls_bonds[j].opls_slave:
+                bonds[i].bond_equib_len = opls_bonds[j].el
+                bonds[i].bond_force_const = opls_bonds[j].fc
+            elif master == opls_bonds[j].opls_slave and slave == opls_bonds[j].opls_master:
+                bonds[i].bond_equib_len = opls_bonds[j].el
+                bonds[i].bond_force_const = opls_bonds[j].fc
+
+def uniq_types(bond):
+    uniq = []
+    uniqadd = []
+    for i in range(len(bond)):
+        if [bond[i].bond_equib_len,bond[i].bond_force_const] in uniqadd:
+            continue
+        uniq.append(bond[i])
+        uniqadd.append([bond[i].bond_equib_len,bond[i].bond_force_const])
+    return uniq

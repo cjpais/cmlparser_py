@@ -4,4 +4,22 @@ Written by CMLParser
 	147 bonds
 
 	11 atom types
-	something else bond types
+	12 bond types
+
+	-120.230361 109.573554 xlo xhi
+	-104.091062 109.747682 ylo yhi
+	-102.51684 103.397004 zlo zhi
+
+Masses
+
+1 14.007 181
+2 12.011 177
+3 12.011 90
+4 15.999 178
+5 32.060 26
+6 1.008 91
+7 12.011 81
+8 13.019 15
+9 1.008 85
+10 0 0
+11 12.011 80

@@ -22,5 +22,5 @@ def create_atoms(atom,van,partial):
         a = atom[i]
         v = van[i]
         p = partial[i]
-        opls_atoms.append(OPLS_Atom(a[1],a[2],a[3],p[2],v[2],v[3],a[8]))
+        opls_atoms.append(OPLS_Atom(a[1],a[2],a[3],p[2],v[2],v[3],a[7]))
     return opls_atoms
