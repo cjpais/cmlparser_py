@@ -50,6 +50,7 @@ class Bond(object):
    bond_force_const = ""
    bond_master = ""
    bond_slave = ""
+   opls_id = ""
 
    #constructor
    def __init__(self, bond_type, bond_master, bond_slave):
@@ -66,6 +67,7 @@ class Angle(object):
     Angle_master = ""
     Angle_slave1 = ""
     Angle_slave2 = ""
+    bad = False
 
     #constructor
     def __init__(self, Angle_type, Angle_master, Angle_slave1, Angle_slave2):
@@ -326,6 +328,8 @@ def get_unique_dihedrals(dihedrals):
 def find_dihedrals_new(AngleList):
     dihedrals = []
     for i in range(0,len(AngleList)):
+        if AngleList[i].bad:
+            continue
         outerMaster = find_atom_by_id(AngleList[i].Angle_master)
         outerSlave1 = find_atom_by_id(AngleList[i].Angle_slave1)
         outerSlave2 = find_atom_by_id(AngleList[i].Angle_slave2)
@@ -335,6 +339,8 @@ def find_dihedrals_new(AngleList):
                 continue
         for j in range(0,len(AngleList)):
             if AngleList[j] == AngleList[i]:
+                continue
+            if AngleList[j].bad:
                 continue
             innerMaster = find_atom_by_id(AngleList[j].Angle_master)
             innerSlave1 = find_atom_by_id(AngleList[j].Angle_slave1)

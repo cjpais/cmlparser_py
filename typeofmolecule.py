@@ -12,11 +12,11 @@ def get_molecule(atom,opls):
         opls - The list of opls atom objects to get data from
     """
     if atom.atom_type == "H":
-        if p.find_atom_by_id(atom.Atom_Bonds[0]).id == "10":
+        if p.find_atom_by_id(atom.Atom_Bonds[0]).id == "80":
             assign_atom_vars(atom,84,opls)
-        elif p.find_atom_by_id(atom.Atom_Bonds[0]).id == "13":
+        elif p.find_atom_by_id(atom.Atom_Bonds[0]).id == "81":
             assign_atom_vars(atom,84,opls)
-        elif p.find_atom_by_id(atom.Atom_Bonds[0]).id == "17":
+        elif p.find_atom_by_id(atom.Atom_Bonds[0]).id == "90":
             assign_atom_vars(atom,90,opls)
     #is1(atom,opls)
     #is2(atom,opls)
@@ -72,7 +72,7 @@ def is181(atom,opls):
     return False
 
 def is10(atom,opls):
-    number = 9
+    number = 79
     if atom.atom_type == "C":
         if atom.Num_Bonds == 4:
             bondList = [p.find_atom_by_id(atom.Atom_Bonds[0]),p.find_atom_by_id(atom.Atom_Bonds[1]),p.find_atom_by_id(atom.Atom_Bonds[2]),p.find_atom_by_id(atom.Atom_Bonds[3])]
@@ -84,8 +84,8 @@ def is10(atom,opls):
 
 
 #DO THIS WITH NEW METHOD
-def is13(atom,opls):
-    number = 12
+def is13(atom,opls): 
+    number = 80
     if atom.atom_type == "C" and atom.Num_Bonds == 4:
         bondList = [p.find_atom_by_id(atom.Atom_Bonds[0]).atom_type,p.find_atom_by_id(atom.Atom_Bonds[1]).atom_type,p.find_atom_by_id(atom.Atom_Bonds[2]).atom_type,p.find_atom_by_id(atom.Atom_Bonds[3]).atom_type]
         if "H" in bondList:
@@ -116,7 +116,7 @@ def is90(atom,opls):
                         assign_atom_vars(atom,number,opls)
 
 def is17(atom,opls):
-    number = 16
+    number = 89
     if atom.atom_type == "C":
         if atom.Num_Bonds == 3:
             bondList = [p.find_atom_by_id(atom.Atom_Bonds[0]).atom_type,p.find_atom_by_id(atom.Atom_Bonds[1]).atom_type,p.find_atom_by_id(atom.Atom_Bonds[2]).atom_type]

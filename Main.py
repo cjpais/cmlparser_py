@@ -101,8 +101,8 @@ for i in range(0,len(AngleList)):
     op.get_angles(AngleList[i],opls_angles)
 
 #print again to see the opls changes, this time printing the extra info
-#p.print_atoms(atom,True)
-#p.print_bonds(bond,True)
+p.print_atoms(atom,True)
+p.print_bonds(bond,True)
 #p.print_angles(AngleList,True)
 
 #count the atoms found earlier by get_molecule
@@ -125,16 +125,18 @@ table = ptable.create_tableobj(periodicseperated)
 def get_masses():
     relmass = []
     id = []
+    id2 = []
     for i in range(0,len(table)):
         for j in range(0,len(atom)):
-            if atom[j].atom_type in id:
+            if atom[j].atom_type in id2:
                 continue
             if atom[j].atom_type == table[i].atom_id:
                 relmass.append(table[i])
-                id.append(atom[j].atom_type)
-    return relmass
+                id.append(atom[j])
+                id2.append(atom[j].atom_type)
+    return relmass,id
 
-masses = get_masses()
+masses,new_atoms = get_masses()
 
 req = []
 for i in range(0,len(atom)):
@@ -155,25 +157,58 @@ xmin,xmax = helper.get_min_max(atomx)
 ymin,ymax = helper.get_min_max(atomy)
 zmin,zmax = helper.get_min_max(atomz)
 
-xmin,xmax = float(xmin) - 0.1,float(xmax) + 0.1
-ymin,ymax = float(ymin) - 0.1,float(ymax) + 0.1
-zmin,zmax = float(zmin) - 0.1,float(zmax) + 0.1
+xmin,xmax = float(xmin) - 100.1,float(xmax) + 100.1
+ymin,ymax = float(ymin) - 100.1,float(ymax) + 100.1
+zmin,zmax = float(zmin) - 100.1,float(zmax) + 100.1
 
 #print the time it takes to make sure it doesnt take too long
 #print("--- %s seconds ---" % (time.time() - start))
+
+bad_bonds = []
+bad_angles = []
+good_bonds = []
+good_angles = []
+
+for i in range(0,len(bond)):
+    master = (bond[i].bond_master).replace('a','')
+    slave = (bond[i].bond_slave).replace('a','')
+    bond_type = 0
+    for j in range(0,len(opls_bonds)):
+        if bond[i].bond_equib_len == opls_bonds[j].equib_len and bond[i].bond_force_const == opls_bonds[j].force_const:
+            bond_type = j+1
+    if bond_type == 0:
+        bad_bonds.append([master,slave])
+        continue
+    good_bonds.append([bond_type,master,slave])
+
+for i in range(0,len(AngleList)):
+    master = AngleList[i].Angle_master.replace('a','')
+    slave1 = AngleList[i].Angle_slave1.replace('a','')
+    slave2 = AngleList[i].Angle_slave2.replace('a','')
+    angle_type = 0
+    for j in range(0,len(angle_info)):
+        if AngleList[i].Angle_equib_len == angle_info[j][0] and AngleList[i].Angle_force_const == angle_info[j][1]:
+            angle_type = j+1
+    if angle_type == 0:
+        bad_angles.append(AngleList[i])
+        AngleList[i].bad = True
+        continue
+    good_angles.append([angle_type,master,slave1,slave2])
+
+dihedrals = p.find_dihedrals_new(AngleList)
 
 def print_lammps():
     print "Created by CMLParser\n"
     print "\t%s atoms" % len(atom)
     print "\t%s bonds" % len(bond)
-    print "\t%s angles" % len(AngleList)
-    print "\t%s dihedrals" % len(dihedrals)
-    print "\t0 impropers\n"
+    #print "\t%s angles" % len(good_angles)
+    #print "\t%s dihedrals\n" % len(dihedrals)
+    #print "\t0 impropers\n"
     print "\t%s atom types" % len(masses)
-    print "\t%s bond types" % len(bond_info)
-    print "\t%s angle types" % len(angle_info)
-    print "\t1 dihedral types"
-    print "\t0 impoper types\n"
+    print "\t%s bond types" % len(opls_bonds)
+    #print "\t%s angle types" % len(angle_info)
+    #print "\t1 dihedral types\n"
+    #print "\t0 impoper types\n"
     print "\t%s %s xlo xhi" % (xmin,xmax)
     print "\t%s %s ylo yhi" % (ymin,ymax)
     print "\t%s %s zlo zhi\n" % (zmin,zmax)
@@ -182,12 +217,20 @@ def print_lammps():
         print "%s %s" % (i+1,masses[i].atomic_mass)
     print "\t"
     print "Bond Coeffs\n"
-    for i in range(0,len(bond_info)):
-        print "%s %s %s" % (i+1,bond_info[i][0],bond_info[i][1])
+    for i in range(0,len(opls_bonds)):
+        #print "%s %s %s" % (i+1,bond_info[i][1],bond_info[i][0])
+        print "%s %s %s" % (i+1,opls_bonds[i].force_const,opls_bonds[i].equib_len)
     print ""
-    print "Angle Coeffs\n"
+    """print "Angle Coeffs\n"
     for i in range(0,len(angle_info)):
-        print "%s %s %s" % (i+1,angle_info[i][0],angle_info[i][1])
+        print "%s %s %s" % (i+1,angle_info[i][0],angle_info[i][1])"""
+    print ""
+    #print "Dihedral Coeffs\n"
+    #print "1 0.5600 -1.0800 0.2800 0.0000 0.0000"
+    print ""
+    print "Pair Coeffs\n"
+    for i in range(0,len(masses)):
+        print "%s %s %s" % (i+1,new_atoms[i].epsilon,new_atoms[i].sigma)
     print ""
     print "Atoms\n"
     for i in range(0,len(atom)):
@@ -199,39 +242,23 @@ def print_lammps():
         print "%s 1 %s %.4f %.4f %.4f" % (i+1,atomtype,float(atom[i].x_pos),float(atom[i].y_pos),float(atom[i].z_pos))
     print ""
     print "Bonds\n"
-    for i in range(0,len(bond)):
-        master = (bond[i].bond_master).replace('a','')
-        slave = (bond[i].bond_slave).replace('a','')
-        bond_type = 0
-        for j in range(0,len(bond_info)):
-            if bond[i].bond_equib_len == bond_info[j][0] and bond[i].bond_force_const == bond_info[j][1]:
-                bond_type = j+1
-        print "%s %s %s %s" % (i+1,bond_type,master,slave)
-    print ""
-    print "Angles\n"
-    for i in range(0,len(AngleList)):
-        master = AngleList[i].Angle_master.replace('a','')
-        slave1 = AngleList[i].Angle_slave1.replace('a','')
-        slave2 = AngleList[i].Angle_slave2.replace('a','')
-        angle_type = 0
-        for j in range(0,len(angle_info)):
-            if AngleList[i].Angle_equib_len == angle_info[j][0] and AngleList[i].Angle_force_const == angle_info[j][1]:
-                angle_type = j+1
-        print "%s %s %s %s %s" % (i+1,angle_type,master,slave1,slave2)
-    print ""
-    print "Dihedrals\n"
-    for i in range(1,len(dihedrals)):
+    for i in range(0,len(good_bonds)):
+        print "%s %s %s %s" % (i+1,good_bonds[i][0],good_bonds[i][1],good_bonds[i][2])
+        #print "%s %s %s %s" % (i+1,good_bonds[i][0],good_bonds[i][1],good_bonds[i][2])
+    print "" 
+    """print "Angles\n"
+    for i in range(0,len(good_angles)):
+        print "%s %s %s %s %s" % (i+1,good_angles[i][0],good_angles[i][1],good_angles[i][2],good_angles[i][3])
+    print "" """
+    """print "Dihedrals\n"
+    for i in range(0,len(dihedrals)):
         master1 = dihedrals[i].Angle_master1.atom_id.replace('a','')
         master2 = dihedrals[i].Angle_master2.atom_id.replace('a','')
         slave1 = dihedrals[i].Angle_slave1.atom_id.replace('a','')
         slave2 = dihedrals[i].Angle_slave2.atom_id.replace('a','')
-        print "%s dihedral_type %s %s %s %s" % (i,master1,master2,slave1,slave2)
+        print "%s 1 %s %s %s %s" % (i+1,master1,master2,slave1,slave2)"""
 
 print_lammps()
-
-print "-----------------------------------"
-print "TO PRINT OTHER DATA UNCOMMENT LINES"
-print "-----------------------------------"
 
 if twoArg:
     sys.stdout = old_stdout

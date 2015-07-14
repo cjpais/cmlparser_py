@@ -44,6 +44,7 @@ def opls_bond_info(bonds):
             new.append([bonds[i].bond_equib_len,bonds[i].bond_force_const])
     return new
 
+
 def opls_angle_info(angle):
     new = []
     for i in range(0,len(angle)):
