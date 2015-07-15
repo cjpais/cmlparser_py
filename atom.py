@@ -13,6 +13,7 @@ class Atom(object):
     opls_sigma = 0
     opls_epsilon = 0
     opls_mass = 0
+    print_type = 0
 
     def __init__(self,atom_id,atom_type,x_pos,y_pos,z_pos):
         self.atom_id = atom_id
@@ -39,9 +40,10 @@ def uniq_types(atom):
     for i in range(0,len(atom)):
         if atom[i].opls_id in uniqadd:
             continue
+        if atom[i].opls_id == 0:
+            continue
         uniq.append(atom[i])
         uniqadd.append(atom[i].opls_id)
-    print uniq
     return uniq
 
 def periodic_b_size(atom):
@@ -65,3 +67,9 @@ def periodic_b_size(atom):
         else:
             minz = atom[i].z_pos
     return float(minx)-100,float(miny)-100,float(minz)-100,float(maxx)+100,float(maxy)+100,float(maxz)+100
+
+def get_type(atom,type):
+    for i in range(len(atom)):
+        for j in range(len(type)):
+            if atom[i].opls_id == type[j].opls_id:
+                atom[i].print_type = j+1

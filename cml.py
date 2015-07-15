@@ -59,11 +59,16 @@ bond.set_opls(bonds,opls_bonds)
 unique_a = atom.uniq_types(atoms)
 unique_b = bond.uniq_types(bonds)
 
+#get type
+atom.get_type(atoms,unique_a)
+bond.get_type(bonds,unique_b)
+
 #box size
 xmin,ymin,zmin,xmax,ymax,zmax = atom.periodic_b_size(atoms)
 
 #print everything to text output as specified by boolean
 if textout:
+    print "ran"
     #print basic info
     #printer.print_atoms(atoms)
     #printer.print_bonds(bonds)
@@ -78,7 +83,7 @@ if textout:
     #printer.print_opls_angles(opls_angles)
 
     #reprint for opls add
-    printer.print_atoms(atoms,True)
+    #printer.print_atoms(atoms,True)
     #printer.print_bonds(bonds,True)
     #op.count_atoms(opls_atoms,atoms)
 
@@ -95,7 +100,20 @@ print "\t%s %s ylo yhi" % (ymin,ymax)
 print "\t%s %s zlo zhi\n" % (zmin,zmax)
 print "Masses\n"
 for i in range(len(unique_a)):
-    print "%s %s" % (i+1,unique_a[i].opls_mass,)
+    print "%s %s" % (i+1,unique_a[i].opls_mass)
+print "\nBond Coeffs\n"
 for i in range(len(unique_b)):
-    print "%s %s %s"
-
+    print "%s %s %s" % (i+1,unique_b[i].bond_force_const,unique_b[i].bond_equib_len)
+print "\nPair Coeffs\n"
+for i in range(len(unique_a)):
+    print "%s %s %s" % (i+1,unique_a[i].opls_epsilon,unique_a[i].opls_sigma)
+print "\nAtoms\n"
+for i in range(len(atoms)):
+    if atoms[i].print_type == 0:
+        atoms[i].print_type = 6
+    print "%s 1 %s %s %s %s" % (i+1,atoms[i].print_type,atoms[i].x_pos,atoms[i].y_pos,atoms[i].z_pos)
+print "\nBonds\n"
+for i in range(len(bonds)):
+    if bonds[i].print_type == 0:
+        bonds[i].print_type = 6
+    print "%s %s %s %s" % (i+1,bonds[i].print_type,bonds[i].bond_master.atom_id,bonds[i].bond_slave.atom_id)

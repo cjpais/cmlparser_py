@@ -34,6 +34,8 @@ def assign_h(atom,opls):
             assign_atom_vars(atom,84,opls)
         elif bondlist[0].opls_id == "90":
             assign_atom_vars(atom,90,opls)
+        elif bondlist[0].opls_id == "82":
+            assign_atom_vars(atom,84,opls)
 
 def is10(atom,opls): #this is really a 80
     number = 79
@@ -62,7 +64,7 @@ def is13(atom,opls): # this is really 81
                         assign_atom_vars(atom,number,opls)
 
 def is15(atom,opls):
-    number = 14
+    number = 81
     if atom.atom_type == "C" and atom.numbonds == 4:
         bondList = gen_bondlist(atom)
         if "C" in bondList:
