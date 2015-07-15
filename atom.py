@@ -66,7 +66,7 @@ def periodic_b_size(atom):
             maxz = atom[i].z_pos
         else:
             minz = atom[i].z_pos
-    return float(minx)-100,float(miny)-100,float(minz)-100,float(maxx)+100,float(maxy)+100,float(maxz)+100
+    return float(minx)-10,float(miny)-10,float(minz)-10,float(maxx)+10,float(maxy)+10,float(maxz)+10
 
 def get_type(atom,type):
     for i in range(len(atom)):

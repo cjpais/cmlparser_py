@@ -4,6 +4,9 @@ import bond
 def print_atoms(atom,extra = False):
     for k in range(0,len(atom)):
        print "Atom id: %s" % atom[k].atom_id
+       if atom[k].atom_id == "116":
+           for i in range(0,len(atom[k].atom_bonds)):
+               print atom[k].atom_bonds[i].atom_id
        print "Atom type: %s" % atom[k].atom_type
        print "X position: %s" % atom[k].x_pos
        print "Y position: %s" % atom[k].y_pos
@@ -53,15 +56,11 @@ def print_angles(AngleList,boo = False):
         print "Slave angle 1: %s" % AngleList[x].Angle_slave1.atom_id
         print "Slave angle 2: %s" % AngleList[x].Angle_slave2.atom_id
         if boo:
-            if find_atom_by_id(AngleList[x].Angle_slave2).bond_id == "":
-                print ""
-                continue
-            print "Master Angle Bond: %s" % find_atom_by_id(AngleList[x].Angle_master).bond_id
-            print "Slave Angle Bond: %s" % find_atom_by_id(AngleList[x].Angle_slave1).bond_id
-            print "Slave Angle2 Bond: %s" % find_atom_by_id(AngleList[x].Angle_slave2).bond_id
+            print "Master Angle Bond: %s" % AngleList[x].Angle_master.opls_bondid
+            print "Slave Angle Bond: %s" % AngleList[x].Angle_slave1.opls_bondid
+            print "Slave Angle2 Bond: %s" % AngleList[x].Angle_slave2.opls_bondid
             if AngleList[x].Angle_equib_len == "":
-                print "No good data on these bonds"
-                print ""
+                print "no good data"
                 continue
             print "Equilibrium length %s" % AngleList[x].Angle_equib_len
             print "Force Constant: %s" % AngleList[x].Angle_force_const
@@ -159,3 +158,15 @@ def print_opls_angles(opls_angles):
         print opls_angles[i].fc
         print opls_angles[i].el
 
+def print_opls_dihedrals(opls_dihedrals):
+    print "----------OPLS DIHEDRALS----------"
+    for i in range(len(opls_dihedrals)):
+        print ""
+        print opls_dihedrals[i].opls_master1
+        print opls_dihedrals[i].opls_master2
+        print opls_dihedrals[i].opls_slave1
+        print opls_dihedrals[i].opls_slave2
+        print opls_dihedrals[i].k1
+        print opls_dihedrals[i].k2
+        print opls_dihedrals[i].k3
+        print opls_dihedrals[i].k4
