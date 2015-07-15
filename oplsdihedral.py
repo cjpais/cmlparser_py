@@ -19,6 +19,12 @@ class OPLS_Dihedral(object):
         self.k4 = 0.000
 
 def create_dihedrals(dihedral):
+    """ Creates an OPLS dihedral object which contains the relevant opls data. It returns
+        a list of all OPLS dihedral objects
+
+        Keyword Arguments:
+        dihedral - The list of dihedral data from getImportant
+    """
     opls_dihedrals = []
     for i in range(0,len(dihedral)):
         dList = dihedral[i]

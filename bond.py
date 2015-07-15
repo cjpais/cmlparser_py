@@ -14,6 +14,12 @@ class Bond(object):
       self.bond_slave = bond_slave
 
 def create_bonds(bond,atom):
+    """ Creates the bond objects
+
+        Keyword Arguments:
+        atom - A list of atom objects
+        bond - A list of bond objects
+    """
     bonds = []
     for i in range(0,len(bond)):
         currbond = str(bond[i].attrib).split()
@@ -25,6 +31,12 @@ def create_bonds(bond,atom):
     return bonds
 
 def change_id_to_atom(bonds,atoms):
+    """ Helper method that matches bond and atom names for ease down the line
+
+        Keyword Arguments:
+        bonds - The list of bond objects
+        atoms - The list of atom objects
+    """
     for i in range(0,len(bonds)):
         newbondmaster = bonds[i].bond_master
         newbondslave = bonds[i].bond_slave
@@ -35,6 +47,12 @@ def change_id_to_atom(bonds,atoms):
                 bonds[i].bond_slave = atoms[j]
 
 def set_opls(bonds,opls_bonds):
+    """ Sets the opls data into the bond object
+
+        Keyword Arguments:
+        bonds - The list of bond objects to set opls data into
+        opls_bonds - The list of opls data to scan
+    """
     for i in range(len(bonds)):
         master = bonds[i].bond_master.opls_bondid
         slave = bonds[i].bond_slave.opls_bondid
@@ -47,6 +65,11 @@ def set_opls(bonds,opls_bonds):
                 bonds[i].bond_force_const = opls_bonds[j].fc
 
 def uniq_types(bond):
+    """ Gets the unique type of bonds for lammps output
+
+        Keyword Arguments:
+        bonds - The list of bond objects to get unique types from
+    """
     uniq = []
     uniqadd = []
     for i in range(len(bond)):
@@ -59,6 +82,12 @@ def uniq_types(bond):
     return uniq
 
 def get_type(bond,type):
+    """ Gets the type of unique bond it is for lammps output
+
+        Keyword Arguments:
+        bond - The list of bond objects
+        type - The list of unique types
+    """
     for i in range(len(bond)):
         for j in range(len(type)):
             if bond[i].bond_force_const == type[j].bond_force_const and bond[i].bond_equib_len == type[j].bond_equib_len:

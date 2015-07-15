@@ -18,6 +18,11 @@ class Dihedral(object):
         self.dihedral_slave2 = dihedral_slave2
 
 def get_unique(dihedrals):
+    """ Remove duplicate dihedrals
+
+        Keyword Arguments:
+        dihedrals - List of dihedrals to remove duplicates from
+    """
     dihedrals_new = []
     for i in range(0,len(dihedrals)):
         for j in range(0,len(dihedrals)):
@@ -40,6 +45,11 @@ def remove_duplicates(l):
     return list(set(l))
 
 def create_dihedrals(dihedral):
+    """ Creates the dihedral objects
+
+        Keyword Arguments:
+        dihedral - A list of angles to create dihedral from
+    """
     dihedrals = []
     for i in range(0,len(dihedral)):
         outlist = [dihedral[i].Angle_master,dihedral[i].Angle_slave1,dihedral[i].Angle_slave2]
@@ -59,6 +69,12 @@ def create_dihedrals(dihedral):
     return dihedrals
 
 def set_opls(dihedrals,opls_dihedrals):
+    """ Sets the opls data into the dihedral object
+
+        Keyword Arguments:
+        dihedrals - The list of dihedral objects to set opls data into
+        opls_dihedrals - The list of opls data to scan
+    """
     for i in range(len(dihedrals)):
         masters = [int(dihedrals[i].dihedral_master1.opls_bondid),int(dihedrals[i].dihedral_master2.opls_bondid)]
         slaves = [int(dihedrals[i].dihedral_slave1.opls_bondid),int(dihedrals[i].dihedral_slave2.opls_bondid)]
@@ -73,6 +89,11 @@ def set_opls(dihedrals,opls_dihedrals):
                 dihedrals[i].k4 = opls_dihedrals[j].k4
 
 def uniq_types(dihedrals):
+    """ Gets the unique type of dihedrals for lammps output
+
+        Keyword Arguments:
+        dihedrals - The list of dihedral objects to get unique types from
+    """
     uniq = []
     uniqadd = []
     for i in range(len(dihedrals)):
@@ -85,6 +106,12 @@ def uniq_types(dihedrals):
     return uniq
 
 def get_type(dihedral,type):
+    """ Gets the type of unique dihedral it is for lammps output
+
+        Keyword Arguments:
+        dihedral - The list of dihedral objects
+        type - The list of unique types
+    """
     for i in range(len(dihedral)):
         for j in range(len(type)):
             if dihedral[i].k1 == type[j].k1 and dihedral[i].k2 == type[j].k2 and dihedral[i].k3 == type[j].k3 and dihedral[i].k4 == type[j].k4:

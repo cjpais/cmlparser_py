@@ -1,4 +1,9 @@
 def get_molecule(atom,opls):
+    """ Basically runs a bunch of methods to check what kind of atom it is
+
+        Keyword Arguments:
+        Same as everything else in this file
+    """
     for i in range(0,len(atom)):
         assign_h(atom[i],opls)
         is10(atom[i],opls)
@@ -12,6 +17,13 @@ def get_molecule(atom,opls):
         is181(atom[i],opls)
 
 def assign_atom_vars(atom,number,opls):
+    """ Assigns the atom object its opls values
+
+        Keyword Arguments:
+        atom - The atom object to assin
+        number - The opls number to assign it
+        opls - The opls object list to use to assign data
+    """
     atom.opls_id = opls[number].opls_id
     atom.opls_sigma = opls[number].sigma
     atom.opls_epsilon = opls[number].epsilon
@@ -20,12 +32,22 @@ def assign_atom_vars(atom,number,opls):
     atom.opls_mass = opls[number].amass
 
 def gen_bondlist(atom):
+    """ A helper method to generate the atom types for use in each ISxxx method
+
+        Keyword Arguments:
+        atom - The single atom to generate the bondlist from
+    """
     bondlist = []
     for i in range(0,atom.numbonds):
         bondlist.append(atom.atom_bonds[i].atom_type)
     return bondlist
 
 def assign_h(atom,opls):
+    """ Assigns hydrogen OPLS ids
+
+        Keyword Arguments:
+        atom - The single atom to assign a hydrogen value to
+    """
     if atom.atom_type == "H" and atom.numbonds == 1:
         bondlist = atom.atom_bonds
         if bondlist[0].opls_id == "80":
@@ -36,6 +58,14 @@ def assign_h(atom,opls):
             assign_atom_vars(atom,90,opls)
         elif bondlist[0].opls_id == "82":
             assign_atom_vars(atom,84,opls)
+
+"""
+----------------------------------------------------
+          NOT DOCUMENTING ANYTHING BELOW.
+
+                IGNORING OPLS-UA
+----------------------------------------------------
+"""
 
 def is10(atom,opls): #this is really a 80
     number = 79

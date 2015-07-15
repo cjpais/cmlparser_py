@@ -12,6 +12,11 @@ def splitList(oplslist):
     return bigList
 
 def getImportant(oplslist):
+    """ Gets the lines from the opls data file and seperates them by category
+
+        Keyword Arguments:
+        oplslist - The list of opls data to get the lines from
+    """
     atomList = []
     vanList = []
     partialList = []

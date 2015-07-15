@@ -17,6 +17,14 @@ class OPLS_Atom(object):
         self.amass = amass
 
 def create_atoms(atom,van,partial):
+    """ Creates an OPLS Angle object which contains the relevant opls data. It returns
+        a list of all OPLS Angle objects
+
+        Keyword Arguments:
+        atom - The list of atom data from getImportant
+        van - The list of vanderwalls data from getImportant
+        partial - The list of partial charges from getImportant
+    """
     opls_atoms = []
     for i in range(0,len(atom)):
         a = atom[i]

@@ -2,6 +2,11 @@ import atom
 import bond
 
 def print_atoms(atom,extra = False):
+    """ Prints a list of atom objects
+
+    Keyword Arguments:
+    bond -- The list of atom objects to pass in and print
+    """
     for k in range(0,len(atom)):
        print "Atom id: %s" % atom[k].atom_id
        if atom[k].atom_id == "116":
@@ -159,6 +164,11 @@ def print_opls_angles(opls_angles):
         print opls_angles[i].el
 
 def print_opls_dihedrals(opls_dihedrals):
+    """ Prints the list of opls dihedrals created earlier in this file
+
+        Keyword Arguments:
+        opls_dihedrals - The list of opls dihedrals to print
+    """
     print "----------OPLS DIHEDRALS----------"
     for i in range(len(opls_dihedrals)):
         print ""

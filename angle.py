@@ -16,6 +16,14 @@ class Angle(object):
         self.Angle_slave2 = Angle_slave2
 
 def set_numbonds(atom,bond):
+    """ Sets the number of bonds an atom has
+
+        Keyword Arguments:
+        atom - The list of atom objects
+        bond - The list of bond objects
+
+        TODO this is in the wrong file lol
+    """
     numbonds = 0
     bondedTo = []
     for i in range(0,len(bond)):
@@ -30,6 +38,12 @@ def set_numbonds(atom,bond):
     atom.atom_bonds = bondedTo
 
 def create_angles(atom,bond):
+    """ Creates the angle objects
+
+        Keyword Arguments:
+        atom - A list of atom objects
+        bond - A list of bond objects
+    """
     angles = []
     for i in range(0,len(atom)):
         set_numbonds(atom[i],bond)
@@ -42,6 +56,12 @@ def create_angles(atom,bond):
     return angles
 
 def set_opls(angles,opls_angles):
+    """ Sets the opls data into the angle object
+
+        Keyword Arguments:
+        angles - The list of angle objects to set opls data into
+        opls_angles - The list of opls data to scan
+    """
     for i in range(len(angles)):
         slaves = [int(angles[i].Angle_slave1.opls_bondid),int(angles[i].Angle_slave2.opls_bondid)]
         slaves.sort()
@@ -59,6 +79,11 @@ def set_opls(angles,opls_angles):
                         angles[i].Angle_force_const = opls_angles[k].fc
 
 def uniq_types(angles):
+    """ Gets the unique type of angles for lammps output
+
+        Keyword Arguments:
+        angles - The list of angle objects to get unique types from
+    """
     uniq = []
     uniqadd = []
     for i in range(len(angles)):
@@ -69,6 +94,12 @@ def uniq_types(angles):
     return uniq
 
 def get_type(angle,type):
+    """ Gets the type of unique angle it is for lammps output
+
+        Keyword Arguments:
+        angle - The list of angle objects
+        type - The list of unique types
+    """
     for i in range(len(angle)):
         for j in range(len(type)):
             if angle[i].Angle_force_const == type[j].Angle_force_const and angle[i].Angle_equib_len == type[j].Angle_equib_len:

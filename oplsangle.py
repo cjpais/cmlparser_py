@@ -13,6 +13,12 @@ class OPLS_Angle(object):
         self.el = el
 
 def create_angles(angle):
+    """ Creates an OPLS Angle object which contains the relevant opls data. It returns
+        a list of all OPLS Angle objects
+
+        Keyword Arguments:
+        angle - The list of angle data from getImportant
+    """
     opls_angles = []
     for i in range(0,len(angle)):
         aList = angle[i]

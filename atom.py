@@ -23,6 +23,11 @@ class Atom(object):
         self.z_pos = z_pos
 
 def create_atoms(atom):
+    """ Creates the atom objects
+
+        Keyword Arguments:
+        atom - A list of atom data
+    """
     atoms = []
     for i in range(0,len(atom)):
         curratom = str(atom[i].attrib).split()
@@ -35,6 +40,11 @@ def create_atoms(atom):
     return atoms
 
 def uniq_types(atom):
+    """ Gets the unique type of atoms for lammps output
+
+        Keyword Arguments:
+        atom - The list of atom objects to get unique types from
+    """
     uniq = []
     uniqadd = []
     for i in range(0,len(atom)):
@@ -47,6 +57,12 @@ def uniq_types(atom):
     return uniq
 
 def periodic_b_size(atom):
+    """ Finds a good periodic boundary size for lammps output. Finds min and max
+        for x,y,z data from the atoms
+
+        Keyword Arguments:
+        atom - The list of atom objects to get x,y,z positional data from.
+    """
     minx = 0
     miny = 0
     minz = 0
@@ -69,6 +85,12 @@ def periodic_b_size(atom):
     return float(minx)-10,float(miny)-10,float(minz)-10,float(maxx)+10,float(maxy)+10,float(maxz)+10
 
 def get_type(atom,type):
+    """ Gets the type of unique atoms it is for lammps output
+
+        Keyword Arguments:
+        atom - The list of atom objects
+        type - The list of unique types
+    """
     for i in range(len(atom)):
         for j in range(len(type)):
             if atom[i].opls_id == type[j].opls_id:

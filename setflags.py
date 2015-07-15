@@ -1,6 +1,7 @@
 import sys
 
 def set_flags():
+    """ Sets the various flags specified by a user """
     #if no file
     if len(sys.argv) == 1:
         print "You need to specifiy a file to read!"
@@ -21,4 +22,3 @@ def set_flags():
         aa = False
 
     return textout,aa,out
-

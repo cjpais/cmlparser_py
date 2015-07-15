@@ -13,6 +13,12 @@ class OPLS_Bond(object):
         self.id = id
 
 def create_bonds(bond):
+    """ Creates an OPLS bond object which contains the relevant opls data. It returns
+        a list of all OPLS bond objects
+
+        Keyword Arguments:
+        bond - The list of bond data from getImportant
+    """
     opls_bonds = []
     for i in range(0,len(bond)):
         bList = bond[i]

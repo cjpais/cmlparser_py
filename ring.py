@@ -40,6 +40,11 @@ class Ring(object):
         return rList
 
 def create_rings(d):
+    """ Creates a ring object given a dihedral list
+
+        Keyword Arguments:
+        d - A list of dihedral objects
+    """
     rings = []
     for i in range(0,len(d)):
         for j in range(0,len(d)):

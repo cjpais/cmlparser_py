@@ -100,6 +100,7 @@ if textout:
 lammps = open(outname,"w")
 sys.stdout = lammps
 
+#writes out to lammps, this really should be done in a method, but it takes a assload of inputs
 print "Written by CMLParser\n"
 print "\t%s atoms" % len(atoms)
 print "\t%s bonds" % len(bonds)

@@ -5,7 +5,7 @@ atom_style full
 boundary p p p
 bond_style harmonic
 dielectric 9.8
-pair_style lj/cut/coul/long 10.0
+pair_style lj/cut/coul/long 20.0
 angle_style harmonic
 dihedral_style opls
 special_bonds lj 0 1 1
@@ -27,11 +27,11 @@ unfix 2
 write_restart restart.rewrite
 
 
-replicate 10 10 10
+replicate 3 3 3
 undump 1
-fix 1 all npt temp 100 423 100 iso 0.0 1 1000 drag 2
+fix 1 all npt temp 100 300 100 iso 10 1 1000 drag 2
 fix 2 all momentum 1 linear 1 1 1
 velocity all create 100.00000 1223
 dump 2 all custom 200 rewrite_final.lammpstrj id type mol xs ys zs vx vy vz
-run 100000
+run 500000
 write_restart restart_final.rewrite
