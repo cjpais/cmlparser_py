@@ -77,6 +77,11 @@ xmin,ymin,zmin,xmax,ymax,zmax = atom.periodic_b_size(atoms)
 #print everything to text output as specified by boolean. DEBUGGING OUTPUT
 if textout:
     print "ran"
+    pctotal = 0
+    for i in range(len(atoms)):
+        pctotal += float(atoms[i].opls_partial)
+        print atoms[i].opls_partial
+    print pctotal
     #print basic info
     #printer.print_atoms(atoms)
     #printer.print_bonds(bonds)
@@ -95,7 +100,7 @@ if textout:
     #printer.print_atoms(atoms,True)
     #printer.print_bonds(bonds,True)
     #printer.print_angles(angles,True)
-    #op.count_atoms(opls_atoms,atoms)
+    op.count_atoms(opls_atoms,atoms)
 
 lammps = open(outname,"w")
 sys.stdout = lammps
@@ -132,7 +137,8 @@ print "\nAtoms\n"
 for i in range(len(atoms)):
     if atoms[i].print_type == 0:
         atoms[i].print_type = 6
-    print "%s 1 %s %s %s %s %s" % (i+1,atoms[i].print_type,atoms[i].opls_partial,atoms[i].x_pos,atoms[i].y_pos,atoms[i].z_pos)
+    #print "%s 1 %s %s %s %s %s" % (i+1,atoms[i].print_type,atoms[i].opls_partial,atoms[i].x_pos,atoms[i].y_pos,atoms[i].z_pos)
+    print "%s 1 %s %s %s %s" % (i+1,atoms[i].print_type,atoms[i].x_pos,atoms[i].y_pos,atoms[i].z_pos)
 print "\nBonds\n"
 for i in range(len(bonds)):
     if bonds[i].print_type == 0:

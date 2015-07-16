@@ -1,21 +1,21 @@
 # Input file for running an NVT Equilibration in LAMMPS, Filename = in.P3HTLeeE250_150
 
 units real
-atom_style full
+atom_style molecular
 boundary p p p
 bond_style harmonic
 dielectric 9.8
-pair_style lj/cut/coul/long 20.0
+pair_style lj/cut 10.0
 angle_style harmonic
 dihedral_style opls
 special_bonds lj 0 1 1
 improper_style none
-kspace_style ewald 10
-read_data data.rewrite
+kspace_style none
+read_data data.rewrite2
 thermo_style custom step temp press ke pe etotal density
-dump 1 all custom 200 rewrite_partial.lammpstrj id type mol xs ys zs vx vy vz
+dump 1 all custom 200 rewrite2.lammpstrj id type mol xs ys zs vx vy vz
 neighbor 10.0 bin
-neigh_modify every 1 delay 0 one 2000
+neigh_modify every 1 delay 0 one 10000
 fix 1 all npt temp 100 100 100 iso 0.0 1 1000 drag 2
 fix 2 all momentum 1 linear 1 1 1
 velocity all create 100.00000 1223
@@ -24,7 +24,7 @@ thermo 100
 run 10000
 unfix 1
 unfix 2
-write_restart restart.rewrite_partial
+write_restart restart.rewrite2
 
 
 replicate 3 3 3
@@ -32,6 +32,6 @@ undump 1
 fix 1 all npt temp 100 300 100 iso 10 1 1000 drag 2
 fix 2 all momentum 1 linear 1 1 1
 velocity all create 100.00000 1223
-dump 2 all custom 200 rewrite_partial_final.lammpstrj id type mol xs ys zs vx vy vz
+dump 2 all custom 200 rewrite_final.lammpstrj id type mol xs ys zs vx vy vz
 run 500000
-write_restart restart_final.rewrite_partial
+write_restart restart_final.rewrite2
