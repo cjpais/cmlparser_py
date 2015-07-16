@@ -1,7 +1,9 @@
 import sys
+import os
 import xml.etree.ElementTree as ET
 import printer
 import setflags
+import setparams
 
 import atom
 import bond
@@ -9,6 +11,7 @@ import angle
 import dihedral
 import ring
 import fused
+import molecule
 
 import opls as op
 import oplsatom
@@ -17,7 +20,17 @@ import oplsangle
 import oplsmolecule
 import oplsdihedral
 
-textout,aa,outname = setflags.set_flags()
+import babel
+
+textout,aa,outname,lammpsin,help = setflags.set_flags()
+dataname = outname.split('/')
+dataname = dataname[len(dataname)-1]
+lammpsinput = lammpsin.split('/')
+lammpsinput = lammpsin.split('.')
+lammpsinput = lammpsinput[len(lammpsinput)-1]
+
+if help:
+    setparams.set_help()
 
 #import the cml file and read
 cmlfile = sys.argv[1]
@@ -73,6 +86,11 @@ dihedral.get_type(dihedrals,unique_d)
 
 #box size
 xmin,ymin,zmin,xmax,ymax,zmax = atom.periodic_b_size(atoms)
+
+#create Molecule object
+molecule = molecule.create_molecule(atoms,bonds,angles,dihedrals,rings,fused_rings)
+
+babel.read_babel_set('molecule/smdppeh.cml',atoms)
 
 #print everything to text output as specified by boolean. DEBUGGING OUTPUT
 if textout:
@@ -137,8 +155,8 @@ print "\nAtoms\n"
 for i in range(len(atoms)):
     if atoms[i].print_type == 0:
         atoms[i].print_type = 6
-    #print "%s 1 %s %s %s %s %s" % (i+1,atoms[i].print_type,atoms[i].opls_partial,atoms[i].x_pos,atoms[i].y_pos,atoms[i].z_pos)
-    print "%s 1 %s %s %s %s" % (i+1,atoms[i].print_type,atoms[i].x_pos,atoms[i].y_pos,atoms[i].z_pos)
+    print "%s 1 %s %s %s %s %s" % (i+1,atoms[i].print_type,atoms[i].opls_partial,atoms[i].x_pos,atoms[i].y_pos,atoms[i].z_pos)
+#    print "%s 1 %s %s %s %s" % (i+1,atoms[i].print_type,atoms[i].x_pos,atoms[i].y_pos,atoms[i].z_pos)
 print "\nBonds\n"
 for i in range(len(bonds)):
     if bonds[i].print_type == 0:
@@ -153,3 +171,48 @@ for i in range(len(dihedrals)):
     if dihedrals[i].print_type == 0:
         dihedrals[i].print_type = 8
     print "%s %s %s %s %s %s" % (i+1,dihedrals[i].print_type,dihedrals[i].dihedral_master1.atom_id,dihedrals[i].dihedral_master2.atom_id,dihedrals[i].dihedral_slave1.atom_id,dihedrals[i].dihedral_slave2.atom_id)
+
+lammps.close()
+
+#writes input file for lammps to run
+lammps2 = open(lammpsin,"w")
+sys.stdout = lammps2
+
+print "# created by CMLParser\n"
+print "units real"
+print "atom_style full"
+print "boundary p p p"
+print "bond_style harmonic"
+print "dielectric 9.8"
+print "pair_style lj/cut/coul/long 20.0"
+print "angle_style harmonic"
+print "dihedral_style opls"
+print "special_bonds lj 0 1 1"
+print "improper_style none"
+print "kspace_style ewald 10"
+print "read_data %s" % dataname
+print "thermo_style custom step temp press ke pe etotal density"
+print "dump 1 all custom 200 %s.lammpstrj id type mol xs ys zs vx vy vz" % lammpsinput
+print "neighbor 10.0 bin"
+print "neigh_modify every 1 delay 0 one 10000"
+print "fix 1 all npt temp 100 100 100 iso 0.0 1 1000 drag 2"
+print "fix 2 all momentum 1 linear 1 1 1"
+print "velocity all create 100.00000 1223"
+print "timestep 1"
+print "thermo 100"
+print "run 10000"
+print "unfix 1"
+print "unfix 2"
+print "write_restart restart.%s\n\n" % lammpsinput
+print "replicate 3 3 3"
+print "undump 1"
+print "fix 1 all npt temp 100 300 100 iso 10 1 1000 drag 2"
+print "fix 2 all momentum 1 linear 1 1 1"
+print "velocity all create 100.00000 1223"
+print "dump 2 all custom 1000 %s.lammpstrj id type mol xs ys zs vx vy vz" % ("%s_final" % lammpsinput)
+print "run 500000"
+print "write_restart restart.%s" % ("%s_final" % lammpsinput)
+
+lammps2.close()
+
+os.chdir('outputs')

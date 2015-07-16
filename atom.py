@@ -1,3 +1,5 @@
+import os
+
 class Atom(object):
     atom_id = ""
     atom_type = ""
