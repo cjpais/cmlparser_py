@@ -35,3 +35,5 @@ velocity all create 100.00000 1223
 dump 2 all custom 1000 rewriteout_final.lammpstrj id type mol xs ys zs vx vy vz
 run 500000
 write_restart restart.rewriteout_final
+unfix 1
+unfix 2

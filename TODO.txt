@@ -1,1 +1,5 @@
 fix bugs
+create comet sbatch file
+run the sbatch
+write lammps_params.md to explain all lammps parameters requested by the help flag
+constrain dft dihedral nwchem

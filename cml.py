@@ -22,7 +22,7 @@ import oplsdihedral
 
 import babel
 
-textout,aa,outname,lammpsin,help = setflags.set_flags()
+textout,aa,outname,lammpsin,help,isfile,fname = setflags.set_flags()
 dataname = outname.split('/')
 dataname = dataname[len(dataname)-1]
 lammpsinput = lammpsin.split('/')
@@ -30,7 +30,10 @@ lammpsinput = lammpsin.split('.')
 lammpsinput = lammpsinput[len(lammpsinput)-1]
 
 if help:
-    setparams.set_help()
+    setparams.set_help(lammpsin,dataname)
+
+if isfile:
+    setparams.change_data_from_filein(fname,dataname)
 
 #import the cml file and read
 cmlfile = sys.argv[1]
@@ -95,11 +98,10 @@ babel.read_babel_set('molecule/smdppeh.cml',atoms)
 #print everything to text output as specified by boolean. DEBUGGING OUTPUT
 if textout:
     print "ran"
-    pctotal = 0
-    for i in range(len(atoms)):
-        pctotal += float(atoms[i].opls_partial)
-        print atoms[i].opls_partial
-    print pctotal
+    #pctotal = 0
+    #for i in range(len(atoms)):
+    #    pctotal += float(atoms[i].opls_partial)
+    #print pctotal
     #print basic info
     #printer.print_atoms(atoms)
     #printer.print_bonds(bonds)
@@ -118,7 +120,7 @@ if textout:
     #printer.print_atoms(atoms,True)
     #printer.print_bonds(bonds,True)
     #printer.print_angles(angles,True)
-    op.count_atoms(opls_atoms,atoms)
+    #op.count_atoms(opls_atoms,atoms)
 
 lammps = open(outname,"w")
 sys.stdout = lammps
@@ -175,44 +177,47 @@ for i in range(len(dihedrals)):
 lammps.close()
 
 #writes input file for lammps to run
-lammps2 = open(lammpsin,"w")
-sys.stdout = lammps2
+if help == False:
+    lammps2 = open(lammpsin,"w")
+    sys.stdout = lammps2
 
-print "# created by CMLParser\n"
-print "units real"
-print "atom_style full"
-print "boundary p p p"
-print "bond_style harmonic"
-print "dielectric 9.8"
-print "pair_style lj/cut/coul/long 20.0"
-print "angle_style harmonic"
-print "dihedral_style opls"
-print "special_bonds lj 0 1 1"
-print "improper_style none"
-print "kspace_style ewald 10"
-print "read_data %s" % dataname
-print "thermo_style custom step temp press ke pe etotal density"
-print "dump 1 all custom 200 %s.lammpstrj id type mol xs ys zs vx vy vz" % lammpsinput
-print "neighbor 10.0 bin"
-print "neigh_modify every 1 delay 0 one 10000"
-print "fix 1 all npt temp 100 100 100 iso 0.0 1 1000 drag 2"
-print "fix 2 all momentum 1 linear 1 1 1"
-print "velocity all create 100.00000 1223"
-print "timestep 1"
-print "thermo 100"
-print "run 10000"
-print "unfix 1"
-print "unfix 2"
-print "write_restart restart.%s\n\n" % lammpsinput
-print "replicate 3 3 3"
-print "undump 1"
-print "fix 1 all npt temp 100 300 100 iso 10 1 1000 drag 2"
-print "fix 2 all momentum 1 linear 1 1 1"
-print "velocity all create 100.00000 1223"
-print "dump 2 all custom 1000 %s.lammpstrj id type mol xs ys zs vx vy vz" % ("%s_final" % lammpsinput)
-print "run 500000"
-print "write_restart restart.%s" % ("%s_final" % lammpsinput)
+    print "# created by CMLParser\n"
+    print "units real"
+    print "atom_style full"
+    print "boundary p p p"
+    print "bond_style harmonic"
+    print "dielectric 9.8"
+    print "pair_style lj/cut/coul/long 20.0"
+    print "angle_style harmonic"
+    print "dihedral_style opls"
+    print "special_bonds lj 0 1 1"
+    print "improper_style none"
+    print "kspace_style ewald 10"
+    print "read_data %s" % dataname
+    print "thermo_style custom step temp press ke pe etotal density"
+    print "dump 1 all custom 200 %s.lammpstrj id type mol xs ys zs vx vy vz" % lammpsinput
+    print "neighbor 10.0 bin"
+    print "neigh_modify every 1 delay 0 one 10000"
+    print "fix 1 all npt temp 100 100 100 iso 0.0 1 1000 drag 2"
+    print "fix 2 all momentum 1 linear 1 1 1"
+    print "velocity all create 100.00000 1223"
+    print "timestep 1"
+    print "thermo 100"
+    print "run 10000"
+    print "unfix 1"
+    print "unfix 2"
+    print "write_restart restart.%s\n\n" % lammpsinput
+    print "replicate 3 3 3"
+    print "undump 1"
+    print "fix 1 all npt temp 100 300 100 iso 10 1 1000 drag 2"
+    print "fix 2 all momentum 1 linear 1 1 1"
+    print "velocity all create 100.00000 1223"
+    print "dump 2 all custom 1000 %s.lammpstrj id type mol xs ys zs vx vy vz" % ("%s_final" % lammpsinput)
+    print "run 500000"
+    print "write_restart restart.%s" % ("%s_final" % lammpsinput)
+    print "unfix 1"
+    print "unfix 2"
 
-lammps2.close()
+    lammps2.close()
 
 os.chdir('outputs')
