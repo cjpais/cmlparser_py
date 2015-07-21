@@ -13,7 +13,6 @@ def set_help(input_write,dataname):
     dielectric = raw_input("Enter Lammps dielectric: ")
     pair_style = raw_input("Enter Lammps pair_style: ")
     angle_style = raw_input("Enter Lammps angle_style: ")
-    dihedral_style = raw_input("Enter Lammps dihedral_style: ")
     special_bonds = raw_input("Enter Lammps special_bonds: ")
     improper_style = raw_input("Enter Lammps improper_style: ")
     kspace_style = raw_input("Enter Lammps kspace_style: ")
@@ -44,7 +43,6 @@ def set_help(input_write,dataname):
     print "dielectric %s " % dielectric
     print "pair_style %s " % pair_style
     print "angle_style %s " % angle_style
-    print "dihedral_style %s " % dihedral_style
     print "special_bonds %s " % special_bonds
     print "improper_style %s " % improper_style
     print "kspace_style %s " % kspace_style
@@ -82,7 +80,7 @@ def set_help(input_write,dataname):
         print "dielectric %s " % dielectric
         print "pair_style %s " % pair_style
         print "angle_style %s " % angle_style
-        print "dihedral_style %s " % dihedral_style
+        print "dihedral_style opls"
         print "special_bonds %s " % special_bonds
         print "improper_style %s " % improper_style
         print "kspace_style %s " % kspace_style

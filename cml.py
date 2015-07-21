@@ -56,6 +56,7 @@ atoms = atom.create_atoms(atomTree)
 bonds = bond.create_bonds(bondTree,atoms)
 angles = angle.create_angles(atoms,bonds)
 dihedrals = dihedral.create_dihedrals(angles)
+dihedral.set_dft(dihedrals,bonds)
 rings = ring.create_rings(dihedrals)
 fused_rings = fused.create_fused_rings(rings)
 
@@ -107,8 +108,8 @@ if textout:
     #printer.print_bonds(bonds)
     #printer.print_angles(angles)
     #printer.print_dihedrals(dihedrals)
-    #printer.print_ring(rings)
-    #printer.print_fused(fused_rings)
+    printer.print_ring(rings)
+    printer.print_fused(fused_rings)
 
     #print opls info (not very useful)
     #printer.print_opls_atoms(opls_atoms)
@@ -120,6 +121,7 @@ if textout:
     #printer.print_atoms(atoms,True)
     #printer.print_bonds(bonds,True)
     #printer.print_angles(angles,True)
+    printer.print_all_dft(dihedrals)
     #op.count_atoms(opls_atoms,atoms)
 
 lammps = open(outname,"w")
@@ -207,7 +209,7 @@ if help == False:
     print "unfix 1"
     print "unfix 2"
     print "write_restart restart.%s\n\n" % lammpsinput
-    print "replicate 3 3 3"
+    print "replicate 10 10 10"
     print "undump 1"
     print "fix 1 all npt temp 100 300 100 iso 10 1 1000 drag 2"
     print "fix 2 all momentum 1 linear 1 1 1"
@@ -221,3 +223,26 @@ if help == False:
     lammps2.close()
 
 os.chdir('outputs')
+cometrun = open('run_%s' % lammpsinput,'w')
+sys.stdout = cometrun
+
+print "#!/bin/bash"
+print '#SBATCH --job-name="cmlparser_run"'
+print '#SBATCH --output="job.%j.%N.out"'
+print '#SBATCH --partition=compute'
+
+print '#SBATCH --nodes=2'
+print '#SBATCH --ntasks-per-node=24'
+
+print '#SBATCH -t 2:00:00'
+
+print '#SBATCH -A sds154'
+
+print 'module load python lammps'
+
+print 'cd /oasis/scratch/comet/cjpais/temp_project/cmlparser_py/outputs'
+print 'export OMP_NUM_THREADS=1'
+
+print 'ibrun -np 48 lammps < in.rewriteout'
+
+os.system('squeue run_%s' % lammpsinput)

@@ -84,7 +84,19 @@ def periodic_b_size(atom):
             maxz = atom[i].z_pos
         else:
             minz = atom[i].z_pos
-    return float(minx)-10,float(miny)-10,float(minz)-10,float(maxx)+10,float(maxy)+10,float(maxz)+10
+    totalmin = float(minx)
+    totalmax = float(maxx)
+    if float(miny) < totalmin:
+        totalmin = float(miny)
+    if float(minz) < totalmin:
+        totalmin = float(minz)
+    if float(maxy) > totalmax:
+        totalmax = float(maxy)
+    if float(maxz) > totalmax:
+        totalmax = float(maxz)
+    totalmax += 10
+    totalmin -+ 10
+    return totalmin,totalmin,totalmin,totalmax,totalmax,totalmax
 
 def get_type(atom,type):
     """ Gets the type of unique atoms it is for lammps output

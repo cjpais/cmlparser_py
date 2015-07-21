@@ -10,7 +10,9 @@ There are a few command line flags to be aware of (show in parens):
 python cml.py (cml-filename) (output-filename) (d)
 * cml-filename - The name and location of the cml file you would like to parse
 * output-filename - The file name and location for a lammps output
-* d - Used for debugging output, lines in cml.py will help print out debugging info
+* d or debug - Used for debugging output, lines in cml.py will help print out debugging info can be specified anywhere in the input
+* h or help - Used when you are unsure on how to write a lammps file
+* -f (file) - Specifies there is an lammps input file that just needs read_data changed. File is the input file
 
 An example of use would be:
 

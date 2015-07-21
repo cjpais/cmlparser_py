@@ -180,3 +180,10 @@ def print_opls_dihedrals(opls_dihedrals):
         print opls_dihedrals[i].k2
         print opls_dihedrals[i].k3
         print opls_dihedrals[i].k4
+
+def print_all_dft(dihedrals):
+    counter = 0
+    for i in range(len(dihedrals)):
+        if dihedrals[i].dft:
+            counter += 1
+    print counter

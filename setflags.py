@@ -32,9 +32,6 @@ def set_flags():
     else:
         help = False
 
-    if "-p" in sys.argv:
-        print "get index of -p then add one for the parameter file"
-
     #aa or ua
     if "aa" in sys.argv:
         aa = True

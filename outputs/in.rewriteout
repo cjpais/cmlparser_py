@@ -27,7 +27,7 @@ unfix 2
 write_restart restart.rewriteout
 
 
-replicate 3 3 3
+replicate 10 10 10
 undump 1
 fix 1 all npt temp 100 300 100 iso 10 1 1000 drag 2
 fix 2 all momentum 1 linear 1 1 1

@@ -92,3 +92,10 @@ def get_type(bond,type):
         for j in range(len(type)):
             if bond[i].bond_force_const == type[j].bond_force_const and bond[i].bond_equib_len == type[j].bond_equib_len:
                 bond[i].print_type = j+1
+
+def get_bond(master,slave,bonds):
+    for i in range(len(bonds)):
+        if master == bonds[i].bond_master and slave == bonds[i].bond_slave:
+            return bonds[i]
+        if master == bonds[i].bond_slave and slave == bonds[i].bond_master:
+            return bonds[i]

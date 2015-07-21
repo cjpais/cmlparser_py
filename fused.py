@@ -35,6 +35,6 @@ def create_fused_rings(rings):
                         if counter == 2:
                             fused_rings.append(Fused_Ring(inRing,outRing))
                             rings[i].fused = True
-                            rings[j].fused = True
+                            #rings[j].fused = True TODO some weird ass bug here
                         continue
     return fused_rings

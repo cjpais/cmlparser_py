@@ -1,3 +1,5 @@
+import bond
+
 class Dihedral(object):
     dihedral_eqib_len = ""
     dihedral_force_const = ""
@@ -10,6 +12,7 @@ class Dihedral(object):
     k3 = ""
     k4 = ""
     print_type = 0
+    dft = False
 
     def __init__(self, dihedral_master1, dihedral_master2, dihedral_slave1, dihedral_slave2):
         self.dihedral_master1 = dihedral_master1
@@ -116,3 +119,14 @@ def get_type(dihedral,type):
         for j in range(len(type)):
             if dihedral[i].k1 == type[j].k1 and dihedral[i].k2 == type[j].k2 and dihedral[i].k3 == type[j].k3 and dihedral[i].k4 == type[j].k4:
                 dihedral[i].print_type = j+1
+
+def set_dft(dihedral,bonds):
+    for i in range(len(dihedral)):
+        mb1 = bond.get_bond(dihedral[i].dihedral_master1,dihedral[i].dihedral_master2,bonds)
+        if mb1.bond_type == '1':
+            ob1 = bond.get_bond(dihedral[i].dihedral_master1,dihedral[i].dihedral_slave1,bonds)
+            ob2 = bond.get_bond(dihedral[i].dihedral_master2,dihedral[i].dihedral_slave2,bonds)
+            if ob1 == None or ob2 == None:
+                continue
+            if ob1.bond_type == '2' and ob2.bond_type == '2':
+                dihedral[i].dft = True
