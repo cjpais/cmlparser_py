@@ -57,6 +57,7 @@ atoms = atom.create_atoms(atomTree)
 bonds = bond.create_bonds(bondTree,atoms)
 angles = angle.create_angles(atoms,bonds)
 dihedrals = dihedral.create_dihedrals(angles)
+#baddihedrals = dihedral.create_dihedrals(angles,True)
 dihedral.set_dft(dihedrals,bonds)
 rings = ring.create_rings(dihedrals)
 fused_rings = fused.create_fused_rings(rings)
@@ -109,8 +110,8 @@ if textout:
     #printer.print_bonds(bonds)
     #printer.print_angles(angles)
     #printer.print_dihedrals(dihedrals)
-    printer.print_ring(rings)
-    printer.print_fused(fused_rings)
+    #printer.print_ring(rings)
+    #printer.print_fused(fused_rings)
 
     #print opls info (not very useful)
     #printer.print_opls_atoms(opls_atoms)
@@ -122,6 +123,7 @@ if textout:
     #printer.print_atoms(atoms,True)
     #printer.print_bonds(bonds,True)
     #printer.print_angles(angles,True)
+    printer.print_dihedrals(dihedrals)
     printer.print_all_dft(dihedrals)
     #op.count_atoms(opls_atoms,atoms)
 
@@ -176,7 +178,9 @@ for i in range(len(dihedrals)):
     if dihedrals[i].print_type == 0:
         dihedrals[i].print_type = 8
     print "%s %s %s %s %s %s" % (i+1,dihedrals[i].print_type,dihedrals[i].dihedral_master1.atom_id,dihedrals[i].dihedral_master2.atom_id,dihedrals[i].dihedral_slave1.atom_id,dihedrals[i].dihedral_slave2.atom_id)
-
+print ""
+for i in range(len(atoms)):
+    print "set atom %s diameter %s" % (i+1,atoms[i].opls_sigma)
 lammps.close()
 
 #writes input file for lammps to run

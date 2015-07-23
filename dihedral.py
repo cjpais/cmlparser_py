@@ -47,7 +47,7 @@ def remove_duplicates(l):
     """
     return list(set(l))
 
-def create_dihedrals(dihedral):
+def create_dihedrals(dihedral,all=False):
     """ Creates the dihedral objects
 
         Keyword Arguments:
@@ -59,8 +59,9 @@ def create_dihedrals(dihedral):
         for j in range(0,len(dihedral)):
             if dihedral[i] == dihedral[j]:
                 continue
-            #if dihedral[i].Angle_master.dihedral or dihedral[j].Angle_master.dihedral:
-            #    continue
+            #if all == False:
+            #    if dihedral[i].Angle_master.dihedral or dihedral[j].Angle_master.dihedral:
+            #        continue
             inF = [dihedral[j].Angle_master,dihedral[j].Angle_slave1]
             inS = [dihedral[j].Angle_slave1,dihedral[j].Angle_slave2]
             inFL = [dihedral[j].Angle_master,dihedral[j].Angle_slave2]

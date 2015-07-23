@@ -3,6 +3,6 @@ benchmark
 
 constrain dft dihedral nwchem
 
-dihedral double counting
+dihedral double counting... still more problems
 duplicate rings... clear them
 matplotlib for python plotting data
