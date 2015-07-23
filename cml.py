@@ -21,6 +21,7 @@ import oplsmolecule
 import oplsdihedral
 
 import babel
+import write_nwchem
 
 textout,aa,outname,lammpsin,help,isfile,fname = setflags.set_flags()
 dataname = outname.split('/')
@@ -221,6 +222,8 @@ if help == False:
     print "unfix 2"
 
     lammps2.close()
+
+write_nwchem.dft(dihedrals)
 
 os.chdir('outputs')
 cometrun = open('run_%s' % lammpsinput,'w')

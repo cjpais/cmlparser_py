@@ -1,11 +1,8 @@
 fix bugs
 benchmark
-Make dihedral style always opls
 
-write lammps_params.md to explain all lammps parameters requested by the help flag
 constrain dft dihedral nwchem
 
 dihedral double counting
+duplicate rings... clear them
 matplotlib for python plotting data
-fused ring bug
-make box cubic

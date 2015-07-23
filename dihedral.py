@@ -59,15 +59,23 @@ def create_dihedrals(dihedral):
         for j in range(0,len(dihedral)):
             if dihedral[i] == dihedral[j]:
                 continue
+            #if dihedral[i].Angle_master.dihedral or dihedral[j].Angle_master.dihedral:
+            #    continue
             inF = [dihedral[j].Angle_master,dihedral[j].Angle_slave1]
             inS = [dihedral[j].Angle_slave1,dihedral[j].Angle_slave2]
             inFL = [dihedral[j].Angle_master,dihedral[j].Angle_slave2]
             if outlist[0] in inF and outlist[1] in inF:
                 dihedrals.append(Dihedral(outlist[0],outlist[1],outlist[2],inS[1]))
+                outlist[0].dihedral = True
+                outlist[1].dihedral = True
             elif outlist[0] in inS and outlist[1] in inS:
                 dihedrals.append(Dihedral(outlist[0],outlist[1],outlist[2],inF[0]))
+                outlist[0].dihedral = True
+                outlist[1].dihedral = True
             elif outlist[0] in inFL and outlist[1] in inFL:
                 dihedrals.append(Dihedral(outlist[0],outlist[1],outlist[2],inS[0]))
+                outlist[0].dihedral = True
+                outlist[1].dihedral = True
     dihedrals = get_unique(dihedrals)
     return dihedrals
 
