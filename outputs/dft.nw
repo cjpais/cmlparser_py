@@ -1,76 +1,76 @@
 title "SMDPPEH with displacement: 04.00 Angstroms"
 
-geometry molA units angstroms noautoz noautosim
+geometry molA units angstroms noautoz noautosym
 C -1.777336 2.355028 1.776412
 C -2.106505 1.288794 0.974347
 O -2.564647 3.080580 2.355990
 C -3.134813 0.519027 0.429582
 end
 
-geometry molB units angstroms noautoz noautosim
+geometry molB units angstroms noautoz noautosym
 C 1.606408 1.284752 0.856230
 C 0.145040 1.529295 1.047099
 C 2.214196 0.475916 -0.119652
 C -0.883743 0.769403 0.495927
 end
 
-geometry molC units angstroms noautoz noautosim
+geometry molC units angstroms noautoz noautosym
 C 3.631477 0.418497 -0.014704
 C 2.214196 0.475916 -0.119652
 C 4.136014 1.173056 1.043963
 C 1.606408 1.284752 0.856230
 end
 
-geometry molD units angstroms noautoz noautosim
+geometry molD units angstroms noautoz noautosym
 C 11.522022 0.088917 0.694076
 C 10.108024 0.146711 0.545644
 C 11.991932 0.836574 1.781734
 C 9.485248 0.937083 1.518358
 end
 
-geometry molE units angstroms noautoz noautosim
+geometry molE units angstroms noautoz noautosym
 C -4.599616 0.737496 0.648947
 C -3.134813 0.519027 0.429582
 C -5.196570 1.548915 1.629161
 C -2.106505 1.288794 0.974347
 end
 
-geometry molF units angstroms noautoz noautosim
+geometry molF units angstroms noautoz noautosym
 C -6.617988 1.553626 1.584791
 C -5.196570 1.548915 1.629161
 C -7.141684 0.753027 0.569820
 C -4.599616 0.737496 0.648947
 end
 
-geometry molG units angstroms noautoz noautosim
+geometry molG units angstroms noautoz noautosym
 C -8.561787 0.529941 0.270937
 C -7.141684 0.753027 0.569820
 C -9.086030 -0.287115 -0.737766
 C -6.617988 1.553626 1.584791
 end
 
-geometry molH units angstroms noautoz noautosim
+geometry molH units angstroms noautoz noautosym
 C -12.524451 0.704187 0.460369
 C -11.089218 0.501677 0.222825
 C -13.098691 1.523564 1.438843
 C -10.508909 -0.302926 -0.764838
 end
 
-geometry molI units angstroms noautoz noautosim
+geometry molI units angstroms noautoz noautosym
 C -14.520628 1.520104 1.410956
 C -13.098691 1.523564 1.438843
 C -15.055692 0.696084 0.414979
 C -12.524451 0.704187 0.460369
 end
 
-geometry molJ units angstroms noautoz noautosim
+geometry molJ units angstroms noautoz noautosym
 C 5.541311 1.319504 1.431341
 C 4.136014 1.173056 1.043963
 C 6.034503 2.077445 2.499359
 C 3.631477 0.418497 -0.014704
 end
 
-geometry molK units angstroms noautoz noautosim
+geometry molK units angstroms noautoz noautosym
 C 7.447953 2.012453 2.625505
 C 6.034503 2.077445 2.499359
 C 8.051794 1.205312 1.654671
