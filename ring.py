@@ -4,6 +4,7 @@ class Ring(object):
     ring_type = 0
     improper = False
     fused = False
+    thio = False
     atom1 = ""
     atom2 = ""
     atom3 = ""
@@ -39,6 +40,17 @@ class Ring(object):
         rList.append(self.atom5)
         if self.atom6 != None:
             rList.append(self.atom6)
+        return rList
+
+    def list_type(self):
+        rList = []
+        rList.append(self.atom1.atom_type)
+        rList.append(self.atom2.atom_type)
+        rList.append(self.atom3.atom_type)
+        rList.append(self.atom4.atom_type)
+        rList.append(self.atom5.atom_type)
+        if self.atom6 != None:
+            rList.append(self.atom6.atom_type)
         return rList
 
 def create_rings(d,bonds):

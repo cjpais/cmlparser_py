@@ -2,11 +2,11 @@
 #SBATCH --job-name="cmlparser_run"
 #SBATCH --output="job.%j.%N.out"
 #SBATCH --partition=compute
-#SBATCH --nodes=4
+#SBATCH --nodes=2
 #SBATCH --ntasks-per-node=24
-#SBATCH -t 24:00:00
+#SBATCH -t 2:00:00
 #SBATCH -A csd459
 module load python lammps openbabel
 cd /oasis/scratch/comet/cjpais/temp_project/cmlparser_py/outputs
 export OMP_NUM_THREADS=1
-ibrun -np 96 lammps < in.rewriteout
+ibrun -np 48 lammps < in.rewriteout

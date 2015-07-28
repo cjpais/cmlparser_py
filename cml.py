@@ -12,6 +12,7 @@ import dihedral
 import ring
 import fused
 import molecule
+import monomer
 
 import opls as op
 import oplsatom
@@ -94,7 +95,16 @@ dihedral.get_type(dihedrals,unique_d)
 xmin,ymin,zmin,xmax,ymax,zmax = atom.periodic_b_size(atoms)
 
 #create Molecule object
-molecule = molecule.create_molecule(atoms,bonds,angles,dihedrals,rings,fused_rings)
+molecule1 = molecule.create_molecule(atoms,bonds,angles,dihedrals,rings,fused_rings)
+monomer1 = monomer.create_monomer(atoms,bonds,angles,dihedrals,rings,fused_rings)
+
+#really should do this in a different file.
+#monomer handling
+monomer.mark_thio(monomer1)
+
+
+
+
 
 #create babel and read to get better partials
 babel.read_babel_set(moleculen,atoms)
