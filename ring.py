@@ -41,7 +41,7 @@ class Ring(object):
             rList.append(self.atom6)
         return rList
 
-def create_rings(d,bonds,angles):
+def create_rings(d,bonds):
     """ Creates a ring object given a dihedral list. Hard to understand via this
         code. Basically creates different lists and checks them
 
@@ -56,6 +56,8 @@ def create_rings(d,bonds,angles):
                 continue
             if d[i].dihedral_master1.ring:
                 continue
+            if d[j].dihedral_master1.ring:
+                continue
             dList = [d[j].dihedral_master1,d[j].dihedral_master2,d[j].dihedral_slave1,d[j].dihedral_slave2]
             dIn = [dList[2],dList[3]]
             outList = [d[i].dihedral_master1,d[i].dihedral_master2,d[i].dihedral_slave1,d[i].dihedral_slave2]
@@ -65,11 +67,22 @@ def create_rings(d,bonds,angles):
             dInS4 = bond.get_bond(dList[3],outList[0],bonds)
             dM1S = bond.get_bond(dList[2],outList[2],bonds)
             dM2S = bond.get_bond(dList[3],outList[3],bonds)
-            if outList[0] not in dList and outList[1] not in dList:
+            if outList[0] not in dList and outList[1] not in dList:      #finding 6 mem rings for 5 mem. bad code
                 if outList[2] in dList and outList[3] in dIn:
                     if dList[0] not in outList and dList[1] not in outList:
                         if dInS1 != None and dInS2 != None:
                             if dInS3 != None and dInS4 != None:
                                 rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0],dList[1]))
-        #FUCK 5 MEMBERED RINGS
+            elif outList[0] in dList and outList[2] in dList and outList[3] in dList and outList[1] not in dList:
+                if dList[0] in outList and dList[2] in outList and dList[3] in outList and dList[1] not in outList:
+                    rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[1]))
+            elif outList[0] in dList and outList[2] in dList and outList[3] in dList and outList[1] not in dList:
+                if dList[1] in outList and dList[2] in outList and dList[3] in outList and dList[0] not in outList:
+                    rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0]))
+            elif outList[1] in dList and outList[2] in dList and outList[3] in dList and outList[0] not in dList:
+                if dList[0] in outList and dList[2] in outList and dList[3] in outList and dList[1] not in outList:
+                    rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[1]))
+            elif outList[1] in dList and outList[2] in dList and outList[3] in dList and outList[0] not in dList:
+                if dList[1] in outList and dList[2] in outList and dList[3] in outList and dList[0] not in outList:
+                    rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0]))
     return rings
