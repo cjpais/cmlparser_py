@@ -22,6 +22,7 @@ import oplsdihedral
 
 import babel
 import write_nwchem
+import write_qchem
 
 textout,aa,outname,lammpsin,help,isfile,fname = setflags.set_flags()
 dataname = outname.split('/')
@@ -59,7 +60,7 @@ angles = angle.create_angles(atoms,bonds)
 dihedrals = dihedral.create_dihedrals(angles)
 #baddihedrals = dihedral.create_dihedrals(angles,True)
 dihedral.set_dft(dihedrals,bonds)
-rings = ring.create_rings(dihedrals)
+rings = ring.create_rings(dihedrals,bonds,angles)
 fused_rings = fused.create_fused_rings(rings)
 
 #get important OPLS info
@@ -106,11 +107,11 @@ if textout:
     #    pctotal += float(atoms[i].opls_partial)
     #print pctotal
     #print basic info
-    #printer.print_atoms(atoms)
-    #printer.print_bonds(bonds)
-    #printer.print_angles(angles)
-    #printer.print_dihedrals(dihedrals)
-    #printer.print_ring(rings)
+    printer.print_atoms(atoms)
+    printer.print_bonds(bonds)
+    printer.print_angles(angles)
+    printer.print_dihedrals(dihedrals)
+    printer.print_ring(rings)
     #printer.print_fused(fused_rings)
 
     #print opls info (not very useful)
@@ -123,8 +124,8 @@ if textout:
     #printer.print_atoms(atoms,True)
     #printer.print_bonds(bonds,True)
     #printer.print_angles(angles,True)
-    printer.print_dihedrals(dihedrals)
-    printer.print_all_dft(dihedrals)
+    #printer.print_dihedrals(dihedrals)
+    #printer.print_all_dft(dihedrals)
     #op.count_atoms(opls_atoms,atoms)
 
 lammps = open(outname,"w")
@@ -178,9 +179,6 @@ for i in range(len(dihedrals)):
     if dihedrals[i].print_type == 0:
         dihedrals[i].print_type = 8
     print "%s %s %s %s %s %s" % (i+1,dihedrals[i].print_type,dihedrals[i].dihedral_master1.atom_id,dihedrals[i].dihedral_master2.atom_id,dihedrals[i].dihedral_slave1.atom_id,dihedrals[i].dihedral_slave2.atom_id)
-print ""
-for i in range(len(atoms)):
-    print "set atom %s diameter %s" % (i+1,atoms[i].opls_sigma)
 lammps.close()
 
 #writes input file for lammps to run
@@ -228,13 +226,15 @@ if help == False:
     lammps2.close()
 
 write_nwchem.dft(dihedrals)
+write_qchem.write(atoms,dihedrals)
 
+# this gets depreciated
 os.chdir('outputs')
 cometrun = open('run_%s' % lammpsinput,'w')
 sys.stdout = cometrun
 
 print "#!/bin/bash"
-print '#SBATCH --job-name="cmlparser_run"'
+print '#SBATCH --job-name="cmlparser_run"' #add shit here
 print '#SBATCH --output="job.%j.%N.out"'
 print '#SBATCH --partition=compute'
 
@@ -243,13 +243,13 @@ print '#SBATCH --ntasks-per-node=24'
 
 print '#SBATCH -t 2:00:00'
 
-print '#SBATCH -A sds154'
+print '#SBATCH -A csd459'
 
-print 'module load python lammps'
+print 'module load python lammps openbabel'
 
 print 'cd /oasis/scratch/comet/cjpais/temp_project/cmlparser_py/outputs'
 print 'export OMP_NUM_THREADS=1'
 
-print 'ibrun -np 48 lammps < in.rewriteout'
+print 'ibrun -np 48 lammps < in.rewriteout' #add shit here
 
-os.system('squeue run_%s' % lammpsinput)
+os.system('sbatch run_%s' % lammpsinput)

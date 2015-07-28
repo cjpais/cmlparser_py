@@ -25,9 +25,7 @@ def dft(dihedrals):
         if dihedrals[i].dft:
             print "set geometry mol%s" % counter
             print "dft"
-            print " xc b31yp"
-            print " odft"
-            print " vectors input atomic outpus mol%s.mos" % counter
+            print " cdft 1 60 charge -1"
             print "end\n"
             print "task dft ignore\n"
             counter = chr(ord(counter)+1)

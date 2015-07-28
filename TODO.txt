@@ -6,3 +6,7 @@ constrain dft dihedral nwchem
 dihedral double counting... still more problems
 duplicate rings... clear them
 matplotlib for python plotting data
+
+p3ht
+monomer class - make polymer from monomer. thiophene rings...
+polymer class - how many chain
