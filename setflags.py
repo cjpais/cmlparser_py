@@ -9,6 +9,7 @@ def set_flags():
         print "You need to specifiy a file to read!"
         quit()
 
+    moleculen = sys.argv[1]
     out = sys.argv[2]
     cat = sys.argv[3]
 
@@ -38,4 +39,4 @@ def set_flags():
     else:
         aa = False
 
-    return textout,aa,out,cat,help,isfile,fname
+    return textout,aa,out,cat,help,isfile,fname,moleculen
