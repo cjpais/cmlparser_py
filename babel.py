@@ -1,5 +1,6 @@
 import os
 
+#TODO THIS FUCKING SHIT IS NOT GENERAL. JUST SMDPPEH. ALSO RENAME THE FUCKING LIST CALLED HI
 def read_babel_set(filename,atom):
     os.system('babel -i cml molecules/smdppeh.cml -o mol2 molecules/smdppeh.mol2')
     bfile = open("molecules/smdppeh.mol2")

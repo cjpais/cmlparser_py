@@ -199,25 +199,25 @@ def debug(atoms,bonds,angles,dihedrals,rings,fused_rings,opls_atoms,opls_bonds,o
     #    pctotal += float(atoms[i].opls_partial)
     #print pctotal
     #print basic info
-    #printer.print_atoms(atoms)
-    #printer.print_bonds(bonds)
-    #printer.print_angles(angles)
-    #printer.print_dihedrals(dihedrals)
-    #printer.print_ring(rings)
-    #printer.print_fused(fused_rings)
+    #print_atoms(atoms)
+    #print_bonds(bonds)
+    #print_angles(angles)
+    #print_dihedrals(dihedrals)
+    #print_ring(rings)
+    #print_fused(fused_rings)
 
     #print opls info (not very useful)
-    #printer.print_opls_atoms(opls_atoms)
-    #printer.print_opls_bonds(opls_bonds)
-    #printer.print_opls_angles(opls_angles)
-    #printer.print_opls_dihedrals(opls_dihedrals)
+    #print_opls_atoms(opls_atoms)
+    #print_opls_bonds(opls_bonds)
+    #print_opls_angles(opls_angles)
+    #print_opls_dihedrals(opls_dihedrals)
 
     #reprint for opls add
-    #printer.print_atoms(atoms,True)
-    #printer.print_bonds(bonds,True)
-    #printer.print_angles(angles,True)
-    #printer.print_dihedrals(dihedrals)
-    #printer.print_all_dft(dihedrals)
+    #print_atoms(atoms,True)
+    #print_bonds(bonds,True)
+    #print_angles(angles,True)
+    #print_dihedrals(dihedrals)
+    #print_all_dft(dihedrals)
     #op.count_atoms(opls_atoms,atoms)
 
 def print_data(outname,atoms,bonds,angles,dihedrals,unique_a,unique_b,unique_ang,unique_d,xmin,xmax,ymin,ymax,zmin,zmax):
@@ -338,7 +338,7 @@ def print_srun(lammpsinput):
 
     print '#SBATCH -A csd459'
 
-    print 'module load python lammps openbabel'
+    print 'module load python lammps openbabel qchem'
 
     print 'cd /oasis/scratch/comet/cjpais/temp_project/cmlparser_py/outputs'
     print 'export OMP_NUM_THREADS=1'

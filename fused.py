@@ -1,4 +1,10 @@
 class Fused_Ring(object):
+    """Docstring for Fused_Ring
+
+       Attributes:
+       ring1 - The first ring object in the fused ring
+       ring2 - The second ring object in the fused ring
+    """
     ring1 = ""
     ring2 = ""
 

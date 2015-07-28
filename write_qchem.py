@@ -1,7 +1,15 @@
 import sys
+import os
 
 def write(atoms,dihedrals):
+    """Writes a bunch of qchem files (named qchem1,qchem2,etc) to run and analyze the outputs from.
+       Partial charges and setting dft calculations
+
+       Keyword Arguments:
+       atoms - The list of atoms to print out at somepoint
+       dihedrals - The list of dihedrals to print out at somepoint
     counter = 1
+    os.system('rm outputs/qchem/qchem*')
     for j in range(len(dihedrals)):
         if dihedrals[j].dft == False:
             continue

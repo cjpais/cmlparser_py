@@ -1,4 +1,5 @@
 class Bond(object):
+   """Docstring for Bond"""
    bond_type = ""
    bond_equib_len = ""
    bond_force_const = ""
@@ -94,6 +95,14 @@ def get_type(bond,type):
                 bond[i].print_type = j+1
 
 def get_bond(master,slave,bonds):
+    """ Given a master atom, a slave atom, and a list of bonds, find the bond
+        that bonds those two atoms
+
+        Keyword Arguments:
+        master - The master bond
+        slave - The slave bond
+        bonds - The list of bonds to check for bonding
+    """
     for i in range(len(bonds)):
         if master == bonds[i].bond_master and slave == bonds[i].bond_slave:
             return bonds[i]

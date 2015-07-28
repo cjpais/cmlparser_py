@@ -1,6 +1,7 @@
 import os
 
 class Atom(object):
+    """Docstring for Atom"""
     atom_id = ""
     atom_type = ""
     x_pos = 0.0000

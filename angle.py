@@ -1,5 +1,5 @@
 class Angle(object):
-    #Angle_master specifies the master angle. Etc for slaves
+    """Docstring for Angle"""
     Angle_type = 0
     Angle_equib_len = ""
     Angle_force_const = ""

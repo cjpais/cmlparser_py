@@ -98,12 +98,12 @@ xmin,ymin,zmin,xmax,ymax,zmax = atom.periodic_b_size(atoms)
 molecule1 = molecule.create_molecule(atoms,bonds,angles,dihedrals,rings,fused_rings)
 monomer1 = monomer.create_monomer(atoms,bonds,angles,dihedrals,rings,fused_rings)
 
+
+sys.stdout = sys.__stdout__
 #really should do this in a different file.
 #monomer handling
-monomer.mark_thio(monomer1)
-
-
-
+thorings = monomer.mark_thio(monomer1)
+intermono = monomer.find_intermono(monomer1)
 
 
 #create babel and read to get better partials

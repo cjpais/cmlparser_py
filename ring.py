@@ -1,6 +1,7 @@
 import bond
 
 class Ring(object):
+    """Docstring for Ring"""
     ring_type = 0
     improper = False
     fused = False

@@ -1,4 +1,5 @@
 class OPLS_Bond(object):
+    """Docstring for OPLS_Bond"""
     opls_master = ""
     opls_slave = ""
     fc = ""

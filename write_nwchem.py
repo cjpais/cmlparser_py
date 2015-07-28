@@ -1,6 +1,11 @@
 import sys
 
 def dft(dihedrals):
+    """Writes dft calculations for nwchem. This is wrong. Uses dihedrals. Runs
+
+       Keyword Arguments:
+       dihedrals - The list of dihedrals to generate a nwchem output from. If the dihedral is marked as dft it will run
+    """
     dftfile = open('outputs/dft.nw','w')
     sys.stdout = dftfile
 

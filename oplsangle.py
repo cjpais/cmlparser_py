@@ -1,4 +1,5 @@
 class OPLS_Angle(object):
+    """Docstring for OPLS_Angle"""
     opls_master = ""
     opls_slave1 = ""
     opls_slave2 = ""

@@ -1,7 +1,9 @@
 import sys
 
 def set_flags():
-    """ Sets the various flags specified by a user """
+    """ Sets the various flags specified by a user
+        Reads from sys.argv
+    """
     #if no file
     fname = ""
 

@@ -1,6 +1,7 @@
 import bond
 
 class Dihedral(object):
+    """Docstring for Dihedral"""
     dihedral_eqib_len = ""
     dihedral_force_const = ""
     dihedral_master1 = ""
@@ -13,6 +14,7 @@ class Dihedral(object):
     k4 = ""
     print_type = 0
     dft = False
+    intermono = False
 
     def __init__(self, dihedral_master1, dihedral_master2, dihedral_slave1, dihedral_slave2):
         self.dihedral_master1 = dihedral_master1
@@ -59,9 +61,6 @@ def create_dihedrals(dihedral,all=False):
         for j in range(0,len(dihedral)):
             if dihedral[i] == dihedral[j]:
                 continue
-            #if all == False:
-            #    if dihedral[i].Angle_master.dihedral or dihedral[j].Angle_master.dihedral:
-            #        continue
             inF = [dihedral[j].Angle_master,dihedral[j].Angle_slave1]
             inS = [dihedral[j].Angle_slave1,dihedral[j].Angle_slave2]
             inFL = [dihedral[j].Angle_master,dihedral[j].Angle_slave2]
@@ -79,6 +78,20 @@ def create_dihedrals(dihedral,all=False):
                 outlist[1].dihedral = True
     dihedrals = get_unique(dihedrals)
     return dihedrals
+
+def find_dihedral(master,slave,dihedrals):
+    """ Given a master and slave atom finds the dihedral that they master together.
+
+        Keyword Arguments:
+        master - The atom master you want to use in conjunction with the slave master to find the dihedral
+        slave - The slave master you want to using in conjunction with the master to find the dihedral
+        dihedrals - The list of dihedrals you want to check for this pair of masters
+    """
+    for i in range(len(dihedrals)):
+        if dihedrals[i].dihedral_master1 == master and dihedrals[i].dihedral_master2 == slave:
+            return dihedrals[i]
+        if dihedrals[i].dihedral_master1 == slave and dihedrals[i].dihedral_master2 == master:
+            return dihedrals[i]
 
 def set_opls(dihedrals,opls_dihedrals):
     """ Sets the opls data into the dihedral object
@@ -130,6 +143,15 @@ def get_type(dihedral,type):
                 dihedral[i].print_type = j+1
 
 def set_dft(dihedral,bonds):
+    """ Given a list of dihedrals find if you should set dft values for those dihedrals or not.
+        Sets a boolean on the list of dihedrals that need dft calculations done to them.
+
+        Probably should return a list instead for speed optimization
+
+        Keyword Arguments:
+        dihedral - The list of dihedrals you want to check
+        bonds - The list of bonds you want to check
+    """
     for i in range(len(dihedral)):
         mb1 = bond.get_bond(dihedral[i].dihedral_master1,dihedral[i].dihedral_master2,bonds)
         if mb1.bond_type == '1':

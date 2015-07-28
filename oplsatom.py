@@ -1,4 +1,5 @@
 class OPLS_Atom(object):
+    """Docstring for OPLS_Atom"""
     opls_id = ""
     opls_bondid = ""
     opls_type = ""

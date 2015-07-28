@@ -1,6 +1,8 @@
 import sys
 
 def set_help(input_write,dataname):
+    """ When using the help flag. It assists in writing all your files for you"""
+    
     print "\nIf you dont know parameters for these inputs, please refer to https://github.com/sipjca/cmlparser_py/blob/master/lammps_params.md\n"
     print "Input the whole string you intend on using for each lammps parameter, without the type"
     print "For example when prompted 'Enter Lammps units: ', enter real for the real style"

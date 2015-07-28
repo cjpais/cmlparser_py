@@ -1,5 +1,8 @@
 import sys
 
+#TODO MAKE THIS A MODULE/FUNCTION/WHATEVER YOU WANT TO CALL IT
+""" Assists the user in writing an input for the supercomputer comet"""
+
 sfile = raw_input("What would you like your sbatch filename to be?: ")
 nodes = raw_input("How many nodes would you like to use?: ")
 time = raw_input("How long do you expect it to run (HH:MM:SS)?: ")

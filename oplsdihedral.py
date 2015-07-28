@@ -1,4 +1,5 @@
 class OPLS_Dihedral(object):
+    """Docstring for OPLS_Dihedral"""
     opls_master1 = ""
     opls_master2 = ""
     opls_slave1 = ""
