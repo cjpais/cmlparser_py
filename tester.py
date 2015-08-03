@@ -17,3 +17,10 @@ def count_atoms(opls_atoms,atoms):
             print "There are %s of opls_id #%s" % (counter,opls_atoms[i].atom_id)
 
 # TODO: Maybe move print statements to here?!
+
+def find_specifc_angles(angles):
+    for i in range(len(angles)):
+        if angles[i].Angle_master.atom_type == "C" and angles[i].Angle_slave1.atom_type == "S" and angles[i].Angle_slave2.atom_type == "H":
+            print "some angle here"
+        elif angles[i].Angle_master.atom_type == "C" and angles[i].Angle_slave2.atom_type == "S" and angles[i].Angle_slave1.atom_type == "H":
+            print "some other angle here"

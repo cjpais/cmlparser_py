@@ -1,4 +1,5 @@
 import dihedral
+import ring
 
 class Monomer(object):
     atoms = []
@@ -29,8 +30,10 @@ def create_monomer(a,b,an,di,ri,fr):
         fr - The list of fused rings to add to the monomer
     """
     if len(ri) != 2:
+        print "\nWARNING:"
         print "Not valid monomer for cmlparser"
-        return
+        print "\nQuitting cmlparser. Check that there are exactly 2 rings.\n"
+        #quit()
     monomer = Monomer(a,b,an,di,ri,fr)
     return monomer
 
@@ -65,7 +68,7 @@ def find_intermono(monomer):
         it should work for a polymer, just not tested yet.
 
         Keyword Arguments:
-        The monomer you want to get the intermonomer dihedral
+        monomer - The monomer you want to get the intermonomer dihedral
     """
     intermono = ""
     masterbond = ""
@@ -78,3 +81,49 @@ def find_intermono(monomer):
                 slavebond = ringlist[i].atom_bonds[j]
     intermono = dihedral.find_dihedral(masterbond,slavebond,monomer.dihedrals)
     return intermono
+
+def get_single_alist(monomer):
+    """ Gets a single instance of the monomer to continue to attach. It returns
+        a new monomer object with all the relevant data, hopefully.
+
+       Keyword Arguments:
+       monomer - The monomer you want to get a single monomer from once you have
+                 found the intermonomer dihedral.
+       inter - The intermonomer dihedral, as not to duplicate code
+    """
+    atomlist = monomer.atoms
+    bondlist = monomer.bonds
+    rings = monomer.rings
+    goodring = monomer.rings[0].list()
+    badring = monomer.rings[1].list()
+    partmono = []
+    notgood = []
+    checked = []
+    for i in range(len(goodring)):
+        partmono.append(goodring[i])
+        checked.append(goodring[i])
+    while len(partmono) != len(atomlist)/2:
+        for i in range(len(partmono)):
+            for j in range(len(partmono[i].atom_bonds)):
+                if partmono[i].atom_bonds[j] in partmono:
+                    continue
+                if partmono[i].atom_bonds[j] in badring:
+                    continue
+                else:
+                    partmono.append(partmono[i].atom_bonds[j])
+    print len(partmono)
+    for i in range(len(partmono)):
+        print "Part of monomer1 %s" % partmono[i].atom_id
+
+def find_attach(monomer):
+    """ Given a monomer/polymer with 2 ends, find which atoms you can attach to. returns
+        a list. Which one to add to will be added randomly.
+
+        Keyword Arguments:
+        monomer - The monomer/polymer you want to find where to attach the next monomer to
+    """
+
+    #get a list of rings
+    #find which rings have 2 hydrogens attached to them.
+    #pick the hydrogen that is correct. This is the hydrogen which is bonded to the carbon bonded to the sulfur.
+    #maybe use an angle to find this. The master being a carbon, one slave as a sulfur and the other as hydrogen

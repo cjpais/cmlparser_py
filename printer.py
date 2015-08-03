@@ -59,9 +59,9 @@ def print_angles(AngleList,boo = False):
     for x in range(0,len(AngleList)):
         print "Angle number %s" % x
         print "Angle Type: %s" % AngleList[x].Angle_type
-        print "Master Angle: %s" % AngleList[x].Angle_master.atom_id
-        print "Slave angle 1: %s" % AngleList[x].Angle_slave1.atom_id
-        print "Slave angle 2: %s" % AngleList[x].Angle_slave2.atom_id
+        print "Master Angle: %s" % AngleList[x].Angle_master.atom_type
+        print "Slave angle 1: %s" % AngleList[x].Angle_slave1.atom_type
+        print "Slave angle 2: %s" % AngleList[x].Angle_slave2.atom_type
         if boo:
             print "Master Angle Bond: %s" % AngleList[x].Angle_master.opls_bondid
             print "Slave Angle Bond: %s" % AngleList[x].Angle_slave1.opls_bondid
@@ -201,7 +201,7 @@ def debug(atoms,bonds,angles,dihedrals,rings,fused_rings,opls_atoms,opls_bonds,o
     #print basic info
     #print_atoms(atoms)
     #print_bonds(bonds)
-    #print_angles(angles)
+    print_angles(angles)
     #print_dihedrals(dihedrals)
     #print_ring(rings)
     #print_fused(fused_rings)

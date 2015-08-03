@@ -80,7 +80,7 @@ def create_rings(d,bonds):
             dInS4 = bond.get_bond(dList[3],outList[0],bonds)
             dM1S = bond.get_bond(dList[2],outList[2],bonds)
             dM2S = bond.get_bond(dList[3],outList[3],bonds)
-            if outList[0] not in dList and outList[1] not in dList:      #finding 6 mem rings for 5 mem. bad code
+            if outList[0] not in dList and outList[1] not in dList:
                 if outList[2] in dList and outList[3] in dIn:
                     if dList[0] not in outList and dList[1] not in outList:
                         if dInS1 != None and dInS2 != None:
@@ -88,14 +88,27 @@ def create_rings(d,bonds):
                                 rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0],dList[1]))
             elif outList[0] in dList and outList[2] in dList and outList[3] in dList and outList[1] not in dList:
                 if dList[0] in outList and dList[2] in outList and dList[3] in outList and dList[1] not in outList:
-                    rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[1]))
+                    if outList[0].atom_type == "H" or outList[1].atom_type == "H" or outList[2].atom_type == "H" or outList[3].atom_type == "H" or dList[1].atom_type == "H":
+                        continue
+                    else:
+                        rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[1]))
             elif outList[0] in dList and outList[2] in dList and outList[3] in dList and outList[1] not in dList:
                 if dList[1] in outList and dList[2] in outList and dList[3] in outList and dList[0] not in outList:
-                    rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0]))
+                    if outList[0].atom_type == "H" or outList[1].atom_type == "H" or outList[2].atom_type == "H" or outList[3].atom_type == "H" or dList[0].atom_type == "H":
+                        continue
+                    else:
+                        rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0]))
             elif outList[1] in dList and outList[2] in dList and outList[3] in dList and outList[0] not in dList:
                 if dList[0] in outList and dList[2] in outList and dList[3] in outList and dList[1] not in outList:
-                    rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[1]))
+                    if outList[0].atom_type == "H" or outList[1].atom_type == "H" or outList[2].atom_type == "H" or outList[3].atom_type == "H" or dList[1].atom_type == "H":
+                        contine
+                    else:
+                        rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[1]))
             elif outList[1] in dList and outList[2] in dList and outList[3] in dList and outList[0] not in dList:
                 if dList[1] in outList and dList[2] in outList and dList[3] in outList and dList[0] not in outList:
-                    rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0]))
+                    if outList[0].atom_type == "H" or outList[1].atom_type == "H" or outList[2].atom_type == "H" or outList[3].atom_type == "H" or dList[0].atom_type == "H":
+                        continue
+                    else:
+                        rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0]))
+    print rings
     return rings

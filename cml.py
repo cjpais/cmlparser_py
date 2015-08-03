@@ -25,6 +25,10 @@ import babel
 import write_nwchem
 import write_qchem
 
+import tester
+
+os.system('clear')
+
 #set basic data names and get flags
 textout,aa,outname,lammpsin,help,isfile,fname,moleculen = setflags.set_flags()
 dataname = outname.split('/')
@@ -104,7 +108,7 @@ sys.stdout = sys.__stdout__
 #monomer handling
 thorings = monomer.mark_thio(monomer1)
 intermono = monomer.find_intermono(monomer1)
-
+monomer.get_single_alist(monomer1)
 
 #create babel and read to get better partials
 babel.read_babel_set(moleculen,atoms)
