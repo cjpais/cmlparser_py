@@ -33,7 +33,7 @@ def create_monomer(a,b,an,di,ri,fr):
         print "\nWARNING:"
         print "Not valid monomer for cmlparser"
         print "\nQuitting cmlparser. Check that there are exactly 2 rings.\n"
-        #quit()
+        quit()
     monomer = Monomer(a,b,an,di,ri,fr)
     return monomer
 
@@ -121,6 +121,7 @@ def find_attach(polymer):
     """
     #TODO this belongs in the polymer class
     #get a list of rings
+    ringlist = polymer.rings
     #find which rings have 2 hydrogens attached to them.
     #pick the hydrogen that is correct. This is the hydrogen which is bonded to the carbon bonded to the sulfur.
     #maybe use an angle to find this. The master being a carbon, one slave as a sulfur and the other as hydrogen

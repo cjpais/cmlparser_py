@@ -1,4 +1,5 @@
 # cmlparser_py
+#### For a more indepth look at cmlparser_py look at DETAIL.md
 Parses avogadro created .cml files
 
 Uses a command line argument specifying the location of the file to parse.
@@ -16,7 +17,9 @@ python cml.py (cml-filename) (output-filename) (d)
 
 An example of use would be:
 
-`python cml.py molecules/smdppeh.cml outputs/data.first outputs/in.rewriteout d`
+`python cml.py -imol molecules/smdppeh.cml -od outputs/data.molecule_smdppeh -oi outputs/in.molecule_smdppeh -d` for molecules
+
+or `python cml.py -imol monomers/p3htn.cml -od outputs/data.monomer_p3ht -oi outputs/data.monomer_p3ht -d` for monomers
 
 This would effectively run the program, using the `molecules/smdppeh.cml` molecule as its input.
 The flag `outputs/data.first` is the data file to output and for lammps to read.

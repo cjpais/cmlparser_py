@@ -1,44 +1,70 @@
 import sys
 
-def set_flags():
-    """ Sets the various flags specified by a user
-        Reads from sys.argv
-    """
-    #if no file
+def set_flags_new():
+    """ Sets the various flags specified by a user. Reads from sys.argv """
+
+    # All the variables
+    molecule = True
+    debug = False
+    help = False
+    isfile = False
+    mname = ""
+    dataname = ""
+    inname = ""
     fname = ""
 
-    if len(sys.argv) == 1:
-        print "You need to specifiy a file to read!"
+    bad = True
+
+
+    for i in range(len(sys.argv)):
+        print sys.argv[i]
+
+    # get Molecule or Monomer
+    if '-imol' in sys.argv or 'imono' in sys.argv:
+        bad = False
+    if bad:
+        print "You need to specify a cml file to read"
+    if '-imol' in sys.argv and '-imono' in sys.argv:
+        print "You cannot specify two different kinds of .cml files"
         quit()
-
-    moleculen = sys.argv[1]
-    out = sys.argv[2]
-    cat = sys.argv[3]
-
-    if "-f" in sys.argv:
-        isfile = True
-        for i in range(len(sys.argv)):
-            if sys.argv[i] == '-f':
-                index = i+1
-        fname = sys.argv[index]
     else:
-        isfile = False
+        if '-imol' in sys.argv:
+            molecule = True
+            mname = sys.argv[get_flag("-imol")]
+        elif '-imono' in sys.argv:
+            molecule = False
+            mname = sys.argv[get_flag("-imono")]
 
-    #debug?
-    if "d" in sys.argv or "debug" in sys.argv:
-        textout = True
+    # Get output data name
+    if '-od' not in sys.argv:
+        print "You need to specify a lammps data file"
+        quit()
     else:
-        textout = False
+        dataname = sys.argv[get_flag('-od')]
 
-    if "h" in sys.argv or "help" in sys.argv:
+    # Get input lammps name
+    if '-oi' not in sys.argv:
+        print "You need to specify a lammps input file"
+        quit()
+    else:
+        inname = sys.argv[get_flag('-oi')]
+
+    if '-d' in sys.argv:
+        debug = True
+
+    if '-h' in sys.argv:
         help = True
-    else:
-        help = False
 
-    #aa or ua
-    if "aa" in sys.argv:
-        aa = True
-    else:
-        aa = False
+    if '-f' in sys.argv:
+        isfile = True
+        fname = sys.argv[get_flag('-f')]
 
-    return textout,aa,out,cat,help,isfile,fname,moleculen
+    return molecule,mname,dataname,inname,debug,isfile,fname,help
+
+
+def get_flag(string):
+    index = 0
+    for i in range(len(sys.argv)):
+        if sys.argv[i] == string:
+            index = i+1
+    return index

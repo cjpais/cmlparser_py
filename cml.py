@@ -30,11 +30,13 @@ import tester
 os.system('clear')
 
 #set basic data names and get flags
-textout,aa,outname,lammpsin,help,isfile,fname,moleculen = setflags.set_flags()
-dataname = outname.split('/')
+moleculeboo,mname,dname,inname,debug,isfile,fname,help = setflags.set_flags_new()
+
+# split names for ease later on
+dataname = dname.split('/')
 dataname = dataname[len(dataname)-1]
-lammpsinput = lammpsin.split('/')
-lammpsinput = lammpsin.split('.')
+lammpsinput = inname.split('/')
+lammpsinput = inname.split('.')
 lammpsinput = lammpsinput[len(lammpsinput)-1]
 
 if help:
@@ -43,8 +45,7 @@ if isfile:
     setparams.change_data_from_filein(fname,dataname)
 
 #import the cml file and read
-cmlfile = sys.argv[1]
-tree = ET.parse(cmlfile)
+tree = ET.parse(mname)
 root = tree.getroot()
 
 #get the oplsfile for later use
@@ -65,7 +66,10 @@ angles = angle.create_angles(atoms,bonds)
 dihedrals = dihedral.create_dihedrals(angles)
 #baddihedrals = dihedral.create_dihedrals(angles,True)
 dihedral.set_dft(dihedrals,bonds)
+
+print "Warning: The create_rings module is running, this may take a while"
 rings = ring.create_rings(dihedrals,bonds)
+print "Rings finished running"
 fused_rings = fused.create_fused_rings(rings)
 
 #get important OPLS info
@@ -99,32 +103,32 @@ dihedral.get_type(dihedrals,unique_d)
 xmin,ymin,zmin,xmax,ymax,zmax = atom.periodic_b_size(atoms)
 
 #create Molecule object
-molecule1 = molecule.create_molecule(atoms,bonds,angles,dihedrals,rings,fused_rings)
-monomer1 = monomer.create_monomer(atoms,bonds,angles,dihedrals,rings,fused_rings)
-
 
 sys.stdout = sys.__stdout__
-#really should do this in a different file.
 #monomer handling
-thorings = monomer.mark_thio(monomer1)
-intermono = monomer.find_intermono(monomer1)
-monomer.get_single_alist(monomer1)
+if moleculeboo:
+    molecule1 = molecule.create_molecule(atoms,bonds,angles,dihedrals,rings,fused_rings)
+elif moleculeboo == False:
+    monomer1 = monomer.create_monomer(atoms,bonds,angles,dihedrals,rings,fused_rings)
+    thorings = monomer.mark_thio(monomer1)
+    intermono = monomer.find_intermono(monomer1)
+    monomer.get_single_alist(monomer1)
 
 #create babel and read to get better partials
-babel.read_babel_set(moleculen,atoms)
+babel.read_babel_set(mname,atoms)
 
 #write different dft finders
 #write_nwchem.dft(dihedrals)
 write_qchem.write(atoms,dihedrals)
 sys.stdout = sys.__stdout__
 
-if textout:
+if debug:
     printer.debug(atoms,bonds,angles,dihedrals,rings,fused_rings,opls_atoms,opls_bonds,opls_angles,opls_dihedrals)
 
 #print all the output files
-printer.print_data(outname,atoms,bonds,angles,dihedrals,unique_a,unique_b,unique_ang,unique_d,xmin,xmax,ymin,ymax,zmin,zmax)
+printer.print_data(dname,atoms,bonds,angles,dihedrals,unique_a,unique_b,unique_ang,unique_d,xmin,xmax,ymin,ymax,zmin,zmax)
 if help == False or isfile == False:
-    printer.print_lammpsin(lammpsin,dataname,lammpsinput)
+    printer.print_lammpsin(inname,dataname,lammpsinput)
 sys.stdout = sys.__stdout__
 printer.print_srun(lammpsinput)
 
