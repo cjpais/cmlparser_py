@@ -108,3 +108,23 @@ def get_bond(master,slave,bonds):
             return bonds[i]
         if master == bonds[i].bond_slave and slave == bonds[i].bond_master:
             return bonds[i]
+
+def set_numbonds(atom,bond):
+    """ Sets the number of bonds an atom has
+
+        Keyword Arguments:
+        atom - The list of atom objects
+        bond - The list of bond objects
+    """
+    numbonds = 0
+    bondedTo = []
+    for i in range(0,len(bond)):
+        if atom.atom_id == bond[i].bond_master.atom_id or atom.atom_id == bond[i].bond_slave.atom_id:
+            if atom.atom_id == bond[i].bond_master.atom_id:
+                numbonds += 1
+                bondedTo.append(bond[i].bond_slave)
+            elif atom.atom_id == bond[i].bond_slave.atom_id:
+                numbonds += 1
+                bondedTo.append(bond[i].bond_master)
+    atom.numbonds = numbonds
+    atom.atom_bonds = bondedTo

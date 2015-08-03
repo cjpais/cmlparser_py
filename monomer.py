@@ -111,18 +111,15 @@ def get_single_alist(monomer):
                     continue
                 else:
                     partmono.append(partmono[i].atom_bonds[j])
-    print len(partmono)
-    for i in range(len(partmono)):
-        print "Part of monomer1 %s" % partmono[i].atom_id
 
-def find_attach(monomer):
+def find_attach(polymer):
     """ Given a monomer/polymer with 2 ends, find which atoms you can attach to. returns
         a list. Which one to add to will be added randomly.
 
         Keyword Arguments:
         monomer - The monomer/polymer you want to find where to attach the next monomer to
     """
-
+    #TODO this belongs in the polymer class
     #get a list of rings
     #find which rings have 2 hydrogens attached to them.
     #pick the hydrogen that is correct. This is the hydrogen which is bonded to the carbon bonded to the sulfur.

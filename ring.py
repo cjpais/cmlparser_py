@@ -110,5 +110,4 @@ def create_rings(d,bonds):
                         continue
                     else:
                         rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0]))
-    print rings
     return rings

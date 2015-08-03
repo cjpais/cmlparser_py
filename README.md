@@ -16,8 +16,14 @@ python cml.py (cml-filename) (output-filename) (d)
 
 An example of use would be:
 
-python cml.py inputs/smdppeh.cml outputs/data.first d
+`python cml.py molecules/smdppeh.cml outputs/data.first outputs/in.rewriteout d`
 
 This would effectively run the program, using the smdppeh molecule as its input.
 The flag outputs/data.first is the data file to output and for lammps to read.
+It also states in.rewriteout as the file to input into lammps
 The final 'd' at the end is to get some debugging output.
+
+
+
+# NOTE: AS OF RIGHT NOW CMLPARSER CANT READ MOLECULES. JUST MONOMERS. NEED TO ADD FLAGS.
+## ALSO RING CHECKING IS VERY SLOW. IF YOU HAVE A LARGE MOLECULE (> 100 ATOMS) EXPECT RUNNING TIME TO BE LONG

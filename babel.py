@@ -1,12 +1,11 @@
 import os
 
-#TODO THIS FUCKING SHIT IS NOT GENERAL. JUST SMDPPEH. ALSO RENAME THE FUCKING LIST CALLED HI
 def read_babel_set(filename,atom):
-    os.system('babel -i cml molecules/smdppeh.cml -o mol2 molecules/smdppeh.mol2')
-    bfile = open("molecules/smdppeh.mol2")
+    os.system('babel -i cml %s -o mol2 %s.mol2' % (filename,filename))
+    bfile = open("%s.mol2" % filename)
     blist = bfile.readlines()
 
-    hi = []
+    partials = []
     for i in range(len(blist)):
         split1 = blist[i].split()
         if blist[i] == "@<TRIPOS>ATOM\n":
@@ -15,6 +14,6 @@ def read_babel_set(filename,atom):
                     break
                 else:
                     split = blist[j].split()
-                    hi.append(split[8])
+                    partials.append(split[8])
     for i in range(len(atom)):
-        atom[i].opls_partial = hi[i]
+        atom[i].opls_partial = partials[i]

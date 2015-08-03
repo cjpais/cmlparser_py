@@ -1,3 +1,5 @@
+import bond as b
+
 class Angle(object):
     """Docstring for Angle"""
     Angle_type = 0
@@ -15,28 +17,6 @@ class Angle(object):
         self.Angle_slave1 = Angle_slave1
         self.Angle_slave2 = Angle_slave2
 
-def set_numbonds(atom,bond):
-    """ Sets the number of bonds an atom has
-
-        Keyword Arguments:
-        atom - The list of atom objects
-        bond - The list of bond objects
-
-        TODO this is in the wrong file lol
-    """
-    numbonds = 0
-    bondedTo = []
-    for i in range(0,len(bond)):
-        if atom.atom_id == bond[i].bond_master.atom_id or atom.atom_id == bond[i].bond_slave.atom_id:
-            if atom.atom_id == bond[i].bond_master.atom_id:
-                numbonds += 1
-                bondedTo.append(bond[i].bond_slave)
-            elif atom.atom_id == bond[i].bond_slave.atom_id:
-                numbonds += 1
-                bondedTo.append(bond[i].bond_master)
-    atom.numbonds = numbonds
-    atom.atom_bonds = bondedTo
-
 def create_angles(atom,bond):
     """ Creates the angle objects
 
@@ -46,7 +26,7 @@ def create_angles(atom,bond):
     """
     angles = []
     for i in range(0,len(atom)):
-        set_numbonds(atom[i],bond)
+        b.set_numbonds(atom[i],bond)
         if atom[i].numbonds > 1:
             for j in range(0,atom[i].numbonds):
                 for k in range(j,atom[i].numbonds):
