@@ -3,6 +3,36 @@ import bond
 import sys
 import os
 
+def debug(atoms,bonds,angles,dihedrals,rings,fused_rings,opls_atoms,opls_bonds,opls_angles,opls_dihedrals):
+    """ Prints any debugging info. Uncomment lines to print
+    """
+    print "Debugger Ran\n"
+    #pctotal = 0
+    #for i in range(len(atoms)):
+    #    pctotal += float(atoms[i].opls_partial)
+    #print pctotal
+    #print basic info
+    #print_atoms(atoms)
+    #print_bonds(bonds)
+    #print_angles(angles)
+    #print_dihedrals(dihedrals)
+    #print_ring(rings)
+    #print_fused(fused_rings)
+
+    #print opls info (not very useful)
+    #print_opls_atoms(opls_atoms)
+    #print_opls_bonds(opls_bonds)
+    #print_opls_angles(opls_angles)
+    #print_opls_dihedrals(opls_dihedrals)
+
+    #reprint for opls add
+    #print_atoms(atoms,True)
+    #print_bonds(bonds,True)
+    #print_angles(angles,True)
+    #print_dihedrals(dihedrals)
+    #print_all_dft(dihedrals)
+    #op.count_atoms(opls_atoms,atoms)
+
 def print_atoms(atom,extra = False):
     """ Prints a list of atom objects
 
@@ -59,9 +89,9 @@ def print_angles(AngleList,boo = False):
     for x in range(0,len(AngleList)):
         print "Angle number %s" % x
         print "Angle Type: %s" % AngleList[x].Angle_type
-        print "Master Angle: %s" % AngleList[x].Angle_master.atom_type
-        print "Slave angle 1: %s" % AngleList[x].Angle_slave1.atom_type
-        print "Slave angle 2: %s" % AngleList[x].Angle_slave2.atom_type
+        print "Master Angle: %s" % AngleList[x].Angle_master.atom_id
+        print "Slave angle 1: %s" % AngleList[x].Angle_slave1.atom_id
+        print "Slave angle 2: %s" % AngleList[x].Angle_slave2.atom_id
         if boo:
             print "Master Angle Bond: %s" % AngleList[x].Angle_master.opls_bondid
             print "Slave Angle Bond: %s" % AngleList[x].Angle_slave1.opls_bondid
@@ -189,36 +219,6 @@ def print_all_dft(dihedrals):
         if dihedrals[i].dft:
             counter += 1
     print counter
-
-def debug(atoms,bonds,angles,dihedrals,rings,fused_rings,opls_atoms,opls_bonds,opls_angles,opls_dihedrals):
-    """ Prints any debugging info. Uncomment lines to print
-    """
-    print "Debugger Ran\n"
-    #pctotal = 0
-    #for i in range(len(atoms)):
-    #    pctotal += float(atoms[i].opls_partial)
-    #print pctotal
-    #print basic info
-    #print_atoms(atoms)
-    #print_bonds(bonds)
-    print_angles(angles)
-    #print_dihedrals(dihedrals)
-    #print_ring(rings)
-    #print_fused(fused_rings)
-
-    #print opls info (not very useful)
-    #print_opls_atoms(opls_atoms)
-    #print_opls_bonds(opls_bonds)
-    #print_opls_angles(opls_angles)
-    #print_opls_dihedrals(opls_dihedrals)
-
-    #reprint for opls add
-    #print_atoms(atoms,True)
-    #print_bonds(bonds,True)
-    #print_angles(angles,True)
-    #print_dihedrals(dihedrals)
-    #print_all_dft(dihedrals)
-    #op.count_atoms(opls_atoms,atoms)
 
 def print_data(outname,atoms,bonds,angles,dihedrals,unique_a,unique_b,unique_ang,unique_d,xmin,xmax,ymin,ymax,zmin,zmax):
     data = open(outname,"w")
