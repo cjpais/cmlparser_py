@@ -15,12 +15,8 @@ def set_flags_new():
 
     bad = True
 
-
-    for i in range(len(sys.argv)):
-        print sys.argv[i]
-
     # get Molecule or Monomer
-    if '-imol' in sys.argv or 'imono' in sys.argv:
+    if '-imol' in sys.argv or '-imono' in sys.argv:
         bad = False
     if bad:
         print "You need to specify a cml file to read"

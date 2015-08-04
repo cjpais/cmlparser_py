@@ -113,6 +113,7 @@ elif moleculeboo == False:
     thorings = monomer.mark_thio(monomer1)
     intermono = monomer.find_intermono(monomer1)
     monomer.get_single_alist(monomer1)
+    monomer.find_attach(monomer1)
 
 #create babel and read to get better partials
 babel.read_babel_set(mname,atoms)

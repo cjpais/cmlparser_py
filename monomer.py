@@ -124,4 +124,19 @@ def find_attach(polymer):
     ringlist = polymer.rings
     #find which rings have 2 hydrogens attached to them.
     #pick the hydrogen that is correct. This is the hydrogen which is bonded to the carbon bonded to the sulfur.
+    goodring = []
+    for i in range(len(ringlist)):
+        hcounter = 0
+        usering = ringlist[i].list
+        for j in range(len(usering)):
+            for k in range(len(usering[j].atom_bonds)):
+                if hcounter == 2:
+                    goodring.append(usering[j].atom_bonds)
+                if usering[j].atom_bonds[k].atom_type == "H":
+                    hcounter += 1
+    for i in range(len(goodring[0].angles)):
+        if goodring[0].angles[i].Angle_master == "C" and goodring[0].angles[i].Angle_slave1 == "S" and goodring[0].angles[i].Angle_slave2 == "H":
+            print "has good hydrogen1"
+        elif goodring[0].angles[i].Angle_master == "C" and goodring[0].angles[i].Angle_slave1 == "H" and goodring[0].angles[i].Angle_slave2 == "S":
+            print "has good hydrogen2"
     #maybe use an angle to find this. The master being a carbon, one slave as a sulfur and the other as hydrogen
