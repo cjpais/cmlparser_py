@@ -106,14 +106,19 @@ xmin,ymin,zmin,xmax,ymax,zmax = atom.periodic_b_size(atoms)
 
 sys.stdout = sys.__stdout__
 #monomer handling
+
+print moleculeboo
+
 if moleculeboo:
     molecule1 = molecule.create_molecule(atoms,bonds,angles,dihedrals,rings,fused_rings)
 elif moleculeboo == False:
     monomer1 = monomer.create_monomer(atoms,bonds,angles,dihedrals,rings,fused_rings)
     thorings = monomer.mark_thio(monomer1)
     intermono = monomer.find_intermono(monomer1)
-    monomer.get_single_alist(monomer1)
-    monomer.find_attach(monomer1)
+    halfmono = monomer.get_single_alist(monomer1)
+    attach = monomer.find_attach(monomer1,halfmono)
+    monomer.create_polymer_cml(mname,halfmono,attach,monomer1,intermono)
+    sys.stdout = sys.__stdout__
 
 #create babel and read to get better partials
 babel.read_babel_set(mname,atoms)

@@ -1,6 +1,3 @@
-import oplsparse as op
-import Queue
-
 def count_atoms(opls_atoms,atoms):
     """ Counts the type of atoms found in the opls file for the molecule
 
@@ -11,10 +8,15 @@ def count_atoms(opls_atoms,atoms):
     for i in range(0,len(opls_atoms)):
         counter = 0
         for j in range(0,len(atoms)):
-            if atoms[j].id == opls_atoms[i].atom_id:
+            if atoms[j].opls_id == opls_atoms[i].opls_id:
                 counter += 1
         if counter != 0:
-            print "There are %s of opls_id #%s" % (counter,opls_atoms[i].atom_id)
+            print "There are %s of opls_id #%s" % (counter,opls_atoms[i].opls_id)
+
+def find_missing_opls(opls_atoms,atoms):
+    for j in range(0,len(atoms)):
+        if atoms[j].opls_id == 0:
+            print "atom %s is missing opls" % atoms[j].atom_id
 
 def find_specifc_angles(angles):
     for i in range(len(angles)):

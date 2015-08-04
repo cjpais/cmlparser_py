@@ -1,5 +1,7 @@
 import dihedral
 import ring
+import sys
+import bond
 
 class Monomer(object):
     atoms = []
@@ -111,32 +113,67 @@ def get_single_alist(monomer):
                     continue
                 else:
                     partmono.append(partmono[i].atom_bonds[j])
+    return partmono
 
-def find_attach(polymer):
+def find_attach(polymer,partmono):
     """ Given a monomer/polymer with 2 ends, find which atoms you can attach to. returns
         a list. Which one to add to will be added randomly.
 
         Keyword Arguments:
         monomer - The monomer/polymer you want to find where to attach the next monomer to
     """
-    #TODO this belongs in the polymer class
-    #get a list of rings
-    ringlist = polymer.rings
-    #find which rings have 2 hydrogens attached to them.
-    #pick the hydrogen that is correct. This is the hydrogen which is bonded to the carbon bonded to the sulfur.
-    goodring = []
-    for i in range(len(ringlist)):
-        hcounter = 0
-        usering = ringlist[i].list
-        for j in range(len(usering)):
-            for k in range(len(usering[j].atom_bonds)):
-                if hcounter == 2:
-                    goodring.append(usering[j].atom_bonds)
-                if usering[j].atom_bonds[k].atom_type == "H":
-                    hcounter += 1
-    for i in range(len(goodring[0].angles)):
-        if goodring[0].angles[i].Angle_master == "C" and goodring[0].angles[i].Angle_slave1 == "S" and goodring[0].angles[i].Angle_slave2 == "H":
-            print "has good hydrogen1"
-        elif goodring[0].angles[i].Angle_master == "C" and goodring[0].angles[i].Angle_slave1 == "H" and goodring[0].angles[i].Angle_slave2 == "S":
-            print "has good hydrogen2"
-    #maybe use an angle to find this. The master being a carbon, one slave as a sulfur and the other as hydrogen
+    anglelist = polymer.angles
+    for i in range(len(anglelist)):
+        if anglelist[i].Angle_master.atom_type == "C" and anglelist[i].Angle_slave1.atom_type == "H" and anglelist[i].Angle_slave2.atom_type == "S" and anglelist[i].Angle_slave1 in partmono:
+            print anglelist[i].Angle_slave1.atom_id
+            return anglelist[i].Angle_master
+        elif anglelist[i].Angle_master.atom_type == "C" and anglelist[i].Angle_slave1.atom_type == "S" and anglelist[i].Angle_slave2.atom_type == "H" and anglelist[i].Angle_slave2 in partmono:
+            print anglelist[i].Angle_slave2.atom_id
+            return anglelist[i].Angle_master
+    print "No valid attachment point found"
+
+def create_polymer_cml(filename,partmono,attach,monomer,intermono):
+    new_cml = open('%s_new.cml' % filename,'w')
+    sys.stdout = new_cml
+    usedbonds = []
+    bondscopy = []
+    for i in range(len(monomer.bonds)):
+        bondscopy.append(monomer.bonds[i])
+    for i in range(len(attach.atom_bonds)):
+        if attach.atom_bonds[i].atom_type == "H":
+            attach2 = attach.atom_bonds[i]
+    abond = bond.get_bond(attach,attach2,monomer.bonds)
+    monomer.bonds.remove(abond)
+    monomer.atoms.remove(attach2) #find the hydrogen its attached to and remove instead
+    add = len(monomer.atoms)+1
+    newattach = ""
+    anglelist = monomer.angles
+    for i in range(len(anglelist)):
+        if anglelist[i].Angle_master.atom_type == "C" and anglelist[i].Angle_slave1.atom_type == "C" and anglelist[i].Angle_slave2.atom_type == "S" and anglelist[i].Angle_master in partmono and anglelist[i].Angle_slave1 in partmono and anglelist[i].Angle_slave2 in partmono:
+            newattach = anglelist[i].Angle_master
+        elif anglelist[i].Angle_master.atom_type == "C" and anglelist[i].Angle_slave1.atom_type == "S" and anglelist[i].Angle_slave2.atom_type == "C" and anglelist[i].Angle_master in partmono and anglelist[i].Angle_slave1 in partmono and anglelist[i].Angle_slave2 in partmono:
+            newattach = anglelist[i].Angle_master
+    print "<molecule>"
+    print " <atomArray>"
+    for i in range(len(monomer.atoms)):
+        print '  <atom id="a%s" elementType="%s" x3="%s" y3="%s" z3="%s"/>' % (monomer.atoms[i].atom_id,monomer.atoms[i].atom_type,monomer.atoms[i].x_pos,monomer.atoms[i].y_pos,monomer.atoms[i].z_pos)
+    for i in range(len(partmono)):
+        print '  <atom id="a%s" elementType="%s" x3="%s" y3="%s" z3="%s"/>' % (int(partmono[i].atom_id)+add,partmono[i].atom_type,float(partmono[i].x_pos)-5.00,float(partmono[i].y_pos),float(partmono[i].z_pos))
+    print " </atomArray>"
+    print " <bondArray>"
+    for i in range(len(monomer.bonds)):
+        print '  <bond atomRefs2="a%s a%s" order="%s"/>' % (monomer.bonds[i].bond_master.atom_id,monomer.bonds[i].bond_slave.atom_id,monomer.bonds[i].bond_type)
+    for i in range(len(partmono)):
+        for j in range(len(partmono[i].atom_bonds)):
+            if partmono[i].atom_bonds[j] in partmono:
+                bondid = bond.get_bond(partmono[i],partmono[i].atom_bonds[j],bondscopy)
+                if bondid in usedbonds:
+                    continue
+                usedbonds.append(bondid)
+                print '  <bond atomRefs2="a%s a%s" order="%s"/>' % (int(partmono[i].atom_id)+add,int(partmono[i].atom_bonds[j].atom_id)+add,bondid.bond_type)
+            else:
+                continue
+    print '  <bond atomRefs2="a%s a%s" order="1"/>' % (attach.atom_id,int(newattach.atom_id)+add-2)
+    print " </bondArray>"
+    print "</molecule>"
+    new_cml.close()

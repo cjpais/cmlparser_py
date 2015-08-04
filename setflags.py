@@ -57,7 +57,6 @@ def set_flags_new():
 
     return molecule,mname,dataname,inname,debug,isfile,fname,help
 
-
 def get_flag(string):
     index = 0
     for i in range(len(sys.argv)):

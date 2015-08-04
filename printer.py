@@ -2,6 +2,7 @@ import atom
 import bond
 import sys
 import os
+import tester
 
 def debug(atoms,bonds,angles,dihedrals,rings,fused_rings,opls_atoms,opls_bonds,opls_angles,opls_dihedrals):
     """ Prints any debugging info. Uncomment lines to print
@@ -31,7 +32,9 @@ def debug(atoms,bonds,angles,dihedrals,rings,fused_rings,opls_atoms,opls_bonds,o
     #print_angles(angles,True)
     #print_dihedrals(dihedrals)
     #print_all_dft(dihedrals)
-    #op.count_atoms(opls_atoms,atoms)
+    tester.count_atoms(opls_atoms,atoms)
+    tester.find_missing_opls(opls_atoms,atoms)
+
 
 def print_atoms(atom,extra = False):
     """ Prints a list of atom objects
@@ -269,8 +272,8 @@ def print_data(outname,atoms,bonds,angles,dihedrals,unique_a,unique_b,unique_ang
     print "\nDihedrals\n"
     for i in range(len(dihedrals)):
         #hack smdppeh specific TODO
-        if dihedrals[i].print_type == 0:
-            dihedrals[i].print_type = 8
+        #if dihedrals[i].print_type == 0:
+        #    dihedrals[i].print_type = 8
         print "%s %s %s %s %s %s" % (i+1,dihedrals[i].print_type,dihedrals[i].dihedral_master1.atom_id,dihedrals[i].dihedral_master2.atom_id,dihedrals[i].dihedral_slave1.atom_id,dihedrals[i].dihedral_slave2.atom_id)
     data.close()
 

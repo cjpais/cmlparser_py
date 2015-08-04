@@ -111,3 +111,7 @@ def get_type(atom,type):
         for j in range(len(type)):
             if atom[i].opls_id == type[j].opls_id:
                 atom[i].print_type = j+1
+
+def adjust_partials(atom):
+    print "do things here"
+    #look at printer on how to adjust without rewriting code lol

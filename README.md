@@ -19,7 +19,7 @@ An example of use would be:
 
 `python cml.py -imol molecules/smdppeh.cml -od outputs/data.molecule_smdppeh -oi outputs/in.molecule_smdppeh -d` for molecules
 
-or `python cml.py -imol monomers/p3htn.cml -od outputs/data.monomer_p3ht -oi outputs/data.monomer_p3ht -d` for monomers
+or `python cml.py -imono monomers/p3htn.cml -od outputs/data.monomer_p3ht -oi outputs/data.monomer_p3ht -d` for monomers
 
 This would effectively run the program, using the `molecules/smdppeh.cml` molecule as its input.
 The flag `outputs/data.first` is the data file to output and for lammps to read.
