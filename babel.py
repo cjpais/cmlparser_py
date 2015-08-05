@@ -17,3 +17,9 @@ def read_babel_set(filename,atom):
                     partials.append(split[8])
     for i in range(len(atom)):
         atom[i].opls_partial = partials[i]
+
+    run_antechamber(%s.mol2 % filename,atom)
+
+def run_antechamber(filename,atom):
+    os.system('module load amber')
+    os.system('antechamber -i %s -fi mol2 -o %s -fo mol2 -c bcc') % (filename,filename)
