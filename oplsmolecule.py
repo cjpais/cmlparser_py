@@ -12,9 +12,16 @@ def get_molecule(atom,opls):
         is17(atom[i],opls)
         is26(atom[i],opls)
         is90(atom[i],opls)
+        is144(atom[i],opls)
         is177(atom[i],opls)
         is178(atom[i],opls)
         is181(atom[i],opls)
+        is660(atom[i],opls)
+        is748(atom[i],opls)
+        is790(atom[i],opls)
+        is866(atom[i],opls)
+        is873(atom[i],opls)
+        is874(atom[i],opls)
 
 def assign_atom_vars(atom,number,opls):
     """ Assigns the atom object its opls values
@@ -57,6 +64,8 @@ def assign_h(atom,opls):
         elif bondlist[0].opls_id == "90":
             assign_atom_vars(atom,90,opls)
         elif bondlist[0].opls_id == "82":
+            assign_atom_vars(atom,84,opls)
+        elif bondlist[0].opls_id == "874":
             assign_atom_vars(atom,84,opls)
 
 """
@@ -130,6 +139,13 @@ def is90(atom,opls):
                 if "C" in bondList or "S" in bondList or "N" in bondList:
                     assign_atom_vars(atom,number,opls)
 
+def is144(atom,opls):
+    number = 143
+    if atom.atom_type == "S" and atom.numbonds == 2:
+        print "ran"
+        if atom.atom_bonds[0].atom_type == "N" and atom.atom_bonds[1].atom_type == "N":
+            assign_atom_vars(atom,number,opls)
+
 def is177(atom,opls):
     number = 176
     if atom.atom_type == "C" and atom.numbonds == 3:
@@ -148,3 +164,69 @@ def is181(atom,opls):
     if atom.atom_type == "N" and atom.numbonds == 3:
         if atom.atom_bonds[0].atom_type == "C" and atom.atom_bonds[1].atom_type == "C" and atom.atom_bonds[2].atom_type == "C":
             assign_atom_vars(atom,number,opls)
+
+def is660(atom,opls):
+    number = 659
+    if atom.atom_type == "F" and atom.numbonds == 1:
+        if atom.atom_bonds[0].atom_type == "C":
+            assign_atom_vars(atom,number,opls)
+
+def is748(atom,opls):
+    number = 747
+    if atom.atom_type == "N" and atom.numbonds == 2:
+        bondlist = gen_bondlist(atom)
+        if "S" in bondlist:
+            bondlist.remove("S")
+            if "C" in bondlist:
+                assign_atom_vars(atom,number,opls)
+
+def is790(atom,opls):
+    number = 789
+    if atom.atom_type == "C" and atom.numbonds == 3:
+        bondlist = gen_bondlist(atom)
+        if "C" in bondlist:
+            bondlist.remove("C")
+            if "C" in bondlist:
+                bondlist.remove("C")
+                if "F" in bondlist:
+                    assign_atom_vars(atom,number,opls)
+
+def is866(atom,opls):
+    number = 865
+    if atom.atom_type == "Si" and atom.numbonds == 4:
+        # C really should be 'R' random
+        if atom.atom_bonds[0].atom_type == "C" and atom.atom_bonds[1].atom_type == "C" and atom.atom_bonds[2].atom_type == "C" and atom.atom_bonds[3].atom_type == "C":
+            assign_atom_vars(atom,number,opls)
+
+def is873(atom,opls):
+    number = 872
+    if atom.atom_type == "C" and atom.numbonds == 3:
+        bondlist = gen_bondlist(atom)
+        if "C" in bondlist:
+            bondlist.remove("C")
+            if "C" in bondlist:
+                bondlist.remove("C")
+                if "Si" in bondlist:
+                    assign_atom_vars(atom,number,opls)
+
+def is874(atom,opls):
+    number = 873
+    if atom.atom_type == "C" and atom.numbonds == 4:
+        bondlist = gen_bondlist(atom)
+        if "C" in bondlist:
+            bondlist.remove("C")
+            if "C" in bondlist:
+                bondlist.remove("C")
+                if "H" in bondlist:
+                    bondlist.remove("H")
+                    if "Si" in bondlist:
+                        assign_atom_vars(atom,number,opls)
+        bondlist = gen_bondlist(atom)
+        if "C" in bondlist:
+            bondlist.remove("C")
+            if "H" in bondlist:
+                bondlist.remove("H")
+                if "H" in bondlist:
+                    bondlist.remove("H")
+                    if "Si" in bondlist:
+                        assign_atom_vars(atom,number,opls)
