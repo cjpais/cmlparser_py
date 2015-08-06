@@ -111,3 +111,12 @@ def create_rings(d,bonds):
                     else:
                         rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0]))
     return rings
+
+def rings_fast(d,a):
+    """ Better and faster way to find rings
+
+        Keyword Arguments:
+        d - A list of dihedrals to generate the rings from.
+        a - A list of atoms to generate the rings from (my guess this is better)
+    """
+    print "do things here to make ring finding way better"

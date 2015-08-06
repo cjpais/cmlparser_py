@@ -27,13 +27,13 @@ def debug(atoms,bonds,angles,dihedrals,rings,fused_rings,opls_atoms,opls_bonds,o
     #print_opls_dihedrals(opls_dihedrals)
 
     #reprint for opls add
-    print_atoms(atoms,True)
+    #print_atoms(atoms,True)
     #print_bonds(bonds,True)
     #print_angles(angles,True)
     #print_dihedrals(dihedrals)
     #print_all_dft(dihedrals)
     #tester.count_atoms(opls_atoms,atoms)
-    #tester.find_missing_opls(opls_atoms,atoms)
+    tester.find_missing_opls(opls_atoms,atoms)
 
 
 def print_atoms(atom,extra = False):
