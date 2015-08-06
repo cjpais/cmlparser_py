@@ -25,6 +25,9 @@ def run_antechamber(filename,atom):
     os.system('module load amber')
     os.system('antechamber -i %s -fi mol2 -o %s -fo mol2 -c bcc' % (filename,filename))
 
+    bfile = open("%s.mol2" % filename)
+    blist = bfile.readlines()
+
     partials = []
     for i in range(len(blist)):
         split1 = blist[i].split()
