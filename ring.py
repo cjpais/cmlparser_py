@@ -1,6 +1,5 @@
 import bond
 import time
-from numpy import array as npa
 
 class Ring(object):
     """Docstring for Ring"""
