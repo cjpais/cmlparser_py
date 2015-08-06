@@ -18,6 +18,8 @@ def read_babel_set(filename,atom):
     for i in range(len(atom)):
         atom[i].opls_partial = partials[i]
 
+    bfile.close()
+    
     newfile = '%s.mol2' % filename
     run_antechamber(newfile,atom)
 
@@ -25,7 +27,7 @@ def run_antechamber(filename,atom):
     os.system('module load amber')
     os.system('antechamber -i %s -fi mol2 -o %s -fo mol2 -c bcc' % (filename,filename))
 
-    bfile = open("%s.mol2" % filename)
+    bfile = open(filename)
     blist = bfile.readlines()
 
     partials = []
