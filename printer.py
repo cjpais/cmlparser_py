@@ -264,8 +264,8 @@ def print_data(outname,atoms,bonds,angles,dihedrals,unique_a,unique_b,unique_ang
     #    print "%s 1 %s %s %s %s" % (i+1,atoms[i].print_type,atoms[i].x_pos,atoms[i].y_pos,atoms[i].z_pos)
     print "\nBonds\n"
     for i in range(len(bonds)):
-        if bonds[i].print_type == 0:
-            bonds[i].print_type = 6
+        #if bonds[i].print_type == 0:
+        #    bonds[i].print_type = 6
         print "%s %s %s %s" % (i+1,bonds[i].print_type,bonds[i].bond_master.atom_id,bonds[i].bond_slave.atom_id)
     print "\nAngles\n"
     for i in range(len(angles)):
@@ -274,7 +274,7 @@ def print_data(outname,atoms,bonds,angles,dihedrals,unique_a,unique_b,unique_ang
     for i in range(len(dihedrals)):
         #hack smdppeh specific TODO
         if dihedrals[i].print_type == 0:
-            dihedrals[i].print_type = 8
+            dihedrals[i].print_type = 5
         print "%s %s %s %s %s %s" % (i+1,dihedrals[i].print_type,dihedrals[i].dihedral_master1.atom_id,dihedrals[i].dihedral_master2.atom_id,dihedrals[i].dihedral_slave1.atom_id,dihedrals[i].dihedral_slave2.atom_id)
     data.close()
 

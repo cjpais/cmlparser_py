@@ -96,8 +96,8 @@ def periodic_b_size(atom):
         totalmax = float(maxy)
     if float(maxz) > totalmax:
         totalmax = float(maxz)
-    totalmax += 5
-    totalmin -+ 5
+    totalmax += 10
+    totalmin -+ 10
     return totalmin,totalmin,totalmin,totalmax,totalmax,totalmax
 
 def get_type(atom,type):
