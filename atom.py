@@ -74,17 +74,17 @@ def periodic_b_size(atom):
     maxy = 0
     maxz = 0
     for i in range(0,len(atom)):
-        if atom[i].x_pos > maxx:
+        if float(atom[i].x_pos) > float(maxx):
             maxx = atom[i].x_pos
-        else:
+        elif float(atom[i].x_pos) < float(minx):
             minx = atom[i].x_pos
-        if atom[i].y_pos > maxy:
+        if float(atom[i].y_pos) > float(maxy):
             maxy = atom[i].y_pos
-        else:
+        elif float(atom[i].y_pos) < float(miny):
             miny = atom[i].y_pos
-        if atom[i].z_pos > maxz:
+        if float(atom[i].z_pos) > float(maxz):
             maxz = atom[i].z_pos
-        else:
+        elif float(atom[i].z_pos) < float(minz):
             minz = atom[i].z_pos
     totalmin = float(minx)
     totalmax = float(maxx)
@@ -96,8 +96,8 @@ def periodic_b_size(atom):
         totalmax = float(maxy)
     if float(maxz) > totalmax:
         totalmax = float(maxz)
-    totalmax += 10
-    totalmin -+ 10
+    totalmax += 2
+    totalmin -+ 2
     return totalmin,totalmin,totalmin,totalmax,totalmax,totalmax
 
 def get_type(atom,type):
@@ -112,6 +112,20 @@ def get_type(atom,type):
             if atom[i].opls_id == type[j].opls_id:
                 atom[i].print_type = j+1
 
-def adjust_partials(atom):
-    print "do things here"
-    #look at printer on how to adjust without rewriting code lol
+def adjust_partials(atoms):
+    pctotal = 0
+    for i in range(len(atoms)):
+        pctotal += float(atoms[i].opls_partial)
+    if -.005 < pctotal < .005:
+        return
+    if pctotal == 0:
+        return
+    each = pctotal/len(atoms)
+    if pctotal > 0:
+        for i in range(len(atoms)):
+            new = float(atoms[i].opls_partial) - each
+            atoms[i].opls_partial = new
+    elif pctotal < 0:
+        for i in range(len(atoms)):
+            new = float(atoms[i].opls_partial) + each
+            atoms[i].opls_partial = new

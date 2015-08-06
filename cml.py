@@ -67,7 +67,7 @@ dihedrals = dihedral.create_dihedrals(angles)
 #baddihedrals = dihedral.create_dihedrals(angles,True)
 dihedral.set_dft(dihedrals,bonds)
 
-print "Warning: The create_rings module is running, this may take a while"
+print "Warning: The create_rings module is running, this may take a while. Also slightly wrong. Doesnt get all rings always."
 rings = ring.create_rings(dihedrals,bonds)
 print "Rings finished running"
 fused_rings = fused.create_fused_rings(rings)
@@ -102,13 +102,9 @@ dihedral.get_type(dihedrals,unique_d)
 #box size
 xmin,ymin,zmin,xmax,ymax,zmax = atom.periodic_b_size(atoms)
 
-#create Molecule object
-
 sys.stdout = sys.__stdout__
-#monomer handling
 
-print moleculeboo
-
+#handling
 if moleculeboo:
     molecule1 = molecule.create_molecule(atoms,bonds,angles,dihedrals,rings,fused_rings)
 elif moleculeboo == False:
@@ -122,6 +118,7 @@ elif moleculeboo == False:
 
 #create babel and read to get better partials
 babel.read_babel_set(mname,atoms)
+atom.adjust_partials(atoms)
 
 #write different dft finders
 #write_nwchem.dft(dihedrals)

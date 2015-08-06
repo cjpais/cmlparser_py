@@ -8,10 +8,10 @@ def debug(atoms,bonds,angles,dihedrals,rings,fused_rings,opls_atoms,opls_bonds,o
     """ Prints any debugging info. Uncomment lines to print
     """
     print "Debugger Ran\n"
-    #pctotal = 0
-    #for i in range(len(atoms)):
-    #    pctotal += float(atoms[i].opls_partial)
-    #print pctotal
+    pctotal = 0
+    for i in range(len(atoms)):
+        pctotal += float(atoms[i].opls_partial)
+    print pctotal
     #print basic info
     #print_atoms(atoms)
     #print_bonds(bonds)
@@ -287,7 +287,7 @@ def print_lammpsin(lammpsin,dataname,lammpsinput):
     print "atom_style full"
     print "boundary p p p"
     print "bond_style harmonic"
-    print "dielectric 9.8"
+    print "dielectric 4.81"
     print "pair_style lj/cut/coul/long 20.0"
     print "angle_style harmonic"
     print "dihedral_style opls"
@@ -299,23 +299,27 @@ def print_lammpsin(lammpsin,dataname,lammpsinput):
     print "dump 1 all custom 200 %s.lammpstrj id type mol xs ys zs vx vy vz" % lammpsinput
     print "neighbor 10.0 bin"
     print "neigh_modify every 1 delay 0 one 10000"
-    print "fix 1 all npt temp 100 100 100 iso 0.0 1 1000 drag 2"
+    print "fix 0 all langevin 300 300 100 43294"
+    print "fix 1 all nph iso 1 1 1000 drag 2"
     print "fix 2 all momentum 1 linear 1 1 1"
     print "velocity all create 100.00000 1223"
     print "timestep 1"
     print "thermo 100"
     print "run 10000"
+    print "unfix 0"
     print "unfix 1"
     print "unfix 2"
     print "write_restart restart.%s\n\n" % lammpsinput
     print "replicate 5 5 5"
     print "undump 1"
-    print "fix 1 all npt temp 100 300 100 iso 10 1 1000 drag 2"
+    print "fix 0 all langevin 300 300 100 43294"
+    print "fix 1 all nph iso 1 1 1000 drag 2"
     print "fix 2 all momentum 1 linear 1 1 1"
     print "velocity all create 100.00000 1223"
     print "dump 2 all custom 1000 %s.lammpstrj id type mol xs ys zs vx vy vz" % ("%s_final" % lammpsinput)
     print "run 500000"
     print "write_restart restart.%s" % ("%s_final" % lammpsinput)
+    print "unfix 0"
     print "unfix 1"
     print "unfix 2"
 
