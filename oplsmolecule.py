@@ -34,7 +34,7 @@ def assign_atom_vars(atom,number,opls):
     atom.opls_id = opls[number].opls_id
     atom.opls_sigma = opls[number].sigma
     atom.opls_epsilon = opls[number].epsilon
-    atom.opls_partial = opls[number].pc
+    #atom.opls_partial = opls[number].pc DONT ASSIGN PARTIALS IN OPLS. DO IT IN ANTECHAMBER
     atom.opls_bondid = opls[number].opls_bondid
     atom.opls_mass = opls[number].amass
 

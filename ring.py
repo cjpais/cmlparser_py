@@ -1,4 +1,6 @@
 import bond
+import time
+from numpy import array as npa
 
 class Ring(object):
     """Docstring for Ring"""
@@ -61,10 +63,11 @@ def create_rings(d,bonds):
         Keyword Arguments:
         d - A list of dihedral objects
     """
+    start_time = time.time()
     rings = []
     #this is for identifying 6 membered rings
-    for i in range(0,len(d)):
-        for j in range(0,len(d)):
+    for i in range(len(d)):
+        for j in range(len(d)):
             if d[i] == d[j]:
                 continue
             if d[i].dihedral_master1.ring:
@@ -78,13 +81,10 @@ def create_rings(d,bonds):
             dInS2 = bond.get_bond(dList[3],outList[1],bonds)
             dInS3 = bond.get_bond(dList[2],outList[1],bonds)
             dInS4 = bond.get_bond(dList[3],outList[0],bonds)
-            dM1S = bond.get_bond(dList[2],outList[2],bonds)
-            dM2S = bond.get_bond(dList[3],outList[3],bonds)
             if outList[0] not in dList and outList[1] not in dList:
                 if outList[2] in dList and outList[3] in dIn:
                     if dList[0] not in outList and dList[1] not in outList:
-                        if dInS1 != None and dInS2 != None:
-                            if dInS3 != None and dInS4 != None:
+                        if dInS1 != None and dInS2 != None and dInS3 != None and dInS4 != None:
                                 rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0],dList[1]))
             elif outList[0] in dList and outList[2] in dList and outList[3] in dList and outList[1] not in dList:
                 if dList[0] in outList and dList[2] in outList and dList[3] in outList and dList[1] not in outList:
@@ -110,13 +110,5 @@ def create_rings(d,bonds):
                         continue
                     else:
                         rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0]))
+    print("--- %s seconds ---" % (time.time() - start_time))
     return rings
-
-def rings_fast(d,a):
-    """ Better and faster way to find rings
-
-        Keyword Arguments:
-        d - A list of dihedrals to generate the rings from.
-        a - A list of atoms to generate the rings from (my guess this is better)
-    """
-    print "do things here to make ring finding way better"

@@ -17,7 +17,7 @@ def debug(atoms,bonds,angles,dihedrals,rings,fused_rings,opls_atoms,opls_bonds,o
     #print_bonds(bonds)
     #print_angles(angles)
     #print_dihedrals(dihedrals)
-    #print_ring(rings)
+    print_ring(rings)
     #print_fused(fused_rings)
 
     #print opls info (not very useful)
@@ -27,7 +27,7 @@ def debug(atoms,bonds,angles,dihedrals,rings,fused_rings,opls_atoms,opls_bonds,o
     #print_opls_dihedrals(opls_dihedrals)
 
     #reprint for opls add
-    #print_atoms(atoms,True)
+    print_atoms(atoms,True)
     #print_bonds(bonds,True)
     #print_angles(angles,True)
     #print_dihedrals(dihedrals)
@@ -60,6 +60,7 @@ def print_atoms(atom,extra = False):
            print "OPLS epsilon %s" % atom[k].opls_epsilon
            print "OPLS partial charge %s" % atom[k].opls_partial
            print "OPLS atomic mass %s" % atom[k].opls_mass
+           print "Ring %s" % atom[k].ring
        print ""
 
 def print_bonds(bond,boo = False):
@@ -307,7 +308,7 @@ def print_lammpsin(lammpsin,dataname,lammpsinput):
     print "unfix 1"
     print "unfix 2"
     print "write_restart restart.%s\n\n" % lammpsinput
-    print "replicate 10 10 10"
+    print "replicate 5 5 5"
     print "undump 1"
     print "fix 1 all npt temp 100 300 100 iso 10 1 1000 drag 2"
     print "fix 2 all momentum 1 linear 1 1 1"
