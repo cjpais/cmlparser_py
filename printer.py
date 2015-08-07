@@ -235,9 +235,9 @@ def print_data(outname,atoms,bonds,angles,dihedrals,unique_a,unique_b,unique_ang
     print "\t%s angles" % len(angles)
     print "\t%s dihedrals\n" % len(dihedrals)
     print "\t%s atom types" % len(unique_a)
-    print "\t%s bond types" % len(unique_b)
+    print "\t%s bond types" % (len(unique_b)+1)
     print "\t%s angle types" % len(unique_ang)
-    print "\t%s dihedral types\n" % len(unique_d)
+    print "\t%s dihedral types\n" % (len(unique_d)+1)
     print "\t%s %s xlo xhi" % (xmin,xmax)
     print "\t%s %s ylo yhi" % (ymin,ymax)
     print "\t%s %s zlo zhi\n" % (zmin,zmax)
@@ -247,7 +247,7 @@ def print_data(outname,atoms,bonds,angles,dihedrals,unique_a,unique_b,unique_ang
     print "\nBond Coeffs\n"
     for i in range(len(unique_b)):
         print "%s %s %s" % (i+1,unique_b[i].bond_force_const,unique_b[i].bond_equib_len)
-    print "%s 450.00 1.500" % (len(unique_b)+1)
+    print "%s 450.00 1.5000" % (len(unique_b)+1)
     print "\nAngle Coeffs\n"
     for i in range(len(unique_ang)):
         print "%s %s %s" % (i+1,unique_ang[i].Angle_force_const,unique_ang[i].Angle_equib_len)

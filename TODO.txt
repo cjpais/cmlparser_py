@@ -10,9 +10,4 @@ polymer class - how many chain
 
 FIX THE TODO IN PRINTER. THAT HACK IS HORRIBLE. For angles too
 
-
 RINGS.
-TIPS NEEDS WORK.
-CHECK smdppeh
-PArtials are still offf!!!!!!!
-Check silicon bonds. They are pretty fucked.
