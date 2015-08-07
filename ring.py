@@ -76,38 +76,38 @@ def create_rings(d,bonds):
             dList = [d[j].dihedral_master1,d[j].dihedral_master2,d[j].dihedral_slave1,d[j].dihedral_slave2]
             dIn = [dList[2],dList[3]]
             outList = [d[i].dihedral_master1,d[i].dihedral_master2,d[i].dihedral_slave1,d[i].dihedral_slave2]
-            dInS1 = bond.get_bond(dList[2],outList[0],bonds)
-            dInS2 = bond.get_bond(dList[3],outList[1],bonds)
-            dInS3 = bond.get_bond(dList[2],outList[1],bonds)
-            dInS4 = bond.get_bond(dList[3],outList[0],bonds)
             if outList[0] not in dList and outList[1] not in dList:
                 if outList[2] in dList and outList[3] in dIn:
                     if dList[0] not in outList and dList[1] not in outList:
-                        if dInS1 != None and dInS2 != None and dInS3 != None and dInS4 != None:
-                                rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0],dList[1]))
-            elif outList[0] in dList and outList[2] in dList and outList[3] in dList and outList[1] not in dList:
+                        if outList[0].atom_type == "H" or outList[1].atom_type == "H" or outList[2].atom_type == "H" or outList[3].atom_type == "H" or dList[1].atom_type == "H" or dList[0].atom_type == "H":
+                            rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0],dList[1]))
+            if outList[0] in dList and outList[2] in dList and outList[3] in dList and outList[1] not in dList:
                 if dList[0] in outList and dList[2] in outList and dList[3] in outList and dList[1] not in outList:
                     if outList[0].atom_type == "H" or outList[1].atom_type == "H" or outList[2].atom_type == "H" or outList[3].atom_type == "H" or dList[1].atom_type == "H":
                         continue
                     else:
+                        print "ran1"
                         rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[1]))
             elif outList[0] in dList and outList[2] in dList and outList[3] in dList and outList[1] not in dList:
                 if dList[1] in outList and dList[2] in outList and dList[3] in outList and dList[0] not in outList:
                     if outList[0].atom_type == "H" or outList[1].atom_type == "H" or outList[2].atom_type == "H" or outList[3].atom_type == "H" or dList[0].atom_type == "H":
                         continue
                     else:
+                        print "ran2"
                         rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0]))
             elif outList[1] in dList and outList[2] in dList and outList[3] in dList and outList[0] not in dList:
                 if dList[0] in outList and dList[2] in outList and dList[3] in outList and dList[1] not in outList:
                     if outList[0].atom_type == "H" or outList[1].atom_type == "H" or outList[2].atom_type == "H" or outList[3].atom_type == "H" or dList[1].atom_type == "H":
-                        contine
+                        continue
                     else:
+                        print "ran3"
                         rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[1]))
             elif outList[1] in dList and outList[2] in dList and outList[3] in dList and outList[0] not in dList:
                 if dList[1] in outList and dList[2] in outList and dList[3] in outList and dList[0] not in outList:
                     if outList[0].atom_type == "H" or outList[1].atom_type == "H" or outList[2].atom_type == "H" or outList[3].atom_type == "H" or dList[0].atom_type == "H":
                         continue
                     else:
+                        print "ran4"
                         rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0]))
     print("--- %s seconds ---" % (time.time() - start_time))
     return rings

@@ -30,7 +30,7 @@ def debug(atoms,bonds,angles,dihedrals,rings,fused_rings,opls_atoms,opls_bonds,o
     #print_atoms(atoms,True)
     #print_bonds(bonds,True)
     #print_angles(angles,True)
-    #print_dihedrals(dihedrals)
+    print_dihedrals(dihedrals)
     #print_all_dft(dihedrals)
     #tester.count_atoms(opls_atoms,atoms)
     tester.find_missing_opls(opls_atoms,atoms)
@@ -247,12 +247,14 @@ def print_data(outname,atoms,bonds,angles,dihedrals,unique_a,unique_b,unique_ang
     print "\nBond Coeffs\n"
     for i in range(len(unique_b)):
         print "%s %s %s" % (i+1,unique_b[i].bond_force_const,unique_b[i].bond_equib_len)
+    print "%s 450.00 1.500" % (len(unique_b)+1)
     print "\nAngle Coeffs\n"
     for i in range(len(unique_ang)):
         print "%s %s %s" % (i+1,unique_ang[i].Angle_force_const,unique_ang[i].Angle_equib_len)
     print "\nDihedral Coeffs\n"
     for i in range(len(unique_d)):
         print "%s %s %s %s %s" % (i+1,unique_d[i].k1,unique_d[i].k2,unique_d[i].k3,unique_d[i].k4)
+    print "%s 0.000 0.000 0.000 0.0" % (len(unique_d)+1)
     print "\nPair Coeffs\n"
     for i in range(len(unique_a)):
         print "%s %s %s" % (i+1,unique_a[i].opls_epsilon,unique_a[i].opls_sigma)
@@ -264,8 +266,8 @@ def print_data(outname,atoms,bonds,angles,dihedrals,unique_a,unique_b,unique_ang
     #    print "%s 1 %s %s %s %s" % (i+1,atoms[i].print_type,atoms[i].x_pos,atoms[i].y_pos,atoms[i].z_pos)
     print "\nBonds\n"
     for i in range(len(bonds)):
-        #if bonds[i].print_type == 0:
-        #    bonds[i].print_type = 6
+        if bonds[i].print_type == 0:
+            bonds[i].print_type = (len(unique_b)+1)
         print "%s %s %s %s" % (i+1,bonds[i].print_type,bonds[i].bond_master.atom_id,bonds[i].bond_slave.atom_id)
     print "\nAngles\n"
     for i in range(len(angles)):
@@ -274,7 +276,7 @@ def print_data(outname,atoms,bonds,angles,dihedrals,unique_a,unique_b,unique_ang
     for i in range(len(dihedrals)):
         #hack smdppeh specific TODO
         if dihedrals[i].print_type == 0:
-            dihedrals[i].print_type = 5
+            dihedrals[i].print_type = (len(unique_d)+1)
         print "%s %s %s %s %s %s" % (i+1,dihedrals[i].print_type,dihedrals[i].dihedral_master1.atom_id,dihedrals[i].dihedral_master2.atom_id,dihedrals[i].dihedral_slave1.atom_id,dihedrals[i].dihedral_slave2.atom_id)
     data.close()
 
