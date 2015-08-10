@@ -9,6 +9,7 @@ import numpy
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 import os
+import sys
 
 def Poly10(x,a,b,c,d,e,f,h,g,i,k):
 	return a*x**10 + b*x**9 + c*x**8 + d*x**7 + e*x**6 + f*x**5 +h*x**4 + g*x**3 + i*x**2 + k*x
@@ -62,8 +63,8 @@ def Plot_Stress_Strain( Filename ):
 
     plt.figure(1)
     plt.subplot(211)
-    plt.xlim((0,1.0))
-    plt.ylim((0,.10))
+    plt.xlim((0,1.01))
+    plt.ylim((0,.11))
     plt.plot(Strainx, StressAVG,'g:', label = 'Moving Average Window = %d' % window)
     plt.plot(Strainx, Poly10Val(Strainx, Pop),'r', linewidth = 4, label = '10th Order Polynomial fit')
     plt.plot(Strainx, Pop[-1]*Strainx, linewidth = 4, label = 'Linear Regime E = %.2f GPa ' % Pop[-1])
@@ -76,9 +77,11 @@ def Plot_Stress_Strain( Filename ):
     plt.plot(Strainx, -.37*Strainx, linewidth = 4,label = 'Linear Regime v = %.2f ' % .37)
     plt.ylabel( 'Transverse Strain', fontsize = 20)
     plt.xlabel('Axial Strain', fontsize = 30)
-    plt.xlim((0,3.0))
+    plt.xlim((0,1.1))
     plt.ylim((0,-.4))
-    plt.legend()
+    plt.legend(loc = 'lower right')
     plt.show()
 
     return
+
+Plot_Stress_Strain(sys.argv[1])

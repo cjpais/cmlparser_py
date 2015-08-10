@@ -26,6 +26,7 @@ import write_nwchem
 import write_qchem
 
 import tester
+import cyclesdemo
 
 os.system('clear')
 
@@ -66,6 +67,7 @@ angles = angle.create_angles(atoms,bonds)
 dihedrals = dihedral.create_dihedrals(angles)
 #baddihedrals = dihedral.create_dihedrals(angles,True)
 dihedral.set_dft(dihedrals,bonds)
+#cyclesdemo.get_edges(atoms)
 
 print "Warning: The create_rings module is running, this may take a while. Also slightly wrong. Doesnt get all rings always."
 rings = ring.create_rings(dihedrals,bonds)
@@ -122,7 +124,7 @@ atom.adjust_partials(atoms)
 
 #write different dft finders
 #write_nwchem.dft(dihedrals)
-write_qchem.write(atoms,dihedrals)
+#write_qchem.write(atoms,dihedrals)
 sys.stdout = sys.__stdout__
 
 if debug:
