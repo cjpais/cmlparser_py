@@ -69,9 +69,7 @@ dihedrals = dihedral.create_dihedrals(angles)
 dihedral.set_dft(dihedrals,bonds)
 #cyclesdemo.get_edges(atoms)
 
-print "Warning: The create_rings module is running, this may take a while. Also slightly wrong. Doesnt get all rings always."
-rings = ring.create_rings(dihedrals,bonds)
-print "Rings finished running"
+rings = ring.create_rings(atoms)
 fused_rings = fused.create_fused_rings(rings)
 
 #get important OPLS info

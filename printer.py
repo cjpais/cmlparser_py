@@ -17,7 +17,7 @@ def debug(atoms,bonds,angles,dihedrals,rings,fused_rings,opls_atoms,opls_bonds,o
     #print_bonds(bonds)
     #print_angles(angles)
     #print_dihedrals(dihedrals)
-    #print_ring(rings)
+    print_ring(rings)
     #print_fused(fused_rings)
 
     #print opls info (not very useful)
@@ -27,7 +27,7 @@ def debug(atoms,bonds,angles,dihedrals,rings,fused_rings,opls_atoms,opls_bonds,o
     #print_opls_dihedrals(opls_dihedrals)
 
     #reprint for opls add
-    print_atoms(atoms,True)
+    #print_atoms(atoms,True)
     #print_bonds(bonds,True)
     #print_angles(angles,True)
     #print_dihedrals(dihedrals)
@@ -43,10 +43,6 @@ def print_atoms(atom,extra = False):
     bond -- The list of atom objects to pass in and print
     """
     for k in range(0,len(atom)):
-       if atom[k].opls_sigma == "":
-           print "FUCK"
-       #else:
-    #       continue
        print "Atom id: %s" % atom[k].atom_id
        print "Atom type: %s" % atom[k].atom_type
        print "X position: %s" % atom[k].x_pos
@@ -226,11 +222,11 @@ def print_all_dft(dihedrals):
     print counter
 
 def print_data(outname,atoms,bonds,angles,dihedrals,unique_a,unique_b,unique_ang,unique_d,xmin,xmax,ymin,ymax,zmin,zmax):
-    #data = open(outname,"w")
-    #sys.stdout = data
+    data = open(outname,"w")
+    sys.stdout = data
 
     #writes out to lammps, this really should be done in a method, but it takes a assload of inputs
-    """print "Written by CMLParser\n"
+    print "Written by CMLParser\n"
     print "\t%s atoms" % len(atoms)
     print "\t%s bonds" % len(bonds)
     print "\t%s angles" % len(angles)
@@ -273,17 +269,15 @@ def print_data(outname,atoms,bonds,angles,dihedrals,unique_a,unique_b,unique_ang
     print "\nAngles\n"
     for i in range(len(angles)):
         print "%s %s %s %s %s" % (i+1,angles[i].print_type,angles[i].Angle_master.atom_id,angles[i].Angle_slave1.atom_id,angles[i].Angle_slave2.atom_id)
-    print "\nDihedrals\n"""
+    print "\nDihedrals\n"
     for i in range(len(dihedrals)):
         #hack smdppeh specific TODO
         if dihedrals[i].print_type == 0:
-            print "check these"
-            print "%s %s %s %s" % (dihedrals[i].dihedral_master1.atom_id,dihedrals[i].dihedral_master2.atom_id,dihedrals[i].dihedral_slave1.atom_id,dihedrals[i].dihedral_slave2.atom_id)
             dihedrals[i].print_type = (len(unique_d)+1)
         else:
             continue
-        #print "%s %s %s %s %s %s" % (i+1,dihedrals[i].print_type,dihedrals[i].dihedral_master1.atom_id,dihedrals[i].dihedral_master2.atom_id,dihedrals[i].dihedral_slave1.atom_id,dihedrals[i].dihedral_slave2.atom_id)
-    #data.close()
+        print "%s %s %s %s %s %s" % (i+1,dihedrals[i].print_type,dihedrals[i].dihedral_master1.atom_id,dihedrals[i].dihedral_master2.atom_id,dihedrals[i].dihedral_slave1.atom_id,dihedrals[i].dihedral_slave2.atom_id)
+    data.close()
 
 def print_lammpsin(lammpsin,dataname,lammpsinput):
     lammps = open(lammpsin,"w")

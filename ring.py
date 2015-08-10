@@ -55,59 +55,48 @@ class Ring(object):
             rList.append(self.atom6.atom_type)
         return rList
 
-def create_rings(d,bonds):
-    """ Creates a ring object given a dihedral list. Hard to understand via this
-        code. Basically creates different lists and checks them
+def create_rings(atoms):
+    """ Creates Ring object through the use of following each atom's bonds
 
         Keyword Arguments:
-        d - A list of dihedral objects
+        atoms - The list of atom objects to find the rings
     """
-    start_time = time.time()
-    rings = []
-    #this is for identifying 6 membered rings
-    for i in range(len(d)):
-        for j in range(len(d)):
-            if d[i] == d[j]:
+    ring = []
+    ringlist = []
+    for i in range(len(atoms)):
+        layer1 = atoms[i]
+        if layer1.ring:
+            continue
+        path = []
+        path.append(layer1)
+        for j in range(len(layer1.atom_bonds)):
+            layer2 = layer1.atom_bonds[j]
+            if layer2 in path:
                 continue
-            if d[i].dihedral_master1.ring:
-                continue
-            if d[j].dihedral_master1.ring:
-                continue
-            dList = [d[j].dihedral_master1,d[j].dihedral_master2,d[j].dihedral_slave1,d[j].dihedral_slave2]
-            dIn = [dList[2],dList[3]]
-            outList = [d[i].dihedral_master1,d[i].dihedral_master2,d[i].dihedral_slave1,d[i].dihedral_slave2]
-            if outList[0] not in dList and outList[1] not in dList:
-                if outList[2] in dList and outList[3] in dIn:
-                    if dList[0] not in outList and dList[1] not in outList:
-                        if outList[0].atom_type == "H" or outList[1].atom_type == "H" or outList[2].atom_type == "H" or outList[3].atom_type == "H" or dList[1].atom_type == "H" or dList[0].atom_type == "H":
-                            rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0],dList[1]))
-            if outList[0] in dList and outList[2] in dList and outList[3] in dList and outList[1] not in dList:
-                if dList[0] in outList and dList[2] in outList and dList[3] in outList and dList[1] not in outList:
-                    if outList[0].atom_type == "H" or outList[1].atom_type == "H" or outList[2].atom_type == "H" or outList[3].atom_type == "H" or dList[1].atom_type == "H":
+            path.append(layer2)
+            for k in range(len(layer2.atom_bonds)):
+                layer3 = layer2.atom_bonds[k]
+                if layer3 in path:
+                    continue
+                path.append(layer3)
+                for l in range(len(layer3.atom_bonds)):
+                    layer4 = layer3.atom_bonds[l]
+                    if layer4 in path:
                         continue
-                    else:
-                        print "ran1"
-                        rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[1]))
-            elif outList[0] in dList and outList[2] in dList and outList[3] in dList and outList[1] not in dList:
-                if dList[1] in outList and dList[2] in outList and dList[3] in outList and dList[0] not in outList:
-                    if outList[0].atom_type == "H" or outList[1].atom_type == "H" or outList[2].atom_type == "H" or outList[3].atom_type == "H" or dList[0].atom_type == "H":
-                        continue
-                    else:
-                        print "ran2"
-                        rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0]))
-            elif outList[1] in dList and outList[2] in dList and outList[3] in dList and outList[0] not in dList:
-                if dList[0] in outList and dList[2] in outList and dList[3] in outList and dList[1] not in outList:
-                    if outList[0].atom_type == "H" or outList[1].atom_type == "H" or outList[2].atom_type == "H" or outList[3].atom_type == "H" or dList[1].atom_type == "H":
-                        continue
-                    else:
-                        print "ran3"
-                        rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[1]))
-            elif outList[1] in dList and outList[2] in dList and outList[3] in dList and outList[0] not in dList:
-                if dList[1] in outList and dList[2] in outList and dList[3] in outList and dList[0] not in outList:
-                    if outList[0].atom_type == "H" or outList[1].atom_type == "H" or outList[2].atom_type == "H" or outList[3].atom_type == "H" or dList[0].atom_type == "H":
-                        continue
-                    else:
-                        print "ran4"
-                        rings.append(Ring(outList[0],outList[1],outList[2],outList[3],dList[0]))
-    print("--- %s seconds ---" % (time.time() - start_time))
-    return rings
+                    path.append(layer4)
+                    for m in range(len(layer4.atom_bonds)):
+                        layer5 = layer4.atom_bonds[m]
+                        if layer5 in path:
+                            continue
+                        for n in range(len(layer5.atom_bonds)):
+                            layer6 = layer5.atom_bonds[n]
+                            if layer6 == path[0]:
+                                ringlist.append(Ring(layer1,layer2,layer3,layer4,layer5))
+                            if layer6 in path:
+                                continue
+                            path.append(layer6)
+                            for o in range(len(layer6.atom_bonds)):
+                                layer7 = layer6.atom_bonds[o]
+                                if layer7 == path[0]:
+                                    ringlist.append(Ring(layer1,layer2,layer3,layer4,layer5,layer6))
+    return ringlist
