@@ -31,7 +31,7 @@ import cyclesdemo
 os.system('clear')
 
 #set basic data names and get flags
-moleculeboo,mname,dname,inname,debug,isfile,fname,help,test,length = setflags.set_flags_new()
+moleculeboo,mname,dname,inname,debug,isfile,fname,help,length = setflags.set_flags_new()
 
 # split names for ease later on
 dataname = dname.split('/')

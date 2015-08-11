@@ -56,13 +56,10 @@ def set_flags_new():
         isfile = True
         fname = sys.argv[get_flag('-f')]
 
-    if '-t' in sys.argv:
-        test = True
-
     if '-l' in sys.argv:
         length = sys.argv[get_flag('-f')]
 
-    return molecule,mname,dataname,inname,debug,isfile,fname,help,test,length
+    return molecule,mname,dataname,inname,debug,isfile,fname,help,length
 
 def get_flag(string):
     index = 0
