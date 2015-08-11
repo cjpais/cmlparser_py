@@ -31,7 +31,7 @@ import cyclesdemo
 os.system('clear')
 
 #set basic data names and get flags
-moleculeboo,mname,dname,inname,debug,isfile,fname,help = setflags.set_flags_new()
+moleculeboo,mname,dname,inname,debug,isfile,fname,help,test,length = setflags.set_flags_new()
 
 # split names for ease later on
 dataname = dname.split('/')
@@ -108,12 +108,15 @@ sys.stdout = sys.__stdout__
 if moleculeboo:
     molecule1 = molecule.create_molecule(atoms,bonds,angles,dihedrals,rings,fused_rings)
 elif moleculeboo == False:
+    print "You really shouldn't be running this. It doesn't fully work"
+    print "If you are using it, I hope you can understand the modules below, some are confusing and unused"
     monomer1 = monomer.create_monomer(atoms,bonds,angles,dihedrals,rings,fused_rings)
     thorings = monomer.mark_thio(monomer1)
     intermono = monomer.find_intermono(monomer1)
     halfmono = monomer.get_single_alist(monomer1)
     attach = monomer.find_attach(monomer1,halfmono)
-    monomer.create_polymer_cml(mname,halfmono,attach,monomer1,intermono)
+    monomer.attach(halfmono,attach,monomer1,number)
+    #monomer.create_polymer_cml(mname,halfmono,attach,monomer1)
     sys.stdout = sys.__stdout__
 
 #create babel and read to get better partials

@@ -35,7 +35,7 @@ def create_monomer(a,b,an,di,ri,fr):
         print "\nWARNING:"
         print "Not valid monomer for cmlparser"
         print "\nQuitting cmlparser. Check that there are exactly 2 rings.\n"
-        quit()
+        #quit()
     monomer = Monomer(a,b,an,di,ri,fr)
     return monomer
 
@@ -91,20 +91,19 @@ def get_single_alist(monomer):
        Keyword Arguments:
        monomer - The monomer you want to get a single monomer from once you have
                  found the intermonomer dihedral.
-       inter - The intermonomer dihedral, as not to duplicate code
     """
     atomlist = monomer.atoms
     bondlist = monomer.bonds
     rings = monomer.rings
-    goodring = monomer.rings[0].list()
-    badring = monomer.rings[1].list()
+    goodring = monomer.rings[len(rings)-2].list()
+    badring = monomer.rings[len(rings)-1].list()
     partmono = []
     notgood = []
     checked = []
     for i in range(len(goodring)):
         partmono.append(goodring[i])
         checked.append(goodring[i])
-    while len(partmono) != len(atomlist)/2:
+    while len(partmono) != len(atomlist)/len(rings):
         for i in range(len(partmono)):
             for j in range(len(partmono[i].atom_bonds)):
                 if partmono[i].atom_bonds[j] in partmono:
@@ -132,7 +131,14 @@ def find_attach(polymer,partmono):
             return anglelist[i].Angle_master
     print "No valid attachment point found"
 
-def create_polymer_cml(filename,partmono,attach,monomer,intermono):
+def attach(partmono,attach1,monomer,number):
+    monomernew = monomer
+    while number > 0:
+        number -= 1
+        attachnew = find_attach(monomernew,partmono)
+        attach(partmono,attachnew,monomernew,number)
+
+def create_polymer_cml(filename,partmono,attach,monomer):
     new_cml = open('%s_new.cml' % filename,'w')
     sys.stdout = new_cml
     usedbonds = []

@@ -8,12 +8,13 @@ def set_flags_new():
     debug = False
     help = False
     isfile = False
+    test = True
+    bad = True
     mname = ""
     dataname = ""
     inname = ""
     fname = ""
-
-    bad = True
+    length = ""
 
     # get Molecule or Monomer
     if '-imol' in sys.argv or '-imono' in sys.argv:
@@ -55,7 +56,13 @@ def set_flags_new():
         isfile = True
         fname = sys.argv[get_flag('-f')]
 
-    return molecule,mname,dataname,inname,debug,isfile,fname,help
+    if '-t' in sys.argv:
+        test = True
+
+    if '-l' in sys.argv:
+        length = sys.argv[get_flag('-f')]
+
+    return molecule,mname,dataname,inname,debug,isfile,fname,help,test,length
 
 def get_flag(string):
     index = 0
