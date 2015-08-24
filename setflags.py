@@ -57,7 +57,7 @@ def set_flags_new():
         fname = sys.argv[get_flag('-f')]
 
     if '-l' in sys.argv:
-        length = sys.argv[get_flag('-f')]
+        length = sys.argv[get_flag('-l')]
 
     return molecule,mname,dataname,inname,debug,isfile,fname,help,length
 

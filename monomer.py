@@ -35,7 +35,7 @@ def create_monomer(a,b,an,di,ri,fr):
         print "\nWARNING:"
         print "Not valid monomer for cmlparser"
         print "\nQuitting cmlparser. Check that there are exactly 2 rings.\n"
-        #quit()
+        quit()
     monomer = Monomer(a,b,an,di,ri,fr)
     return monomer
 
@@ -134,7 +134,23 @@ def find_attach(polymer,partmono):
 def attach(partmono,attach1,monomer,number):
     monomernew = monomer
     while number > 0:
-        number -= 1
+        #set up variables
+        add = len(monomer.atoms)
+        newattach = ""
+        anglelist = monomer.angles
+
+        # get which atom to remove and remove it
+        # we want to remove the hydrogen to attach a new monomer
+        for i in range(len(attach1.atom_bonds)):
+            if attach1.atom_bonds[i].atom_type == "H":
+                attach2 = attach1.atom_bonds[i]
+        abond = bond.get_bond(attach1,attach2,monomer.bonds)
+        # remove corresponding bond
+        monomer.bonds.remove(abond)
+        monomer.atoms.remove(attach2)
+        print "test %s" % attach1.atom_id
+
+        newnum = int(number) - 1
         attachnew = find_attach(monomernew,partmono)
         attach(partmono,attachnew,monomernew,number)
 
@@ -154,6 +170,7 @@ def create_polymer_cml(filename,partmono,attach,monomer):
     add = len(monomer.atoms)+1
     newattach = ""
     anglelist = monomer.angles
+    # THIS SHIT IS USELESS. DONT USE FOR ATTACH MODULE
     for i in range(len(anglelist)):
         if anglelist[i].Angle_master.atom_type == "C" and anglelist[i].Angle_slave1.atom_type == "C" and anglelist[i].Angle_slave2.atom_type == "S" and anglelist[i].Angle_master in partmono and anglelist[i].Angle_slave1 in partmono and anglelist[i].Angle_slave2 in partmono:
             newattach = anglelist[i].Angle_master

@@ -99,6 +99,8 @@ bond.get_type(bonds,unique_b)
 angle.get_type(angles,unique_ang)
 dihedral.get_type(dihedrals,unique_d)
 
+ring.dls(atoms[0].atom_bonds, atoms[0], 6)
+
 #box size
 xmin,ymin,zmin,xmax,ymax,zmax = atom.periodic_b_size(atoms)
 
@@ -115,7 +117,8 @@ elif moleculeboo == False:
     intermono = monomer.find_intermono(monomer1)
     halfmono = monomer.get_single_alist(monomer1)
     attach = monomer.find_attach(monomer1,halfmono)
-    monomer.attach(halfmono,attach,monomer1,number)
+    print length
+    monomer.attach(halfmono,attach,monomer1,length)
     #monomer.create_polymer_cml(mname,halfmono,attach,monomer1)
     sys.stdout = sys.__stdout__
 
