@@ -18,6 +18,7 @@ class Atom(object):
     opls_mass = 0
     print_type = 0
     dihedral = False
+    fixed = False
 
     def __init__(self,atom_id,atom_type,x_pos,y_pos,z_pos):
         self.atom_id = atom_id
@@ -42,6 +43,18 @@ def create_atoms(atom):
         type = curratom[5].replace(',','').replace("'","")
         atoms.append(Atom(id,type,x,y,z))
     return atoms
+
+def get_atombyid(atoms,id):
+    """ Find an atom by its id in a list of atoms
+        Returns the correct atom
+
+        Keyword Arguments:
+        atoms - The list of atoms you want to search for a particular id
+        id - The id for the atom you want to find
+    """
+    for i in range(len(atoms)):
+        if atoms[i].atom_id == id:
+            return atoms[i]
 
 def uniq_types(atom):
     """ Gets the unique type of atoms for lammps output

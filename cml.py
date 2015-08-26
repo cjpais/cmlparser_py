@@ -99,8 +99,6 @@ bond.get_type(bonds,unique_b)
 angle.get_type(angles,unique_ang)
 dihedral.get_type(dihedrals,unique_d)
 
-ring.dls(atoms[0].atom_bonds, atoms[0], 6)
-
 #box size
 xmin,ymin,zmin,xmax,ymax,zmax = atom.periodic_b_size(atoms)
 
@@ -111,14 +109,14 @@ if moleculeboo:
     molecule1 = molecule.create_molecule(atoms,bonds,angles,dihedrals,rings,fused_rings)
 elif moleculeboo == False:
     print "You really shouldn't be running this. It doesn't fully work"
-    print "If you are using it, I hope you can understand the modules below, some are confusing and unused"
+    print "If you are using it, I hope you can understand the modules below, some are confusing and unused\n"
     monomer1 = monomer.create_monomer(atoms,bonds,angles,dihedrals,rings,fused_rings)
     thorings = monomer.mark_thio(monomer1)
     intermono = monomer.find_intermono(monomer1)
     halfmono = monomer.get_single_alist(monomer1)
     attach = monomer.find_attach(monomer1,halfmono)
-    print length
-    monomer.attach(halfmono,attach,monomer1,length)
+    test2 = monomer.attach(halfmono,attach,monomer1,length)
+    monomer.print_mono(test2,"outputs/test")
     #monomer.create_polymer_cml(mname,halfmono,attach,monomer1)
     sys.stdout = sys.__stdout__
 

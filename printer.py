@@ -18,7 +18,7 @@ def debug(atoms,bonds,angles,dihedrals,rings,fused_rings,opls_atoms,opls_bonds,o
     #print_angles(angles)
     #print_dihedrals(dihedrals)
     print_ring(rings)
-    #print_fused(fused_rings)
+    print_fused(fused_rings)
 
     #print opls info (not very useful)
     #print_opls_atoms(opls_atoms)
@@ -146,9 +146,11 @@ def print_fused(fused):
     """
     print "----------FUSED RINGS---------"
     for i in range(0,len(fused)):
+        for j in range(0,len(fused[i].ring1)):
+            print "fused 1: %s" % fused[i].ring1[j].atom_id
         print ""
-        print "fused 1 %s" % fused[i].ring1
-        print "fused 2 %s" % fused[i].ring2
+        for j in range(0,len(fused[i].ring2)):
+            print "fused 2: %s" % fused[i].ring2[j].atom_id
 
 def print_opls_atoms(opls_atoms):
     """ Prints the list of opls atoms created earlier in this file
@@ -259,8 +261,10 @@ def print_data(outname,atoms,bonds,angles,dihedrals,unique_a,unique_b,unique_ang
     for i in range(len(atoms)):
         if atoms[i].print_type == 0:
             atoms[i].print_type = 6
-        print "%s 1 %s %s %s %s %s" % (i+1,atoms[i].print_type,atoms[i].opls_partial,atoms[i].x_pos,atoms[i].y_pos,atoms[i].z_pos)
-    #    print "%s 1 %s %s %s %s" % (i+1,atoms[i].print_type,atoms[i].x_pos,atoms[i].y_pos,atoms[i].z_pos)
+        if atoms[i].fixed == True:
+            print "%s 2 %s %s %s %s %s" % (i+1,atoms[i].print_type,atoms[i].opls_partial,atoms[i].x_pos,atoms[i].y_pos,atoms[i].z_pos)
+        else:
+            print "%s 1 %s %s %s %s %s" % (i+1,atoms[i].print_type,atoms[i].opls_partial,atoms[i].x_pos,atoms[i].y_pos,atoms[i].z_pos)
     print "\nBonds\n"
     for i in range(len(bonds)):
         if bonds[i].print_type == 0:
@@ -316,6 +320,7 @@ def print_lammpsin(lammpsin,dataname,lammpsinput):
     print "fix 0 all langevin 300 300 100 43294"
     print "fix 1 all nph iso 1 1 1000 drag 2"
     print "fix 2 all momentum 1 linear 1 1 1"
+    print "fix 3 2 rigid single"
     print "velocity all create 100.00000 1223"
     print "dump 2 all custom 1000 %s.lammpstrj id type mol xs ys zs vx vy vz" % ("%s_final" % lammpsinput)
     print "run 500000"

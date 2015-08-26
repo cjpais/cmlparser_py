@@ -2,6 +2,8 @@ import dihedral
 import ring
 import sys
 import bond
+import atom
+import copy
 
 class Monomer(object):
     atoms = []
@@ -124,37 +126,99 @@ def find_attach(polymer,partmono):
     anglelist = polymer.angles
     for i in range(len(anglelist)):
         if anglelist[i].Angle_master.atom_type == "C" and anglelist[i].Angle_slave1.atom_type == "H" and anglelist[i].Angle_slave2.atom_type == "S" and anglelist[i].Angle_slave1 in partmono:
-            print anglelist[i].Angle_slave1.atom_id
             return anglelist[i].Angle_master
         elif anglelist[i].Angle_master.atom_type == "C" and anglelist[i].Angle_slave1.atom_type == "S" and anglelist[i].Angle_slave2.atom_type == "H" and anglelist[i].Angle_slave2 in partmono:
-            print anglelist[i].Angle_slave2.atom_id
             return anglelist[i].Angle_master
     print "No valid attachment point found"
 
-def attach(partmono,attach1,monomer,number):
+def getpartblist(partmono,monomer,newatoms,add):
+    partmonobonds = []
+    for i in range(len(partmono)):
+        for j in range(len(monomer.bonds)):
+            if monomer.bonds[j].bond_master == partmono[i]:
+                bondscopy = copy.deepcopy(monomer.bonds[j])
+                newmast = atom.get_atombyid(newatoms,int(monomer.bonds[j].bond_master.atom_id) + add)
+                newslave = atom.get_atombyid(newatoms,int(monomer.bonds[j].bond_slave.atom_id) + add)
+                bondscopy.bond_master = newmast
+                bondscopy.bond_slave = newslave
+                partmonobonds.append(bondscopy)
+    return partmonobonds
+
+def attach(partmono,attach1,monomer,number): #needs more work, very specific right now
     monomernew = monomer
-    while number > 0:
-        #set up variables
-        add = len(monomer.atoms)
-        newattach = ""
-        anglelist = monomer.angles
-
-        # get which atom to remove and remove it
-        # we want to remove the hydrogen to attach a new monomer
+    num = int(number)
+    for run in range(0,num):
+        add = int(monomernew.atoms[-1].atom_id)
+        newalist = []
+        newblist = []
+        #remove bonds in old attach and remove the hydrogen as well
         for i in range(len(attach1.atom_bonds)):
-            if attach1.atom_bonds[i].atom_type == "H":
-                attach2 = attach1.atom_bonds[i]
-        abond = bond.get_bond(attach1,attach2,monomer.bonds)
-        # remove corresponding bond
-        monomer.bonds.remove(abond)
-        monomer.atoms.remove(attach2)
-        print "test %s" % attach1.atom_id
+            if attach1.atom_bonds[i].atom_type == "H": #this has to do in a specific manner, may have to change
+                oldh = attach1.atom_bonds[i]
+                attachid = attach1.atom_id
+        abond = bond.get_bond(attach1,oldh,monomernew.bonds)
+        monomernew.bonds.remove(abond)
+        monomernew.atoms.remove(oldh)
 
-        newnum = int(number) - 1
-        attachnew = find_attach(monomernew,partmono)
-        attach(partmono,attachnew,monomernew,number)
+        #take partmono and offset all of its atoms to create a good atomlist
+        for i in range(len(partmono)):
+            newalist.append(copy.deepcopy(partmono[i]))
+            newalist[i].atom_id = int(partmono[i].atom_id) + add
+            newalist[i].x_pos = float(newalist[i].x_pos) + (run+1)*-4.000
+            print (run+1)*5.000
 
-def create_polymer_cml(filename,partmono,attach,monomer):
+        #generate new alist, put this kind of stuff into one big method or something
+        for i in range(len(newalist)):
+            for j in range(len(newalist[i].atom_bonds)):
+                newalist[i].atom_bonds[j] = atom.get_atombyid(newalist,int(newalist[i].atom_bonds[j].atom_id)+add)
+
+
+        #generate new blist
+        newblist = getpartblist(partmono,monomer,newalist,add)
+        for i in range(len(newblist)):
+            if newblist[i].bond_slave == None:
+                newblist.remove(newblist[i])
+                break
+        a5add = atom.get_atombyid(newalist,5+add)
+        a37add = atom.get_atombyid(newalist,37+add)
+
+        newblist.append(bond.Bond(1,a5add,a37add))
+
+        #remove the nonetype from addloc so it doesnt fuck shit up
+        #add this to newmonomer
+        for i in range(len(newalist)):
+            monomernew.atoms.append(newalist[i])
+        for i in range(len(newblist)):
+            monomernew.bonds.append(newblist[i])
+
+        print newalist[0].atom_id
+        print monomer.atoms[0].atom_id
+        print newalist[0].atom_bonds[1].atom_id
+        print newblist[0].bond_master.atom_id
+        print newalist[0].x_pos
+        print monomer.atoms[0].x_pos
+
+        attach1 = atom.get_atombyid(newalist,int(attachid)+add)
+
+    return monomernew
+
+def print_mono(monomer,filename):
+    cml = open('%s.cml' % filename,'w')
+    sys.stdout = cml
+    print "<molecule>"
+    print " <atomArray>"
+    for i in range(len(monomer.atoms)):
+        print '  <atom id="a%s" elementType="%s" x3="%s" y3="%s" z3="%s"/>' % (monomer.atoms[i].atom_id,monomer.atoms[i].atom_type,monomer.atoms[i].x_pos,monomer.atoms[i].y_pos,monomer.atoms[i].z_pos)
+    print " </atomArray>"
+    print " <bondArray>"
+    for i in range(len(monomer.bonds)):
+        print '  <bond atomRefs2="a%s a%s" order="%s"/>' % (monomer.bonds[i].bond_master.atom_id,monomer.bonds[i].bond_slave.atom_id,monomer.bonds[i].bond_type)
+    print " </bondArray>"
+    print "</molecule>"
+    cml.close()
+
+def create_polymer_cml(filename,partmono,attach,monomer,number):
+    """ Basically a test for writing a cml from data and creating a 3rd attach"""
     new_cml = open('%s_new.cml' % filename,'w')
     sys.stdout = new_cml
     usedbonds = []

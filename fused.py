@@ -42,4 +42,12 @@ def create_fused_rings(rings):
                             fused_rings.append(Fused_Ring(inRing,outRing))
                             rings[i].fused = True
                         continue
+    markfused(fused_rings)
     return fused_rings
+
+def markfused(fused):
+    for i in range(len(fused)):
+        for j in range(len(fused[i].ring1)):
+            fused[i].ring1[j].fixed = True
+        for j in range(len(fused[i].ring2)):
+            fused[i].ring2[j].fixed = True
