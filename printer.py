@@ -278,8 +278,6 @@ def print_data(outname,atoms,bonds,angles,dihedrals,unique_a,unique_b,unique_ang
         #hack smdppeh specific TODO
         if dihedrals[i].print_type == 0:
             dihedrals[i].print_type = (len(unique_d)+1)
-        else:
-            continue
         print "%s %s %s %s %s %s" % (i+1,dihedrals[i].print_type,dihedrals[i].dihedral_master1.atom_id,dihedrals[i].dihedral_master2.atom_id,dihedrals[i].dihedral_slave1.atom_id,dihedrals[i].dihedral_slave2.atom_id)
     data.close()
 
@@ -307,6 +305,7 @@ def print_lammpsin(lammpsin,dataname,lammpsinput):
     print "fix 0 all langevin 300 300 100 43294"
     print "fix 1 all nph iso 1 1 1000 drag 2"
     print "fix 2 all momentum 1 linear 1 1 1"
+    print "fix 3 2 rigid single"
     print "velocity all create 100.00000 1223"
     print "timestep 1"
     print "thermo 100"
@@ -314,6 +313,7 @@ def print_lammpsin(lammpsin,dataname,lammpsinput):
     print "unfix 0"
     print "unfix 1"
     print "unfix 2"
+    print "unfix 3"
     print "write_restart restart.%s\n\n" % lammpsinput
     print "replicate 5 5 5"
     print "undump 1"
@@ -328,6 +328,7 @@ def print_lammpsin(lammpsin,dataname,lammpsinput):
     print "unfix 0"
     print "unfix 1"
     print "unfix 2"
+    print "unfix 3"
 
     lammps.close()
 
