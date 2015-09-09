@@ -299,13 +299,15 @@ def print_lammpsin(lammpsin,dataname,lammpsinput):
     print "kspace_style ewald 10"
     print "read_data %s" % dataname
     print "thermo_style custom step temp press ke pe etotal density"
+    print "group ring molecule 2"
+    print "group chain molecule 1"
     print "dump 1 all custom 200 %s.lammpstrj id type mol xs ys zs vx vy vz" % lammpsinput
     print "neighbor 10.0 bin"
     print "neigh_modify every 1 delay 0 one 10000"
+    print "fix 3 ring rigid molecule iso 1 1 1000"
     print "fix 0 all langevin 300 300 100 43294"
     print "fix 1 all nph iso 1 1 1000 drag 2"
     print "fix 2 all momentum 1 linear 1 1 1"
-    print "fix 3 2 rigid single"
     print "velocity all create 100.00000 1223"
     print "timestep 1"
     print "thermo 100"
@@ -317,10 +319,10 @@ def print_lammpsin(lammpsin,dataname,lammpsinput):
     print "write_restart restart.%s\n\n" % lammpsinput
     print "replicate 5 5 5"
     print "undump 1"
+    print "fix 3 test rigid/nph/small molecule iso 1 1 1000"
     print "fix 0 all langevin 300 300 100 43294"
-    print "fix 1 all nph iso 1 1 1000 drag 2"
-    print "fix 2 all momentum 1 linear 1 1 1"
-    print "fix 3 2 rigid single"
+    print "fix 1 chain nph iso 1 1 1000 drag 2     # note the chain group"
+    print "fix 2 chain momentum 1 linear 1 1 1"
     print "velocity all create 100.00000 1223"
     print "dump 2 all custom 1000 %s.lammpstrj id type mol xs ys zs vx vy vz" % ("%s_final" % lammpsinput)
     print "run 500000"
