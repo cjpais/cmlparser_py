@@ -73,13 +73,13 @@ rings = ring.create_rings(atoms)
 fused_rings = fused.create_fused_rings(rings)
 
 #get important OPLS info
-opatom,van,partial,opbond,opangle,optorsion = op.getImportant(oplsfinal)
+opatom,van,partial,opbond,opangle,optorsion,opimprop = op.getImportant(oplsfinal)
 
 #deal with OPLS
 opls_atoms = oplsatom.create_atoms(opatom,van,partial)
 opls_bonds = oplsbond.create_bonds(opbond)
 opls_angles = oplsangle.create_angles(opangle)
-opls_dihedrals = oplsdihedral.create_dihedrals(optorsion)
+opls_dihedrals = oplsdihedral.create_dihedrals(optorsion,opimprop)
 
 #more OPLS fun
 oplsmolecule.get_molecule(atoms,opls_atoms)

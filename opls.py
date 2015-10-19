@@ -23,6 +23,7 @@ def getImportant(oplslist):
     bondList = []
     angleList = []
     torsionList = []
+    improperlist = []
     for i in range(0,len(oplslist)):
         curline = oplslist[i]
         if curline[0] == "atom":
@@ -37,7 +38,9 @@ def getImportant(oplslist):
             angleList.append(curline)
         elif curline[0] == "torsion":
             torsionList.append(curline)
-    return atomList,vanList,partialList,bondList,angleList,torsionList
+        elif curline[0] == "imptors":
+            improperlist.append(curline)
+    return atomList,vanList,partialList,bondList,angleList,torsionList,improperlist
 
 def count_atoms(opls_atoms,atoms):
     """ Counts the type of atoms found in the opls file for the molecule

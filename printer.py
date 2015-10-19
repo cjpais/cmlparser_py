@@ -24,7 +24,7 @@ def debug(atoms,bonds,angles,dihedrals,rings,fused_rings,opls_atoms,opls_bonds,o
     #print_opls_atoms(opls_atoms)
     #print_opls_bonds(opls_bonds)
     #print_opls_angles(opls_angles)
-    #print_opls_dihedrals(opls_dihedrals)
+    print_opls_dihedrals(opls_dihedrals)
 
     #reprint for opls add
     #print_atoms(atoms,True)
